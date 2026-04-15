@@ -1,31 +1,39 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="theme-dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>关于 · Nous3508</title>
+  <!-- Performance: preconnect to external origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google Fonts: Nunito Sans for friendly rounded typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" role="banner">
     <div class="wrap">
       <h1 class="site-title"><a href="/">Nous3508</a></h1>
-      <nav class="site-nav">
+      <nav class="site-nav" role="navigation" aria-label="Main navigation">
         <a href="/">首页</a>
         <a href="about.html">关于</a>
-        <a href="https://github.com/Nous3508" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button id="theme-toggle" aria-label="Switch to light theme">☀️</button>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
+  <main class="wrap" id="main-content">
     <article class="content">
       <h2>关于我 / 关于本站</h2>
       <p>在此写下你的简介、联系方式或站点用途。你可以自由编辑该页面，加入图片、外部链接或联系方式。</p>
       <h3>联系方式</h3>
       <ul>
-        <li>GitHub: <a href="https://github.com/Nous3508" target="_blank" rel="noopener">Nous3508</a></li>
-        <li>邮箱: your-email@example.com（替换为你的地址）</li>
+        <li>GitHub: <a href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer">Nous3508</a></li>
+        <li>邮箱: <a href="mailto:3508525674@qq.com">3508525674@qq.com</a></li>
       </ul>
     </article>
   </main>
@@ -37,6 +45,39 @@
   </footer>
 
   <script>
+    // ─── Theme (persist across pages) ────────────────────────────────────────
+    var THEME_KEY = 'site-theme';
+    var root   = document.documentElement;
+    var toggle = document.getElementById('theme-toggle');
+
+    function applyTheme(t) {
+      if (t === 'dark') {
+        root.classList.add('theme-dark');
+        toggle.textContent = '☀️';
+        toggle.setAttribute('aria-label', 'Switch to light theme');
+      } else {
+        root.classList.remove('theme-dark');
+        toggle.textContent = '🌙';
+        toggle.setAttribute('aria-label', 'Switch to dark theme');
+      }
+      localStorage.setItem(THEME_KEY, t);
+    }
+
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+
+    toggle.addEventListener('click', function() {
+      applyTheme(root.classList.contains('theme-dark') ? 'light' : 'dark');
+    });
+
+    // ─── Header elevation on scroll ───────────────────────────────────────────
+    var header = document.querySelector('.site-header');
+    if (header) {
+      window.addEventListener('scroll', function() {
+        header.classList.toggle('elevated', window.scrollY > 8);
+      }, { passive: true });
+    }
+
+    // ─── Footer year ──────────────────────────────────────────────────────────
     document.getElementById('year2').textContent = new Date().getFullYear();
   </script>
 </body>
