@@ -274,14 +274,18 @@ html, body {
 /* =============================================
    Stats images
    ============================================= */
+:root {
+  --stats-gap: .75rem;
+}
+
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: .75rem;
+  gap: var(--stats-gap);
   margin-top: .75rem;
 }
 .stats img {
-  width: calc(50% - .375rem);
+  width: calc(50% - var(--stats-gap) / 2);
   max-width: 100%;
   height: auto;
   border-radius: 10px;
@@ -353,5 +357,5 @@ a:focus-visible {
 }
 
 @media (min-width: 681px) {
-  .stats img { width: calc(50% - .375rem); }
+  .stats img { width: calc(50% - var(--stats-gap) / 2); }
 }

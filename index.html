@@ -171,7 +171,7 @@
 
     // Detect browser language on first visit; otherwise use stored preference
     var savedLang = localStorage.getItem(LANG_KEY);
-    var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    var browserLang = (navigator.language || '').toLowerCase();
     applyLang(savedLang || (browserLang.startsWith('zh') ? 'zh' : 'en'));
 
     // ─── Mobile nav toggle ────────────────────────────────────────────────────
