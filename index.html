@@ -1,43 +1,44 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="theme-dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nous の private little nest</title>
   <meta name="description" content="Nous — Student · Smart Manufacturing · Aspiring Embedded Engineer" />
+  <!-- Performance: preconnect to external origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://img.shields.io">
+  <link rel="preconnect" href="https://github-readme-stats.vercel.app">
+  <!-- Google Fonts: Nunito Sans for friendly rounded typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <!-- Favicon & icons -->
-  <!-- Primary vector favicon (modern browsers) -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-
-  <!-- PNG fallbacks (recommended to generate and place in repo) -->
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png">
-
-  <!-- Safari pinned tab (uses monochrome mask + color) -->
-  <link rel="mask-icon" href="/favicon.svg" color="#2563eb">
-
-  <!-- Apple touch icon (iOS / macOS) -->
+  <link rel="mask-icon" href="/favicon.svg" color="#ff85b3">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-  <!-- favicon.ico fallback for old browsers (generate and place in repo) -->
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
-  <header class="topbar">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="topbar" role="banner">
     <div class="wrap">
       <h1 class="logo">Nous <small>👋</small></h1>
-      <nav class="nav">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="main-nav">☰</button>
+      <nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
         <a href="#about">About</a>
         <a href="#tech">Tech</a>
         <a href="#work">Working On</a>
         <a href="#contact">Contact</a>
-        <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <button id="theme-toggle" aria-label="Switch to light theme">☀️</button>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
+  <main class="wrap" id="main-content">
     <section class="hero">
       <h2>Hi, I'm Nous</h2>
       <p class="lead">Student • Smart Manufacturing • Aspiring Embedded Engineer — Guangdong, China</p>
@@ -50,15 +51,15 @@
 
     <article id="content">
       <!-- English -->
-      <div class="pane lang-en">
+      <div class="pane lang-en" lang="en">
         <h3 id="about">✨ About Me</h3>
         <p>I’m <strong>Nous</strong>, a student focused on <strong>Mechanical Design, Manufacturing & Automation (Smart Manufacturing)</strong>, and I’m working toward becoming an <strong>Embedded Engineer</strong>. I enjoy building systems that combine mechanics, electronics, control and software.</p>
 
         <h3 id="tech">🚀 Tech Stack</h3>
         <p>
-          <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" />
-          <img src="https://img.shields.io/badge/C++-004482?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++" />
-          <img src="https://img.shields.io/badge/Python-1f4b99?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+          <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" loading="lazy" />
+          <img src="https://img.shields.io/badge/C++-004482?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++" loading="lazy" />
+          <img src="https://img.shields.io/badge/Python-1f4b99?style=for-the-badge&logo=python&logoColor=white" alt="Python" loading="lazy" />
         </p>
 
         <h3 id="work">🔥 What I’m Working On</h3>
@@ -70,21 +71,21 @@
 
         <h3>📊 Live GitHub Stats</h3>
         <div class="stats">
-          <img id="stats-img" src="https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=tokyonight" alt="GitHub stats" />
-          <img id="langs-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=tokyonight" alt="Top languages" />
+          <img id="stats-img" src="https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=tokyonight" alt="GitHub stats" loading="lazy" />
+          <img id="langs-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=tokyonight" alt="Top languages" loading="lazy" />
         </div>
       </div>
 
       <!-- Chinese -->
-      <div class="pane lang-zh" hidden>
+      <div class="pane lang-zh" lang="zh" hidden aria-hidden="true">
         <h3 id="about-zh">✨ 关于我</h3>
         <p>我是 <strong>Nous</strong>，专注于 <strong>机械设计、制造与自动化（智能制造）</strong> 的学生，目标成为一名嵌入式工程师。我喜欢把机械、电子、控制与软件结合成完整系统。</p>
 
         <h3 id="tech-zh">🚀 技术栈</h3>
         <p>
-          <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" />
-          <img src="https://img.shields.io/badge/C++-004482?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++" />
-          <img src="https://img.shields.io/badge/Python-1f4b99?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+          <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" loading="lazy" />
+          <img src="https://img.shields.io/badge/C++-004482?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++" loading="lazy" />
+          <img src="https://img.shields.io/badge/Python-1f4b99?style=for-the-badge&logo=python&logoColor=white" alt="Python" loading="lazy" />
         </p>
 
         <h3 id="work-zh">🔥 我正在做的事</h3>
@@ -96,16 +97,16 @@
 
         <h3>📊 实时 GitHub 统计</h3>
         <div class="stats">
-          <img id="stats-img-zh" src="https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=light" alt="GitHub stats" />
-          <img id="langs-img-zh" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=light" alt="Top languages" />
+          <img id="stats-img-zh" src="https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=tokyonight" alt="GitHub stats" loading="lazy" />
+          <img id="langs-img-zh" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=tokyonight" alt="Top languages" loading="lazy" />
         </div>
       </div>
     </article>
 
     <section id="contact" class="card">
       <h3>📫 Contact</h3>
-      <p>Email: <a href="mailto:your-email@example.com">your-email@example.com</a> (replace)</p>
-      <p>GitHub: <a href="https://github.com/Nous3508" target="_blank" rel="noopener">Nous3508</a></p>
+      <p>Email: <a href="mailto:3508525674@qq.com">3508525674@qq.com</a></p>
+      <p>GitHub: <a href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer">Nous3508</a></p>
     </section>
   </main>
 
@@ -116,54 +117,91 @@
   </footer>
 
   <script>
-    // Theme toggle (light / dark) persisted in localStorage
-    const toggle = document.getElementById('theme-toggle');
-    const root = document.documentElement;
+    // ─── Theme ────────────────────────────────────────────────────────────────
     const THEME_KEY = 'site-theme';
+    const LANG_KEY  = 'site-lang';
+    const root      = document.documentElement;
+    const toggle    = document.getElementById('theme-toggle');
 
-    function applyTheme(t){
-      if(t === 'dark'){
+    function applyTheme(t) {
+      if (t === 'dark') {
         root.classList.add('theme-dark');
         toggle.textContent = '☀️';
+        toggle.setAttribute('aria-label', 'Switch to light theme');
       } else {
         root.classList.remove('theme-dark');
         toggle.textContent = '🌙';
+        toggle.setAttribute('aria-label', 'Switch to dark theme');
       }
-      // update dynamic images if needed (example: switch stats theme)
-      document.querySelectorAll('#stats-img').forEach(img => {
-        img.src = t === 'dark'
-          ? 'https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=tokyonight'
-          : 'https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=light';
+      const statsTheme = t === 'dark' ? 'tokyonight' : 'light';
+      ['stats-img', 'stats-img-zh'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.src = 'https://github-readme-stats.vercel.app/api?username=Nous3508&show_icons=true&theme=' + statsTheme;
       });
-      document.querySelectorAll('#langs-img').forEach(img => {
-        img.src = t === 'dark'
-          ? 'https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=tokyonight'
-          : 'https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=light';
+      ['langs-img', 'langs-img-zh'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.src = 'https://github-readme-stats.vercel.app/api/top-langs/?username=Nous3508&layout=compact&theme=' + statsTheme;
       });
       localStorage.setItem(THEME_KEY, t);
     }
 
-    // init
-    const saved = localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    applyTheme(saved);
+    // Default to dark if no stored preference
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 
-    toggle.addEventListener('click', () => {
-      const cur = root.classList.contains('theme-dark') ? 'dark' : 'light';
-      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    toggle.addEventListener('click', function() {
+      applyTheme(root.classList.contains('theme-dark') ? 'light' : 'dark');
     });
 
-    // language switch
-    document.querySelectorAll('.lang-switch button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const lang = btn.dataset.lang;
-        document.querySelectorAll('.pane').forEach(p => p.hidden = true);
-        document.querySelector('.lang-' + lang).hidden = false;
+    // ─── Language switch ──────────────────────────────────────────────────────
+    function applyLang(lang) {
+      document.querySelectorAll('.pane').forEach(function(p) {
+        var active = p.classList.contains('lang-' + lang);
+        p.hidden = !active;
+        p.setAttribute('aria-hidden', String(!active));
       });
+      document.querySelectorAll('.lang-switch button').forEach(function(b) {
+        b.classList.toggle('active', b.dataset.lang === lang);
+      });
+      localStorage.setItem(LANG_KEY, lang);
+    }
+
+    document.querySelectorAll('.lang-switch button').forEach(function(btn) {
+      btn.addEventListener('click', function() { applyLang(btn.dataset.lang); });
     });
 
-    // year
+    // Detect browser language on first visit; otherwise use stored preference
+    var savedLang = localStorage.getItem(LANG_KEY);
+    var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    applyLang(savedLang || (browserLang.startsWith('zh') ? 'zh' : 'en'));
+
+    // ─── Mobile nav toggle ────────────────────────────────────────────────────
+    var navToggle = document.getElementById('nav-toggle');
+    var navEl = document.getElementById('main-nav');
+    if (navToggle && navEl) {
+      navToggle.addEventListener('click', function() {
+        var open = navEl.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navEl.classList.contains('open')) {
+          navEl.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          navToggle.setAttribute('aria-label', 'Open navigation menu');
+          navToggle.focus();
+        }
+      });
+    }
+
+    // ─── Header elevation on scroll ───────────────────────────────────────────
+    var header = document.querySelector('.topbar');
+    if (header) {
+      window.addEventListener('scroll', function() {
+        header.classList.toggle('elevated', window.scrollY > 8);
+      }, { passive: true });
+    }
+
+    // ─── Footer year ──────────────────────────────────────────────────────────
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
