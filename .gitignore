@@ -1,4 +1,4 @@
-# 常见忽略项
+# common
 node_modules/
 .DS_Store
 .env
