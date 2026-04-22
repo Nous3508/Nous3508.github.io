@@ -1,0 +1,23 @@
+# 双语资料：en / zh
+en:
+  name: "Nous"
+  tagline: "Full‑stack developer, building playful and useful web apps"
+  about: >
+    Hi — I'm Nous. I build web applications, developer tools and interactive demos.
+    I enjoy clean UI, performance-conscious code, and shipping projects that help people.
+  resume: "/assets/resume.pdf"
+  social:
+    github: "https://github.com/Nous3508"
+    twitter: ""
+    linkedin: ""
+zh:
+  name: "Nous"
+  tagline: "全栈开发者，构建有趣且实用的 Web 应用"
+  about: >
+    你好，我是 Nous。我的兴趣是构建 Web 应用、开发工具与互动演示。
+    我喜欢简洁的界面、高性能的实现，并把项目发布出来帮助他人。
+  resume: "/assets/resume.pdf"
+  social:
+    github: "https://github.com/Nous3508"
+    twitter: ""
+    linkedin: ""

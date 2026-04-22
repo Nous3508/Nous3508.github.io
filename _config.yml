@@ -1,0 +1,21 @@
+title: "Nous"
+email: "you@example.com"
+description: "Nous — Personal site · Portfolio · Blog · Docs"
+baseurl: "" # 如果托管在 https://nous3508.github.io/ 就保持空字符串
+url: "https://nous3508.github.io"
+lang: "en"
+theme: null
+plugins: []
+markdown: kramdown
+paginate: 6
+
+collections:
+  projects:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "default"

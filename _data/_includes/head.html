@@ -1,0 +1,46 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ page.title | default: site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+
+<link rel="icon" href="/assets/images/favicon.png">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ page.title | default: site.title }}">
+<meta property="og:description" content="{{ site.description }}">
+<meta property="og:image" content="{{ site.url }}/assets/images/social-card.png">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ site.title }}",
+  "url": "{{ site.url }}",
+  "image": "{{ site.url }}/web-app-manifest-192x192.png",
+  "sameAs": [
+    "https://github.com/Nous3508"
+  ]
+}
+</script>
+
+<!-- Analytics placeholders - 替换 MEASUREMENT_ID / domain / site id -->
+<!-- Google Analytics (GA4) -->
+<script>
+  // GA4 placeholder - 替换 'G-XXXXXXXXXX'
+  (function(){ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} window.gtag = gtag; })();
+  // gtag('js', new Date());
+  // gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- Plausible placeholder -->
+<!-- <script defer data-domain="example.com" src="https://plausible.io/js/plausible.js"></script> -->
+
+<!-- Fathom placeholder -->
+<!-- <script src="https://cdn.usefathom.com/script.js" site="YOUR-FATHOM-SITE-ID" defer></script> -->
+
+<!-- FlexSearch (client-side) -->
+<script src="https://unpkg.com/flexsearch@0.7.31/dist/flexsearch.bundle.js"></script>
+
+<link rel="stylesheet" href="/assets/css/style.css">
