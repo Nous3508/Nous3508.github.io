@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Home
+title: Nous の little nest
 description: "Nous の little nest — projects first, search centered, clean blog preview"
 permalink: /
 ---
