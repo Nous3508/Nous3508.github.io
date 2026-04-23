@@ -11,7 +11,7 @@ permalink: /blog/
 </section>
 
 <section class="container blog-list">
-  {% for post in paginator.posts %}
+  {% for post in site.posts %}
   <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.index0 | times: 60 }}">
     <div class="blog-card-main">
       <p class="mini-meta">{{ post.date | date: "%Y-%m-%d" }}</p>

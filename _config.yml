@@ -6,22 +6,14 @@ lang: "en"
 
 markdown: kramdown
 highlighter: rouge
-permalink: pretty
+permalink: /:categories/:year/:month/:day/:title/
 
 plugins:
   - jekyll-feed
   - jekyll-sitemap
 
-collections:
-  projects:
-    output: true
-    permalink: /projects/:name/
-  learning:
-    output: true
-    permalink: /learning/:name/
-  notes:
-    output: true
-    permalink: /notes/:name/
+paginate: 6
+paginate_path: "/blog/page:num/"
 
 defaults:
   - scope:
@@ -31,22 +23,3 @@ defaults:
       layout: post
       author: "Nous"
       share: true
-  - scope:
-      path: ""
-      type: "projects"
-    values:
-      layout: project
-  - scope:
-      path: ""
-      type: "learning"
-    values:
-      layout: page
-  - scope:
-      path: ""
-      type: "notes"
-    values:
-      layout: page
-
-paginate: 6
-paginate_path: "/blog/page:num/"
-excerpt_separator: "<!--more-->"
