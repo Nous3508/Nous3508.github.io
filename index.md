@@ -17,10 +17,29 @@ permalink: /
   </div>
 
   <div class="quick-links" data-aos="fade-up" data-aos-delay="80">
-    <a class="quick-link-btn" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">Bilibili</a>
-    <a class="quick-link-btn" href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer">知网</a>
-    <a class="quick-link-btn" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" target="_blank" rel="noopener noreferrer">学校网站</a>
-    <a class="quick-link-btn" href="https://feishu.cn/" target="_blank" rel="noopener noreferrer">飞书</a>
+    <a class="quick-link-btn quick-link-bilibili" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer" aria-label="Bilibili" title="Bilibili">
+      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+        <path d="M7 5l2 2h6l2-2 2 2v10H5V7l2-2zm1 4v6h8V9H8zm2-2h1v1h-1V7zm4 0h1v1h-1V7z" fill="currentColor"/>
+      </svg>
+    </a>
+
+    <a class="quick-link-btn quick-link-cnki" href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer" aria-label="知网" title="知网">
+      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+        <path d="M12 2l4 4-4 4-4-4 4-4zm0 6l5 5-5 5-5-5 5-5zm0 2l3 3-3 3-3-3 3-3z" fill="currentColor"/>
+      </svg>
+    </a>
+
+    <a class="quick-link-btn quick-link-school" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" target="_blank" rel="noopener noreferrer" aria-label="学校网站" title="学校网站">
+      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+        <path d="M12 3l9 5-9 5-9-5 9-5zm-6 8v5l6 3 6-3v-5l-6 3-6-3zm1 7h10v2H7v-2z" fill="currentColor"/>
+      </svg>
+    </a>
+
+    <a class="quick-link-btn quick-link-feishu" href="https://feishu.cn/" target="_blank" rel="noopener noreferrer" aria-label="飞书" title="飞书">
+      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+        <path d="M6 4h12v3H6V4zm0 6h12v3H6v-3zm0 6h8v3H6v-3z" fill="currentColor"/>
+      </svg>
+    </a>
   </div>
 
   <div class="search-panel" data-aos="fade-up" data-aos-delay="120">

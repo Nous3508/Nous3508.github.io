@@ -911,3 +911,86 @@ button, input{ font:inherit; }
     width: 100%;
   }
 }
+
+/* === HOME QUICK LINK SVG BUTTONS === */
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.quick-link-btn{
+  width: 64px;
+  height: 64px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  text-decoration:none;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.quick-link-btn:hover{
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: var(--shadow-strong);
+}
+
+.quick-link-svg{
+  width: 30px;
+  height: 30px;
+  display:block;
+}
+
+.quick-link-bilibili{
+  background: linear-gradient(135deg, #ff8ec7 0%, #7c6dff 100%);
+  color:#fff;
+}
+.quick-link-cnki{
+  background: linear-gradient(135deg, #19c37d 0%, #0ea5e9 100%);
+  color:#fff;
+}
+.quick-link-school{
+  background: linear-gradient(135deg, #ffd36b 0%, #ff8a4c 100%);
+  color:#fff;
+}
+.quick-link-feishu{
+  background: linear-gradient(135deg, #6aa7ff 0%, #3b82f6 100%);
+  color:#fff;
+}
+
+.quick-link-btn:hover .quick-link-svg{
+  transform: scale(1.06);
+}
+
+@media (max-width: 760px){
+  .quick-links{
+    gap: 10px;
+  }
+
+  .quick-link-btn{
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+  }
+
+  .quick-link-svg{
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px){
+  .quick-link-btn{
+    width: 56px;
+    height: 56px;
+  }
+}
