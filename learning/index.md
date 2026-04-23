@@ -6,31 +6,34 @@ permalink: /learning/
 ---
 <section class="container page-hero" data-aos="fade-up">
   <p class="eyebrow">Learning</p>
-  <h1>Learning resources</h1>
+  <h1>Learning resources 📚</h1>
   <p class="lead lang-en">
-    Notes, references, and study paths for embedded systems, robotics, and engineering practice.
+    Choose a study path by direction.
   </p>
   <p class="lead lang-zh" style="display:none">
-    关于嵌入式、机器人和工程实践的学习笔记、参考资料和学习路径。
+    按方向选择学习路径。
   </p>
 </section>
 
-<section class="container content-card prose" data-aos="fade-up" data-aos-delay="80">
-  <h2>Study focus</h2>
-  <ul>
-    <li>STM32 peripherals, interrupts, and control tasks</li>
-    <li>Motor control and debugging workflow</li>
-    <li>ROS2 and MoveIt motion planning basics</li>
-    <li>PCB layout and hardware bring-up</li>
-    <li>Mechanical design for automation systems</li>
-  </ul>
+<section class="container resource-grid" data-aos="fade-up" data-aos-delay="80">
+  <a class="resource-card resource-mech" href="/resources/mechanical/">
+    <div class="resource-icon">⚙️</div>
+    <h2>机械方向</h2>
+    <p>机械设计、结构分析、建模、制造工艺等资料。</p>
+    <span class="resource-link">进入 →</span>
+  </a>
 
-  <h2>Resource structure</h2>
-  <ul>
-    <li><strong>Notes:</strong> short technical notes and conclusions</li>
-    <li><strong>Guides:</strong> step-by-step learning articles</li>
-    <li><strong>Links:</strong> useful tools, docs, and references</li>
-  </ul>
+  <a class="resource-card resource-elec" href="/resources/electrical/">
+    <div class="resource-icon">🔌</div>
+    <h2>电控方向</h2>
+    <p>单片机、嵌入式、电路、控制系统与硬件开发资料。</p>
+    <span class="resource-link">进入 →</span>
+  </a>
 
-  <p>More detailed materials will be added later.</p>
+  <a class="resource-card resource-embodied" href="/resources/embodied-ai/">
+    <div class="resource-icon">🤖</div>
+    <h2>具身智能方向</h2>
+    <p>ROS2、MoveIt、机器人、感知、规划与控制资料。</p>
+    <span class="resource-link">进入 →</span>
+  </a>
 </section>
