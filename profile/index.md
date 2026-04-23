@@ -51,16 +51,43 @@ permalink: /profile/
   <article class="profile-card" data-aos="fade-up" data-aos-delay="120">
     <p class="profile-card-kicker">Tech Stack 🛠️</p>
     <h2>What I use</h2>
-    <div class="tag-list tag-list--compact">
-      <span class="tag">C</span>
-      <span class="tag">C++</span>
-      <span class="tag">Python</span>
-      <span class="tag">STM32</span>
-      <span class="tag">ROS2</span>
-      <span class="tag">MoveIt</span>
-      <span class="tag">PCB</span>
-      <span class="tag">SolidWorks</span>
-      <span class="tag">AutoCAD</span>
+
+    <div class="profile-stack-groups">
+      <div class="profile-stack-group">
+        <h3>Languages</h3>
+        <div class="tag-list tag-list--compact">
+          <span class="tag">C</span>
+          <span class="tag">C++</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+
+      <div class="profile-stack-group">
+        <h3>Embedded / Hardware</h3>
+        <div class="tag-list tag-list--compact">
+          <span class="tag">STM32</span>
+          <span class="tag">PCB Design</span>
+          <span class="tag">PCB Layout</span>
+          <span class="tag">JLCPCB</span>
+        </div>
+      </div>
+
+      <div class="profile-stack-group">
+        <h3>Robotics / Motion Planning</h3>
+        <div class="tag-list tag-list--compact">
+          <span class="tag">ROS2</span>
+          <span class="tag">MoveIt</span>
+          <span class="tag">Motion Control</span>
+        </div>
+      </div>
+
+      <div class="profile-stack-group">
+        <h3>CAD / Engineering Tools</h3>
+        <div class="tag-list tag-list--compact">
+          <span class="tag">SolidWorks</span>
+          <span class="tag">AutoCAD</span>
+        </div>
+      </div>
     </div>
   </article>
 

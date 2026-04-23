@@ -1102,3 +1102,67 @@ button, input{ font:inherit; }
     min-height: 120px;
   }
 }
+
+/* === PROFILE TECH STACK GROUPS === */
+.profile-stack-groups{
+  display:grid;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.profile-stack-group{
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255,255,255,.10);
+  text-align: center;
+}
+
+.profile-stack-group h3{
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent-solid);
+  letter-spacing: .02em;
+}
+
+.profile-stack-group .tag-list{
+  justify-content:center;
+}
+
+.profile-stack-group .tag{
+  margin: 0;
+  font-weight: 700;
+}
+
+/* === PROFILE TECH STACK GROUPS === */
+.profile-stack-groups{
+  display:grid;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.profile-stack-group{
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255,255,255,.10);
+  text-align: center;
+}
+
+.profile-stack-group h3{
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent-solid);
+  letter-spacing: .02em;
+}
+
+.profile-stack-group .tag-list{
+  justify-content:center;
+}
+
+.profile-stack-group .tag{
+  margin: 0;
+  font-weight: 700;
+}
