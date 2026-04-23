@@ -874,3 +874,47 @@ button, input{ font:inherit; }
     min-width: 420px;
   }
 }
+
+/* === HOME LISTS: single-card per row === */
+#featured-project-grid,
+.latest-posts-grid{
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.project-card{
+  grid-template-columns: 220px 1fr;
+  min-height: 220px;
+}
+
+@media (max-width: 900px){
+  .project-card{
+    grid-template-columns: 1fr;
+  }
+}
+
+#featured-project-grid .project-card{
+  overflow: hidden;
+}
+
+#featured-project-grid .project-thumb{
+  min-height: 100%;
+  font-size: 4rem;
+}
+
+#featured-project-grid .project-body{
+  padding: 22px 24px;
+}
+
+.latest-posts-grid .mini-post-card{
+  padding: 24px;
+}
+
+.latest-posts-grid .mini-post-card h3{
+  font-size: 1.3rem;
+  margin-top: 10px;
+}
+
+.latest-posts-grid .mini-actions{
+  margin-top: 16px;
+}
