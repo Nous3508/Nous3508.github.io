@@ -17,7 +17,7 @@ permalink: /profile/
 
 <section class="container profile-stack">
   <article class="profile-card profile-card--hero" data-aos="fade-up">
-    <img class="profile-avatar" src="/web-app-manifest-192x192.png" alt="Nous avatar">
+    <img class="profile-avatar" src="/web-app-manifest-512x512.png" alt="Nous avatar">
     <div class="profile-card-body">
       <p class="profile-card-kicker">GitHub Home</p>
       <h2>Visit my GitHub profile</h2>
