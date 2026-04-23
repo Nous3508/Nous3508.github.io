@@ -1,6 +1,6 @@
 (() => {
   const owner = "Nous3508";
-  const CACHE_KEY = "nous_github_repos_cache_v4";
+  const CACHE_KEY = "nous_github_repos_cache_v5";
   const CACHE_TTL = 1000 * 60 * 10;
 
   async function fetchRepos() {
