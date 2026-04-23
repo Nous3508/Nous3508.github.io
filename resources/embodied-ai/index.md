@@ -12,13 +12,32 @@ permalink: /resources/embodied-ai/
   </p>
 </section>
 
+<section class="container learning-progress-note" data-aos="fade-up" data-aos-delay="60">
+  <div class="learning-note-item">
+    <span>建议周期</span>
+    <strong>4 - 8 个月</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>核心工具</span>
+    <strong>ROS2 · MoveIt · RViz · Gazebo</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>最终目标</span>
+    <strong>能独立完成机器人规划与控制项目</strong>
+  </div>
+</section>
+
 <section class="container learning-timeline">
 
   <article class="learning-timeline-item" data-aos="fade-up">
-    <div class="learning-step">01</div>
+    <div class="learning-step">
+      <span class="learning-step-number">01</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">基础入门</p>
+      <p class="learning-kicker">基础入门 · 2-3 周</p>
       <h2>先理解机器人系统</h2>
+      <p class="learning-goal">目标：理解机器人是如何描述位置、姿态和运动的。</p>
       <ul class="learning-list">
         <li>机器人学基础概念</li>
         <li>坐标系、位姿、旋转矩阵与四元数</li>
@@ -30,10 +49,14 @@ permalink: /resources/embodied-ai/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="80">
-    <div class="learning-step">02</div>
+    <div class="learning-step">
+      <span class="learning-step-number">02</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">ROS2 开发</p>
+      <p class="learning-kicker">ROS2 开发 · 4-5 周</p>
       <h2>搭建机器人软件基础</h2>
+      <p class="learning-goal">目标：能完成 ROS2 节点通信、模型加载和基本调试。</p>
       <ul class="learning-list">
         <li>ROS2 工作空间与基础命令</li>
         <li>Node、Topic、Service、Action</li>
@@ -45,10 +68,14 @@ permalink: /resources/embodied-ai/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="160">
-    <div class="learning-step">03</div>
+    <div class="learning-step">
+      <span class="learning-step-number">03</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">规划与控制</p>
+      <p class="learning-kicker">规划与控制 · 4-6 周</p>
       <h2>让机器人动起来</h2>
+      <p class="learning-goal">目标：能在仿真环境里稳定完成机械臂规划与执行。</p>
       <ul class="learning-list">
         <li>MoveIt 基础与机械臂规划</li>
         <li>路径规划、碰撞检测与轨迹执行</li>
@@ -60,10 +87,14 @@ permalink: /resources/embodied-ai/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="240">
-    <div class="learning-step">04</div>
+    <div class="learning-step">
+      <span class="learning-step-number">04</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">具身智能拓展</p>
+      <p class="learning-kicker">具身智能拓展 · 持续迭代</p>
       <h2>走向更智能的机器人</h2>
+      <p class="learning-goal">目标：把感知、规划、控制整合进一个完整的具身系统。</p>
       <ul class="learning-list">
         <li>感知、决策、执行的系统框架</li>
         <li>多模态数据与环境理解</li>

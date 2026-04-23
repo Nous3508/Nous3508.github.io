@@ -12,13 +12,32 @@ permalink: /resources/electrical/
   </p>
 </section>
 
+<section class="container learning-progress-note" data-aos="fade-up" data-aos-delay="60">
+  <div class="learning-note-item">
+    <span>建议周期</span>
+    <strong>4 - 8 个月</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>核心工具</span>
+    <strong>STM32 · Keil · CubeMX · 示波器</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>最终目标</span>
+    <strong>能完成嵌入式控制与电机驱动项目</strong>
+  </div>
+</section>
+
 <section class="container learning-timeline">
 
   <article class="learning-timeline-item" data-aos="fade-up">
-    <div class="learning-step">01</div>
+    <div class="learning-step">
+      <span class="learning-step-number">01</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">基础入门</p>
+      <p class="learning-kicker">基础入门 · 2-3 周</p>
       <h2>先把底层概念打牢</h2>
+      <p class="learning-goal">目标：能看懂基础电路并完成简单测量与判断。</p>
       <ul class="learning-list">
         <li>电阻、电容、电感、二极管、三极管基础</li>
         <li>欧姆定律、基尔霍夫定律、分压分流</li>
@@ -30,10 +49,14 @@ permalink: /resources/electrical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="80">
-    <div class="learning-step">02</div>
+    <div class="learning-step">
+      <span class="learning-step-number">02</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">核心开发</p>
+      <p class="learning-kicker">核心开发 · 4-6 周</p>
       <h2>进入单片机与嵌入式</h2>
+      <p class="learning-goal">目标：能独立完成 MCU 外设开发和基础调试。</p>
       <ul class="learning-list">
         <li>C 语言基础与嵌入式 C 习惯</li>
         <li>STM32 / 其他 MCU 开发环境搭建</li>
@@ -45,10 +68,14 @@ permalink: /resources/electrical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="160">
-    <div class="learning-step">03</div>
+    <div class="learning-step">
+      <span class="learning-step-number">03</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">控制与通信</p>
+      <p class="learning-kicker">控制与通信 · 3-5 周</p>
       <h2>把系统真正跑起来</h2>
+      <p class="learning-goal">目标：能把电机、传感器、通信和控制组合成完整系统。</p>
       <ul class="learning-list">
         <li>PID 控制基础与参数整定</li>
         <li>电机驱动：直流电机、步进电机、舵机、无刷电机</li>
@@ -60,10 +87,14 @@ permalink: /resources/electrical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="240">
-    <div class="learning-step">04</div>
+    <div class="learning-step">
+      <span class="learning-step-number">04</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">项目实践</p>
+      <p class="learning-kicker">项目实践 · 持续迭代</p>
       <h2>用项目把知识串起来</h2>
+      <p class="learning-goal">目标：做出一个可以稳定运行的完整电控项目。</p>
       <ul class="learning-list">
         <li>循迹小车 / 平衡车</li>
         <li>电机调速系统</li>

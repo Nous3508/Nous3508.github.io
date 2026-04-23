@@ -12,13 +12,32 @@ permalink: /resources/mechanical/
   </p>
 </section>
 
+<section class="container learning-progress-note" data-aos="fade-up" data-aos-delay="60">
+  <div class="learning-note-item">
+    <span>建议周期</span>
+    <strong>3 - 6 个月</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>核心工具</span>
+    <strong>SolidWorks · AutoCAD · FEA</strong>
+  </div>
+  <div class="learning-note-item">
+    <span>最终目标</span>
+    <strong>能独立完成结构设计与装配验证</strong>
+  </div>
+</section>
+
 <section class="container learning-timeline">
 
   <article class="learning-timeline-item" data-aos="fade-up">
-    <div class="learning-step">01</div>
+    <div class="learning-step">
+      <span class="learning-step-number">01</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">基础入门</p>
+      <p class="learning-kicker">基础入门 · 2-4 周</p>
       <h2>先把机械基础打牢</h2>
+      <p class="learning-goal">目标：能看懂机械图纸，理解零件和机构的基本表达方式。</p>
       <ul class="learning-list">
         <li>机械制图基础与三视图识读</li>
         <li>公差、配合、尺寸链与标准件认知</li>
@@ -30,10 +49,14 @@ permalink: /resources/mechanical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="80">
-    <div class="learning-step">02</div>
+    <div class="learning-step">
+      <span class="learning-step-number">02</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">建模设计</p>
+      <p class="learning-kicker">建模设计 · 3-5 周</p>
       <h2>进入三维建模与结构设计</h2>
+      <p class="learning-goal">目标：能独立完成零件建模、装配和工程图输出。</p>
       <ul class="learning-list">
         <li>SolidWorks / AutoCAD 基础操作</li>
         <li>草图、拉伸、旋转、装配、工程图</li>
@@ -45,10 +68,14 @@ permalink: /resources/mechanical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="160">
-    <div class="learning-step">03</div>
+    <div class="learning-step">
+      <span class="learning-step-number">03</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">分析优化</p>
+      <p class="learning-kicker">分析优化 · 3-4 周</p>
       <h2>让设计更可靠</h2>
+      <p class="learning-goal">目标：能判断结构是否合理，并针对问题做优化。</p>
       <ul class="learning-list">
         <li>有限元分析基础</li>
         <li>应力、应变、变形与安全系数</li>
@@ -60,10 +87,14 @@ permalink: /resources/mechanical/
   </article>
 
   <article class="learning-timeline-item" data-aos="fade-up" data-aos-delay="240">
-    <div class="learning-step">04</div>
+    <div class="learning-step">
+      <span class="learning-step-number">04</span>
+      <span class="learning-step-line"></span>
+    </div>
     <div class="learning-card">
-      <p class="learning-kicker">制造实践</p>
+      <p class="learning-kicker">制造实践 · 持续迭代</p>
       <h2>把图纸变成实物</h2>
+      <p class="learning-goal">目标：完成一个可以装配、可调试、可复盘的机械项目。</p>
       <ul class="learning-list">
         <li>常见加工工艺：车、铣、钻、磨、切割</li>
         <li>3D 打印与快速原型验证</li>
