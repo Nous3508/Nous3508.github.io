@@ -1,62 +1,92 @@
 ---
 layout: default
 title: Profile
-description: "About Nous, skills, timeline, and contact"
+description: "Nous profile, skills, timeline, and contact"
 permalink: /profile/
 ---
-<section class="profile-hero container" data-aos="fade-up">
-  <div class="profile-card">
-    <img class="profile-avatar" src="/web-app-manifest-192x192.png" alt="Nous avatar">
-    <div class="profile-copy">
-      <p class="eyebrow">Profile</p>
-      <h1>{{ site.data.profile.en.name }} / {{ site.data.profile.zh.name }}</h1>
-
-      <p class="profile-subtitle lang-en">{{ site.data.profile.en.subtitle }}</p>
-      <p class="profile-subtitle lang-zh" style="display:none">{{ site.data.profile.zh.subtitle }}</p>
-
-      <p class="profile-intro lang-en">{{ site.data.profile.en.intro }}</p>
-      <p class="profile-intro lang-zh" style="display:none">{{ site.data.profile.zh.intro }}</p>
-
-      <div class="profile-actions">
-        <a class="download-btn" href="{{ site.data.profile.en.resume }}" target="_blank" rel="noopener">
-          Download Resume
-        </a>
-      </div>
-    </div>
-  </div>
+<section class="container page-hero" data-aos="fade-up">
+  <p class="eyebrow">Profile</p>
+  <h1>Hi, I'm Nous 👋</h1>
+  <p class="lead lang-en">
+    Student • Smart Manufacturing • Aspiring Embedded Engineer
+  </p>
+  <p class="lead lang-zh" style="display:none">
+    学生 • 智能制造 • 未来嵌入式工程师
+  </p>
 </section>
 
-<section class="container profile-sections">
-  <div class="profile-block" data-aos="fade-up" data-aos-delay="80">
-    <h2>Skills / 技术标签</h2>
-    <div class="tag-list">
-      {% for tag in site.data.profile.en.tags %}
-      <span class="tag">{{ tag }}</span>
-      {% endfor %}
+<section class="container profile-grid">
+  <a class="profile-card profile-card--feature" href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer" data-aos="fade-up">
+    <div class="profile-card-icon">GH</div>
+    <div class="profile-card-body">
+      <p class="profile-card-kicker">GitHub Home</p>
+      <h2>Visit my GitHub profile</h2>
+      <p class="lang-en">
+        Click here to view my repositories, projects, and profile README.
+      </p>
+      <p class="lang-zh" style="display:none">
+        点击这里查看我的仓库、项目和 GitHub 个人主页介绍。
+      </p>
     </div>
-  </div>
+    <div class="profile-card-arrow">→</div>
+  </a>
 
-  <div class="profile-block" data-aos="fade-up" data-aos-delay="120">
-    <h2>Timeline / 时间线</h2>
-    <div class="timeline">
-      {% for item in site.data.profile.en.timeline %}
-      <div class="timeline-item">
-        <div class="timeline-year">{{ item.year }}</div>
-        <div class="timeline-body">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.desc }}</p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+  <article class="profile-card" data-aos="fade-up" data-aos-delay="60">
+    <p class="profile-card-kicker">About Me</p>
+    <h2>Who I am</h2>
+    <p class="lang-en">
+      I’m Nous, a student focused on Mechanical Design, Manufacturing & Automation.
+      I enjoy combining mechanics, electronics, and software into real systems.
+    </p>
+    <p class="lang-zh" style="display:none">
+      我是 Nous，专注于机械设计、制造与自动化方向。
+      我喜欢把机械、电子和软件结合成真正可运行的系统。
+    </p>
+  </article>
 
-  <div class="profile-block" data-aos="fade-up" data-aos-delay="160">
-    <h2>Contact / 联系</h2>
-    <div class="social-row">
-      <a href="{{ site.data.profile.en.social.github }}" target="_blank" rel="noopener">GitHub</a>
-      <a href="mailto:{{ site.data.profile.en.social.email }}">Email</a>
-      <a href="{{ site.data.profile.en.social.station }}" target="_blank" rel="noopener">Station</a>
+  <article class="profile-card" data-aos="fade-up" data-aos-delay="120">
+    <p class="profile-card-kicker">Tech Stack</p>
+    <h2>What I use</h2>
+    <div class="tag-list tag-list--compact">
+      <span class="tag">C</span>
+      <span class="tag">C++</span>
+      <span class="tag">Python</span>
+      <span class="tag">STM32</span>
+      <span class="tag">ROS2</span>
+      <span class="tag">MoveIt</span>
+      <span class="tag">PCB</span>
+      <span class="tag">SolidWorks</span>
+      <span class="tag">AutoCAD</span>
     </div>
-  </div>
+  </article>
+
+  <article class="profile-card" data-aos="fade-up" data-aos-delay="180">
+    <p class="profile-card-kicker">Working On</p>
+    <h2>Current focus</h2>
+    <ul class="profile-list">
+      <li>Building a strong embedded development foundation</li>
+      <li>Robot arm motion control & planning with ROS2 / MoveIt</li>
+      <li>Integrating mechanical design, electronics, and software</li>
+    </ul>
+  </article>
+
+  <article class="profile-card" data-aos="fade-up" data-aos-delay="240">
+    <p class="profile-card-kicker">Experience</p>
+    <h2>Communities & collaboration</h2>
+    <ul class="profile-list">
+      <li>AgroTech Intelligent Machinery Association</li>
+      <li>Mechanical / Robotic Arm Control groups</li>
+      <li>Collaboration with Guangdong Academy of Agricultural Sciences</li>
+    </ul>
+  </article>
+
+  <article class="profile-card" data-aos="fade-up" data-aos-delay="300">
+    <p class="profile-card-kicker">Contact</p>
+    <h2>Let's connect</h2>
+    <div class="social-row social-row--stack">
+      <a href="mailto:3508525674@qq.com">Email</a>
+      <a href="https://github.com/Nous3508" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://nous3508.github.io/" target="_blank" rel="noopener">Station</a>
+    </div>
+  </article>
 </section>
