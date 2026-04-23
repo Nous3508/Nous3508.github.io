@@ -918,3 +918,31 @@ button, input{ font:inherit; }
 .latest-posts-grid .mini-actions{
   margin-top: 16px;
 }
+
+/* === SEARCH PANEL COMPACT TUNE === */
+.search-panel{
+  padding-bottom: 14px;
+}
+
+.search-hints{
+  margin-top: 8px;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.search-results{
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.search-result{
+  padding: 12px 14px;
+}
+
+.search-result h4{
+  margin-bottom: 4px;
+}
+
+.search-result p{
+  font-size: 0.9rem;
+}
