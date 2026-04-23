@@ -689,3 +689,41 @@ button, input{ font:inherit; }
     font-size: 0.9rem;
   }
 }
+
+/* --- debug: force nav visible --- */
+#site-nav.site-nav{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 99999 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  background: rgba(20,20,20,.92) !important;
+  backdrop-filter: blur(8px);
+}
+
+#site-nav .nav-shell{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 64px !important;
+}
+
+#site-nav .nav-links{
+  display: flex !important;
+  gap: 16px !important;
+}
+
+#site-nav .nav-tools{
+  display: flex !important;
+  gap: 8px !important;
+}
+
+#site-nav .icon-btn,
+#site-nav .lang-btn{
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
