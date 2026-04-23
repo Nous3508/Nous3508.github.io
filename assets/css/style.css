@@ -1396,3 +1396,92 @@ button, input{ font:inherit; }
     min-height: auto;
   }
 }
+
+:root{
+  --bg: #fff7f0;
+  --bg-2: #fff;
+  --text: #1f2330;
+  --muted: #667085;
+  --accent: linear-gradient(135deg, #9b5cff 0%, #23d5ff 100%);
+  --accent-solid: #8e5cff;
+  --card: rgba(255,255,255,0.78);
+  --border: rgba(31,35,48,0.08);
+  --shadow: 0 16px 40px rgba(31,35,48,0.10);
+  --shadow-strong: 0 22px 60px rgba(31,35,48,0.18);
+  --radius: 22px;
+  --nav-height: 72px;
+  --page-bg-image: url("/assets/images/background.jpg");
+}
+
+[data-theme="dark"]{
+  --bg: #0e1220;
+  --bg-2: #11172a;
+  --text: #edf2ff;
+  --muted: #9aa6c1;
+  --card: rgba(17,23,42,0.78);
+  --border: rgba(255,255,255,0.08);
+  --shadow: 0 16px 40px rgba(0,0,0,0.28);
+  --shadow-strong: 0 22px 60px rgba(0,0,0,0.38);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  color:var(--text);
+  background:
+    linear-gradient(rgba(255,247,240,0.74), rgba(255,247,240,0.74)),
+    var(--page-bg-image) center center / cover fixed no-repeat;
+  min-height:100vh;
+  transition: background .35s ease, color .35s ease;
+}
+
+[data-theme="dark"] body{
+  background:
+    linear-gradient(rgba(14,18,32,0.76), rgba(14,18,32,0.76)),
+    var(--page-bg-image) center center / cover fixed no-repeat;
+}
+
+/* === BACKGROUND IMAGE TUNING === */
+.site-nav{
+  background: rgba(255,247,240,0.60);
+  backdrop-filter: blur(14px);
+}
+[data-theme="dark"] .site-nav{
+  background: rgba(14,18,32,0.72);
+}
+
+.project-card,
+.blog-card,
+.mini-post-card,
+.content-card,
+.profile-card,
+.toc-card,
+.search-panel,
+.resource-card{
+  backdrop-filter: blur(12px);
+}
+
+.search-panel,
+.project-card,
+.blog-card,
+.mini-post-card,
+.content-card,
+.profile-card,
+.toc-card,
+.resource-card{
+  background: rgba(255,255,255,0.82);
+}
+
+[data-theme="dark"] .search-panel,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .blog-card,
+[data-theme="dark"] .mini-post-card,
+[data-theme="dark"] .content-card,
+[data-theme="dark"] .profile-card,
+[data-theme="dark"] .toc-card,
+[data-theme="dark"] .resource-card{
+  background: rgba(17,23,42,0.82);
+}
