@@ -812,3 +812,65 @@ button, input{ font:inherit; }
 .project-page-grid .project-card{
   margin-bottom: 6px;
 }
+
+/* === NAV SPACING TUNE-UP === */
+:root{
+  --nav-height: 80px;
+}
+
+.site-main{
+  padding-top: calc(var(--nav-height) + 20px);
+}
+
+.nav-shell{
+  height: var(--nav-height);
+  gap: 28px;
+}
+
+.brand{
+  min-width: 130px;
+}
+
+.brand-logo{
+  font-size: 1.35rem;
+}
+
+.brand-sub{
+  font-size: 0.78rem;
+  margin-top: 6px;
+}
+
+.nav-links{
+  gap: 28px;
+  margin: 0 10px;
+}
+
+.nav-links a{
+  padding: 10px 2px;
+  font-size: 0.98rem;
+}
+
+.nav-tools{
+  gap: 12px;
+  margin-left: auto;
+}
+
+.icon-btn,
+.lang-btn{
+  height: 44px;
+  padding: 0 16px;
+}
+
+.lang-btn{
+  font-size: 0.95rem;
+}
+
+.menu-btn{
+  padding: 0 14px;
+}
+
+@media (min-width: 761px){
+  .nav-links{
+    min-width: 420px;
+  }
+}
