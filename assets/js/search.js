@@ -116,7 +116,7 @@
   function doWebSearch() {
     const q = input?.value?.trim();
     if (!q) return;
-    window.location.href = `https://www.google.com/search?q=${encodeURIComponent("site:nous3508.github.io " + q)}`;
+    window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(q)}`;
   }
 
   function toggleMode() {
