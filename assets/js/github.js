@@ -1,6 +1,6 @@
 (() => {
   const owner = "Nous3508";
-  const CACHE_KEY = "nous_github_repos_cache_v3";
+  const CACHE_KEY = "nous_github_repos_cache_v4";
   const CACHE_TTL = 1000 * 60 * 10;
 
   async function fetchRepos() {
@@ -29,7 +29,7 @@
   function homeCard(repo) {
     const topics = (repo.topics || []).slice(0, 4).map(t => `<span class="chip">${t}</span>`).join("");
     return `
-      <article class="project-card" data-aos="fade-up">
+      <article class="project-card project-card--home" data-aos="fade-up">
         <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
         <div class="project-body">
           <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
@@ -48,9 +48,8 @@
   function projectPageCard(repo) {
     const topics = (repo.topics || []).slice(0, 5).map(t => `<span class="chip">${t}</span>`).join("");
     const summary = repo.description || "No description yet.";
-
     return `
-      <article class="project-card project-card--clickable" data-aos="fade-up">
+      <article class="project-card project-card--page" data-aos="fade-up">
         <a class="project-card-link" href="${repo.html_url}" target="_blank" rel="noopener noreferrer" aria-label="Open ${repo.name} on GitHub">
           <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
           <div class="project-body">
