@@ -995,3 +995,123 @@ button, input{ font:inherit; }
     height: 56px;
   }
 }
+
+/* === QUICK LINK TOOLTIP VERSION === */
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.quick-link-btn{
+  width: 66px;
+  height: 66px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  text-decoration:none;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  position:relative;
+  overflow:visible;
+}
+
+.quick-link-btn:hover{
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: var(--shadow-strong);
+}
+
+.quick-link-svg{
+  width: 32px;
+  height: 32px;
+  display:block;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.08));
+}
+
+.quick-link-tooltip{
+  position:absolute;
+  top:-38px;
+  left:50%;
+  transform:translateX(-50%) translateY(4px);
+  background: rgba(31,35,48,.92);
+  color:#fff;
+  font-size: .78rem;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events:none;
+  transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+
+.quick-link-tooltip::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-5px;
+  transform:translateX(-50%);
+  border-width:5px 5px 0 5px;
+  border-style:solid;
+  border-color: rgba(31,35,48,.92) transparent transparent transparent;
+}
+
+.quick-link-btn:hover .quick-link-tooltip{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(-50%) translateY(0);
+}
+
+.quick-link-bilibili{
+  background: linear-gradient(135deg, #ff8ec7 0%, #7c6dff 100%);
+  color:#fff;
+}
+.quick-link-cnki{
+  background: linear-gradient(135deg, #19c37d 0%, #0ea5e9 100%);
+  color:#fff;
+}
+.quick-link-school{
+  background: linear-gradient(135deg, #ffd36b 0%, #ff8a4c 100%);
+  color:#fff;
+}
+.quick-link-feishu{
+  background: linear-gradient(135deg, #6aa7ff 0%, #3b82f6 100%);
+  color:#fff;
+}
+
+@media (max-width: 760px){
+  .quick-links{
+    gap: 10px;
+  }
+
+  .quick-link-btn{
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+  }
+
+  .quick-link-svg{
+    width: 26px;
+    height: 26px;
+  }
+
+  .quick-link-tooltip{
+    display:none;
+  }
+}
+
+@media (max-width: 480px){
+  .quick-link-btn{
+    width: 56px;
+    height: 56px;
+  }
+}
