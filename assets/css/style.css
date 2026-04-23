@@ -976,15 +976,16 @@ button, input{ font:inherit; }
     gap: 10px;
   }
 
-  .quick-link-btn{
-    width: 58px;
-    height: 58px;
-    border-radius: 18px;
+  .quick-link-svg{
+    width: 32px;
+    height: 32px;
+    display:block;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.08));
   }
 
-  .quick-link-svg{
-    width: 26px;
-    height: 26px;
+  .quick-link-btn{
+    width: 66px;
+    height: 66px;
   }
 }
 

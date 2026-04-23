@@ -16,31 +16,36 @@ permalink: /
     </p>
   </div>
 
-  <div class="quick-links" data-aos="fade-up" data-aos-delay="80">
-    <a class="quick-link-btn quick-link-bilibili" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer" aria-label="Bilibili" title="Bilibili">
-      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
-        <path d="M7 5l2 2h6l2-2 2 2v10H5V7l2-2zm1 4v6h8V9H8zm2-2h1v1h-1V7zm4 0h1v1h-1V7z" fill="currentColor"/>
-      </svg>
-    </a>
+<div class="quick-links" data-aos="fade-up" data-aos-delay="80">
+  <a class="quick-link-btn quick-link-bilibili" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer" aria-label="Bilibili" title="Bilibili">
+    <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+      <path d="M7 6h2l1.8 2H13l1.8-2H17a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-2.2L13 11H11L9.2 8H7zm2 2h1.5v3H9V10zm4.5 0H15v3h-1.5V10z" fill="currentColor"/>
+      <path d="M19.2 8.4h1.2v7.2h-1.2zm-17.6 0h1.2v7.2H1.6z" fill="currentColor"/>
+    </svg>
+  </a>
 
-    <a class="quick-link-btn quick-link-cnki" href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer" aria-label="知网" title="知网">
-      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
-        <path d="M12 2l4 4-4 4-4-4 4-4zm0 6l5 5-5 5-5-5 5-5zm0 2l3 3-3 3-3-3 3-3z" fill="currentColor"/>
-      </svg>
-    </a>
+  <a class="quick-link-btn quick-link-cnki" href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer" aria-label="知网" title="知网">
+    <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+      <path d="M12 3l4.2 4.2L12 11.4 7.8 7.2 12 3zm0 7.2l4.2 4.2L12 18.6 7.8 14.4 12 10.2z" fill="currentColor"/>
+      <path d="M8.2 14.4L12 18.2l3.8-3.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 6h2v12H6zm10 0h2v12h-2z" fill="currentColor" opacity=".18"/>
+    </svg>
+  </a>
 
-    <a class="quick-link-btn quick-link-school" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" target="_blank" rel="noopener noreferrer" aria-label="学校网站" title="学校网站">
-      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
-        <path d="M12 3l9 5-9 5-9-5 9-5zm-6 8v5l6 3 6-3v-5l-6 3-6-3zm1 7h10v2H7v-2z" fill="currentColor"/>
-      </svg>
-    </a>
+  <a class="quick-link-btn quick-link-school" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" target="_blank" rel="noopener noreferrer" aria-label="学校网站" title="学校网站">
+    <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+      <path d="M12 3L3.5 7.2 12 11.4l8.5-4.2L12 3zm-6 8.5V16l6 3 6-3v-4.5L12 14.7 6 11.5zm1.5 4.9l4.5 2.2 4.5-2.2" fill="currentColor"/>
+      <path d="M12 12.8v6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </a>
 
-    <a class="quick-link-btn quick-link-feishu" href="https://feishu.cn/" target="_blank" rel="noopener noreferrer" aria-label="飞书" title="飞书">
-      <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
-        <path d="M6 4h12v3H6V4zm0 6h12v3H6v-3zm0 6h8v3H6v-3z" fill="currentColor"/>
-      </svg>
-    </a>
-  </div>
+  <a class="quick-link-btn quick-link-feishu" href="https://feishu.cn/" target="_blank" rel="noopener noreferrer" aria-label="飞书" title="飞书">
+    <svg viewBox="0 0 24 24" class="quick-link-svg" aria-hidden="true">
+      <path d="M7 5.2c2.4 0 4.8 1 6.8 2.8 1.8 1.6 2.9 3.6 3.2 5.8.1.5-.3.9-.8.9h-3.1c-1.3 0-2.5.5-3.4 1.4l-1.1 1.1c-.5.5-1.3.5-1.8 0l-2.5-2.5c-.5-.5-.5-1.3 0-1.8l1.1-1.1c.9-.9 1.4-2.1 1.4-3.4V5.9c0-.4.3-.7.7-.7z" fill="currentColor"/>
+      <path d="M14.2 8.1l2.8 2.8c.6.6 1.4 1 2.3 1h1c.5 0 .9.4.9.9 0 2.2-1.2 4.2-3.1 5.3-2 .9-4.4.7-6.1-.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</div>
 
   <div class="search-panel" data-aos="fade-up" data-aos-delay="120">
     <div class="search-bar">
