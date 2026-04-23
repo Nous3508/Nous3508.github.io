@@ -10,8 +10,10 @@ permalink: /profile/
     <div class="profile-copy">
       <p class="eyebrow">Profile</p>
       <h1>{{ site.data.profile.en.name }} / {{ site.data.profile.zh.name }}</h1>
+
       <p class="profile-subtitle lang-en">{{ site.data.profile.en.subtitle }}</p>
       <p class="profile-subtitle lang-zh" style="display:none">{{ site.data.profile.zh.subtitle }}</p>
+
       <p class="profile-intro lang-en">{{ site.data.profile.en.intro }}</p>
       <p class="profile-intro lang-zh" style="display:none">{{ site.data.profile.zh.intro }}</p>
 
@@ -25,7 +27,7 @@ permalink: /profile/
 </section>
 
 <section class="container profile-sections">
-  <div class="profile-block" data-aos="fade-up">
+  <div class="profile-block" data-aos="fade-up" data-aos-delay="80">
     <h2>Skills / 技术标签</h2>
     <div class="tag-list">
       {% for tag in site.data.profile.en.tags %}
@@ -34,7 +36,7 @@ permalink: /profile/
     </div>
   </div>
 
-  <div class="profile-block" data-aos="fade-up" data-aos-delay="80">
+  <div class="profile-block" data-aos="fade-up" data-aos-delay="120">
     <h2>Timeline / 时间线</h2>
     <div class="timeline">
       {% for item in site.data.profile.en.timeline %}
@@ -49,7 +51,7 @@ permalink: /profile/
     </div>
   </div>
 
-  <div class="profile-block" data-aos="fade-up" data-aos-delay="120">
+  <div class="profile-block" data-aos="fade-up" data-aos-delay="160">
     <h2>Contact / 联系</h2>
     <div class="social-row">
       <a href="{{ site.data.profile.en.social.github }}" target="_blank" rel="noopener">GitHub</a>
