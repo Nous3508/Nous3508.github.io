@@ -773,3 +773,67 @@ button, input{ font:inherit; }
     grid-template-columns:1fr;
   }
 }
+
+/* === PROFILE STACK: single card per row === */
+.profile-stack{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  padding-bottom: 20px;
+}
+
+.profile-stack .profile-card{
+  width: 100%;
+  display:block;
+  padding: 22px;
+}
+
+.profile-card--hero{
+  display:grid !important;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items:center;
+}
+
+.profile-card--hero .profile-avatar{
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:28px;
+}
+
+.profile-card-body{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.profile-card-body h2{
+  margin: 0;
+}
+
+.profile-stack .profile-card h2{
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.profile-stack .profile-card p{
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px){
+  .profile-card--hero{
+    grid-template-columns: 1fr;
+    text-align:center;
+  }
+
+  .profile-card--hero .profile-avatar{
+    width:160px;
+    height:160px;
+    margin: 0 auto;
+  }
+
+  .profile-card-body{
+    align-items:center;
+  }
+}

@@ -15,9 +15,9 @@ permalink: /profile/
   </p>
 </section>
 
-<section class="container profile-grid">
-  <a class="profile-card profile-card--feature" href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer" data-aos="fade-up">
-    <div class="profile-card-icon">GH</div>
+<section class="container profile-stack">
+  <article class="profile-card profile-card--hero" data-aos="fade-up">
+    <img class="profile-avatar" src="/web-app-manifest-192x192.png" alt="Nous avatar">
     <div class="profile-card-body">
       <p class="profile-card-kicker">GitHub Home</p>
       <h2>Visit my GitHub profile</h2>
@@ -27,9 +27,13 @@ permalink: /profile/
       <p class="lang-zh" style="display:none">
         点击这里查看我的仓库、项目和 GitHub 个人主页介绍。
       </p>
+      <div class="profile-actions">
+        <a class="download-btn" href="https://github.com/Nous3508" target="_blank" rel="noopener noreferrer">
+          Open GitHub
+        </a>
+      </div>
     </div>
-    <div class="profile-card-arrow">→</div>
-  </a>
+  </article>
 
   <article class="profile-card" data-aos="fade-up" data-aos-delay="60">
     <p class="profile-card-kicker">About Me</p>
