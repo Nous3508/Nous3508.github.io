@@ -1485,3 +1485,74 @@ body{
 [data-theme="dark"] .resource-card{
   background: rgba(17,23,42,0.82);
 }
+
+/* === GLASS CARD TRANSPARENCY TUNING === */
+:root{
+  --card: rgba(255,255,255,0.62);
+  --card-strong: rgba(255,255,255,0.72);
+}
+
+[data-theme="dark"]{
+  --card: rgba(17,23,42,0.60);
+  --card-strong: rgba(17,23,42,0.72);
+}
+
+.project-card,
+.blog-card,
+.mini-post-card,
+.content-card,
+.profile-card,
+.toc-card,
+.search-panel,
+.resource-card,
+.section-link,
+.share-btn.secondary,
+.read-btn.secondary,
+.download-btn,
+.tag,
+.chip{
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.project-card:hover,
+.blog-card:hover,
+.mini-post-card:hover,
+.resource-card:hover,
+.profile-card:hover,
+.content-card:hover{
+  background: var(--card-strong);
+}
+
+.search-panel::before{
+  opacity: .65;
+}
+
+.site-nav{
+  background: rgba(255,247,240,0.40);
+  backdrop-filter: blur(18px);
+}
+
+[data-theme="dark"] .site-nav{
+  background: rgba(14,18,32,0.50);
+}
+
+.tag,
+.chip{
+  border: 1px solid rgba(255,255,255,0.16);
+}
+
+.section-link,
+.share-btn.secondary,
+.read-btn.secondary,
+.download-btn{
+  background: rgba(255,255,255,0.10);
+}
+
+[data-theme="dark"] .section-link,
+[data-theme="dark"] .share-btn.secondary,
+[data-theme="dark"] .read-btn.secondary,
+[data-theme="dark"] .download-btn{
+  background: rgba(255,255,255,0.06);
+}
