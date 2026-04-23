@@ -15,6 +15,7 @@
       <article class="project-card" id="${repo.name}" data-aos="fade-up">
         <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
         <div class="project-body">
+          <p class="project-kicker">GitHub Project</p>
           <h3><a href="${repo.html_url}" target="_blank" rel="noopener">${repo.name}</a></h3>
           <p>${repo.description || "No description yet."}</p>
           <div class="project-meta">

@@ -644,86 +644,171 @@ button, input{ font:inherit; }
   min-width: 0;
 }
 
-/* mobile menu panel */
-@media (max-width: 760px){
-  .nav-shell{
-    align-items: center;
+/* === HOME + BLOG VISUAL POLISH === */
+.hero-home{
+  padding-top: 24px;
+  padding-bottom: 22px;
+}
+
+.hero-copy{
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.hero-copy h1{
+  text-wrap: balance;
+  letter-spacing: -0.03em;
+}
+
+.search-panel{
+  position: relative;
+  overflow: hidden;
+}
+
+.search-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(135deg, rgba(155,92,255,.08), rgba(35,213,255,.06));
+  pointer-events:none;
+}
+
+.search-panel > *{
+  position: relative;
+  z-index: 1;
+}
+
+.search-hints{
+  margin-top: 12px;
+  font-size: 0.92rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.hero-divider{
+  margin-top: 12px;
+}
+
+.section-head h2{
+  margin: 0;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  letter-spacing: -0.02em;
+}
+
+.latest-posts-grid{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mini-post-card{
+  min-height: 190px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.mini-post-card h3{
+  margin: 8px 0 10px;
+  font-size: 1.15rem;
+}
+
+.mini-post-card p{
+  color: var(--muted);
+}
+
+.mini-actions{
+  margin-top: 14px;
+  justify-content: flex-start;
+}
+
+.blog-preview-block{
+  padding-top: 10px;
+}
+
+.blog-card{
+  align-items:flex-start;
+}
+
+.blog-card-main h2{
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.blog-card-main p{
+  max-width: 720px;
+}
+
+.blog-card-actions{
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:flex-start;
+  min-width: 120px;
+}
+
+.read-btn{
+  white-space: nowrap;
+}
+
+.section-link{
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.section-link:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+@media (max-width: 900px){
+  .latest-posts-grid{
+    grid-template-columns: 1fr;
   }
 
-  .nav-tools{
-    margin-left: auto;
-  }
-
-  .nav-links{
-    display: none;
-    position: absolute;
-    top: calc(var(--nav-height) - 6px);
-    right: 0;
-    width: min(280px, calc(100vw - 24px));
+  .blog-card{
     flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: 12px;
-    border-radius: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-strong);
-    z-index: 2000;
   }
 
-  .nav-links a{
-    padding: 12px 14px;
-    border-radius: 14px;
-  }
-
-  .nav-links a:hover{
-    background: rgba(127,127,127,0.08);
-  }
-
-  .menu-btn{
-    display: inline-flex !important;
-  }
-
-  .lang-btn{
-    padding: 0 10px;
-    font-size: 0.9rem;
+  .blog-card-actions{
+    align-items:flex-start;
   }
 }
 
-/* --- debug: force nav visible --- */
-#site-nav.site-nav{
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 99999 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  transform: none !important;
-  pointer-events: auto !important;
-  background: rgba(20,20,20,.92) !important;
-  backdrop-filter: blur(8px);
+/* === PROJECT CARD POLISH === */
+.project-card{
+  min-height: 240px;
 }
 
-#site-nav .nav-shell{
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  min-height: 64px !important;
+.project-thumb{
+  font-size: 3.2rem;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,.22), transparent 40%),
+    var(--accent);
 }
 
-#site-nav .nav-links{
-  display: flex !important;
-  gap: 16px !important;
+.project-kicker{
+  margin: 0 0 6px;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--muted);
 }
 
-#site-nav .nav-tools{
-  display: flex !important;
-  gap: 8px !important;
+.project-body h3{
+  font-size: 1.55rem;
+  line-height: 1.15;
 }
 
-#site-nav .icon-btn,
-#site-nav .lang-btn{
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+.project-body p{
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.chip-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top: 12px;
+}
+
+/* better project page spacing */
+.project-page-grid .project-card{
+  margin-bottom: 6px;
 }
