@@ -1,3 +1,9 @@
+---
+layout: default
+title: 电控方向
+description: "单片机、嵌入式、电路与控制系统学习资料"
+permalink: /resources/electrical/
+---
 <section class="container page-hero" data-aos="fade-up">
   <p class="eyebrow">Learning Path</p>
   <h1>电控方向 🔌</h1>
@@ -12,7 +18,7 @@
     <p class="learning-kicker">01 · 基础入门</p>
     <h2>先把底层概念打牢</h2>
     <ul class="learning-list">
-      <li>电阻、电容、电感、二极管、三极��基础</li>
+      <li>电阻、电容、电感、二极管、三极管基础</li>
       <li>欧姆定律、基尔霍夫定律、分压分流</li>
       <li>模拟电路与数字电路基础</li>
       <li>万用表、示波器、电源使用方法</li>
