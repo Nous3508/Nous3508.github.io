@@ -946,3 +946,50 @@ button, input{ font:inherit; }
 .search-result p{
   font-size: 0.9rem;
 }
+
+/* === PROJECT PAGE UPGRADE === */
+.project-page-grid{
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.project-card{
+  overflow: hidden;
+}
+
+.project-card-link{
+  display:grid;
+  grid-template-columns: 220px 1fr;
+  text-decoration:none;
+  color:inherit;
+  min-height: 240px;
+}
+
+.project-card-link:hover .project-cta{
+  transform: translateX(4px);
+}
+
+.project-summary{
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.98rem;
+}
+
+.project-cta{
+  margin-top: 12px;
+  font-weight: 800;
+  color: var(--accent-solid);
+  transition: transform .2s ease;
+}
+
+.project-card:hover{
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-strong);
+}
+
+@media (max-width: 900px){
+  .project-card-link{
+    grid-template-columns: 1fr;
+  }
+}
