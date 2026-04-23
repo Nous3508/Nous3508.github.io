@@ -1,0 +1,19 @@
+{
+  "posts": [
+    {
+      "title": "Welcome to Nous の little nest",
+      "url": "/blog/2026/04/22/welcome/",
+      "date": "2026-04-22",
+      "content": "This is a starter post for the site. It introduces the blog structure, future topics, and how to navigate the site.",
+      "tags": ["welcome", "site"]
+    },
+    {
+      "title": "Embedded Notes: Starting with STM32",
+      "url": "/blog/2026/04/23/stm32-start/",
+      "date": "2026-04-23",
+      "content": "A quick note about getting started with STM32 peripherals, task organization, and basic project structure.",
+      "tags": ["stm32", "embedded"]
+    }
+  ],
+  "projects": []
+}
