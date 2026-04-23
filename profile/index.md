@@ -43,8 +43,8 @@ permalink: /profile/
       I enjoy combining mechanics, electronics, and software into real systems.
     </p>
     <p class="lang-zh" style="display:none">
-      我是 Nous，专注于机械设计、制造与自动化方向。
-      我喜欢把机械、电子和软件结合成真正可运行的系统。
+      我是 Nous，专注于具身智能、机械设计、制造与自动化方向。
+      擅长把机械、电子硬件和软件结合成真正可运行的系统。
     </p>
   </article>
 
