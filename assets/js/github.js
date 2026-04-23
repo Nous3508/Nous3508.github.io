@@ -1,7 +1,7 @@
 (() => {
   const owner = "Nous3508";
-  const CACHE_KEY = "nous_github_repos_cache_v2";
-  const CACHE_TTL = 1000 * 60 * 10; // 10 minutes
+  const CACHE_KEY = "nous_github_repos_cache_v3";
+  const CACHE_TTL = 1000 * 60 * 10;
 
   async function fetchRepos() {
     try {
@@ -26,17 +26,31 @@
     }
   }
 
-  function extractReadmeSummary(repo) {
-    const text = repo.description || "No description yet.";
-    return text.length > 180 ? text.slice(0, 180) + "..." : text;
-  }
-
-  function card(repo) {
-    const topics = (repo.topics || []).slice(0, 5).map(t => `<span class="chip">${t}</span>`).join("");
-    const summary = extractReadmeSummary(repo);
-
+  function homeCard(repo) {
+    const topics = (repo.topics || []).slice(0, 4).map(t => `<span class="chip">${t}</span>`).join("");
     return `
       <article class="project-card" data-aos="fade-up">
+        <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
+        <div class="project-body">
+          <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
+          <p>${repo.description || "No description yet."}</p>
+          <div class="project-meta">
+            <span>Language: ${repo.language || "n/a"}</span>
+            <span>Stars: ${repo.stargazers_count || 0}</span>
+            <span>Updated: ${(repo.updated_at || "").slice(0, 10)}</span>
+          </div>
+          <div class="chip-row">${topics}</div>
+        </div>
+      </article>
+    `;
+  }
+
+  function projectPageCard(repo) {
+    const topics = (repo.topics || []).slice(0, 5).map(t => `<span class="chip">${t}</span>`).join("");
+    const summary = repo.description || "No description yet.";
+
+    return `
+      <article class="project-card project-card--clickable" data-aos="fade-up">
         <a class="project-card-link" href="${repo.html_url}" target="_blank" rel="noopener noreferrer" aria-label="Open ${repo.name} on GitHub">
           <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
           <div class="project-body">
@@ -61,10 +75,10 @@
     const featured = repos.slice(0, 6);
 
     const homeGrid = document.getElementById("featured-project-grid");
-    if (homeGrid) homeGrid.innerHTML = featured.map(card).join("");
+    if (homeGrid) homeGrid.innerHTML = featured.map(homeCard).join("");
 
     const pageGrid = document.getElementById("projects-page-grid");
-    if (pageGrid) pageGrid.innerHTML = repos.map(card).join("");
+    if (pageGrid) pageGrid.innerHTML = repos.map(projectPageCard).join("");
   }
 
   renderProjects().catch(console.error);
