@@ -45,6 +45,14 @@ permalink: /resources/electrical/
         <li>万用表、示波器、电源使用方法</li>
         <li>电路图识读与基础焊接</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1QE411R7pN/" target="_blank" rel="noopener noreferrer">B站视频：电子技术基础（清华大学）</a></li>
+          <li><a href="https://www.st.com/content/st_com/en/support/learning/stm32-education.html" target="_blank" rel="noopener noreferrer">官方：ST STM32 Education</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1BV41197rY/" target="_blank" rel="noopener noreferrer">B站视频：零基础入门嵌入式</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -64,6 +72,14 @@ permalink: /resources/electrical/
         <li>中断、定时器、DMA、看门狗</li>
         <li>传感器驱动与外设调试</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1vt4y1k7DV" target="_blank" rel="noopener noreferrer">B站视频：STM32 HAL 库开发</a></li>
+          <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html" target="_blank" rel="noopener noreferrer">官方：STM32CubeIDE</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1qP41187Pq/" target="_blank" rel="noopener noreferrer">B站视频：AutoCAD 机械制图入门（辅助硬件出图）</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -83,6 +99,14 @@ permalink: /resources/electrical/
         <li>UART、CAN、I2C、RS485 通信</li>
         <li>FreeRTOS 与任务调度基础</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1134y1C7zP" target="_blank" rel="noopener noreferrer">B站视频：STM32 电机应用控制</a></li>
+          <li><a href="https://www.bilibili.com/video/BV13x411E7Ac" target="_blank" rel="noopener noreferrer">B站视频：FreeRTOS 教程</a></li>
+          <li><a href="https://www.freertos.org/" target="_blank" rel="noopener noreferrer">官方：FreeRTOS</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -96,49 +120,21 @@ permalink: /resources/electrical/
       <h2>用项目把知识串起来</h2>
       <p class="learning-goal">目标：做出一个可以稳定运行的完整电控项目。</p>
       <ul class="learning-list">
-        <li>循迹小车 / 平衡车</li>
+        <li>循迹��车 / 平衡车</li>
         <li>电机调速系统</li>
         <li>多传感器数据采集系统</li>
         <li>机械臂底层控制模块</li>
         <li>嵌入式综合实战项目</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://github.com/oguzoktem/embedded-journey" target="_blank" rel="noopener noreferrer">练习参考：Embedded Journey</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1BV41197rY/" target="_blank" rel="noopener noreferrer">B站视频：零基础入门嵌入式</a></li>
+          <li><a href="https://controllerstech.com/introduction-to-free-rtos-in-stm32/?page" target="_blank" rel="noopener noreferrer">B站/教程参考：FreeRTOS 实战</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
-</section>
-
-<section class="container learning-links-grid" data-aos="fade-up" data-aos-delay="320">
-  <article class="learning-link-card">
-    <p class="learning-kicker">官方文档</p>
-    <h2>先看官方资料</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://www.st.com/content/st_com/en/support/learning/stm32-education.html" target="_blank" rel="noopener noreferrer">ST STM32 Education</a></li>
-      <li><a href="https://www.freertos.org/" target="_blank" rel="noopener noreferrer">FreeRTOS Official Docs</a></li>
-      <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html" target="_blank" rel="noopener noreferrer">STM32CubeIDE</a></li>
-      <li><a href="https://www.st.com/en/development-tools/stm32cubemx.html" target="_blank" rel="noopener noreferrer">STM32CubeMX</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">推荐视频</p>
-    <h2>边学边做更快</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://www.youtube.com/playlist?list=PLL85Snp_ZPNWHH1C4XsfTjabMzkiLr1aj" target="_blank" rel="noopener noreferrer">Embedded C programming for STM32</a></li>
-      <li><a href="https://controllerstech.com/introduction-to-free-rtos-in-stm32/?page" target="_blank" rel="noopener noreferrer">Controllerstech FreeRTOS Tutorial</a></li>
-      <li><a href="https://www.embeddedexplorer.com/stm32/" target="_blank" rel="noopener noreferrer">EmbeddedExplorer STM32 Tutorials</a></li>
-      <li><a href="https://github.com/oguzoktem/embedded-journey" target="_blank" rel="noopener noreferrer">Embedded Journey</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">练习项目</p>
-    <h2>从简单到完整</h2>
-    <ul class="learning-link-list">
-      <li>LED 闪烁 + 按键输入</li>
-      <li>PWM 调光 + 电位器采样</li>
-      <li>串口通信小助手</li>
-      <li>温湿度采集 + OLED 显示</li>
-      <li>PID 电机调速控制器</li>
-    </ul>
-  </article>
 </section>

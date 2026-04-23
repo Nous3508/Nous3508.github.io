@@ -1871,3 +1871,38 @@ body{
     grid-template-columns: 1fr;
   }
 }
+
+.learning-resource-block{
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+
+.learning-resource-title{
+  margin: 0 0 10px;
+  font-weight: 900;
+  color: var(--accent-solid);
+  font-size: .92rem;
+  letter-spacing: .08em;
+}
+
+.learning-resource-list{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.learning-resource-list li{
+  margin: 0.35rem 0;
+}
+
+.learning-resource-list a{
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.learning-resource-list a:hover{
+  color: var(--accent-solid);
+}

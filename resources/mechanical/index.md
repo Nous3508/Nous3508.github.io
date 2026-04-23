@@ -45,6 +45,14 @@ permalink: /resources/mechanical/
         <li>常见机械机构与传动方式</li>
         <li>机械设计基本流程与安全规范</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1AqdUBmE2T/" target="_blank" rel="noopener noreferrer">B站视频：工程图教程</a></li>
+          <li><a href="https://mitocw.ups.edu.ec/courses/mechanical-engineering/2-007-design-and-manufacturing-i-spring-2009/related-resources/drawing_and_sketching/" target="_blank" rel="noopener noreferrer">MIT 官方：Engineering Drawing and Sketching</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1pdK1zPEDY/" target="_blank" rel="noopener noreferrer">B站视频：机械设计全套教程</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -64,6 +72,14 @@ permalink: /resources/mechanical/
         <li>参数化设计与简单机构建模</li>
         <li>常见连接件、轴承、紧固件选型</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1qP41187Pq/" target="_blank" rel="noopener noreferrer">B站视频：AutoCAD 机械制图入门</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1b741127mm/" target="_blank" rel="noopener noreferrer">B站视频：CAD 零基础快速入门</a></li>
+          <li><a href="https://www.solidworks.com/solution/solidworks-academic-curriculum" target="_blank" rel="noopener noreferrer">官方：SOLIDWORKS Academic Curriculum</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -83,6 +99,14 @@ permalink: /resources/mechanical/
         <li>运动干涉、刚度与稳定性分析</li>
         <li>机械误差与装配精度控制</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.ansys.com/academic/learning-resources" target="_blank" rel="noopener noreferrer">官方：Ansys Academic Resources</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1U5411H7PZ/" target="_blank" rel="noopener noreferrer">B站视频：SolidWorks Simulation 有限元分析</a></li>
+          <li><a href="https://grabcad.com/tutorials" target="_blank" rel="noopener noreferrer">官方/社区：GrabCAD Tutorials</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -102,43 +126,15 @@ permalink: /resources/mechanical/
         <li>制造成本、加工精度与工艺可行性</li>
         <li>项目复盘：设计—加工—装配—优化</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1pdK1zPEDY/" target="_blank" rel="noopener noreferrer">B站视频：机械设计全套教程</a></li>
+          <li><a href="https://www.autodesk.com/education/industries/mechanical-engineering" target="_blank" rel="noopener noreferrer">官方：Autodesk Mechanical Engineering</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1C7411K7HP/" target="_blank" rel="noopener noreferrer">B站参考：工业机器人技术基础（制造思维）</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
-</section>
-
-<section class="container learning-links-grid" data-aos="fade-up" data-aos-delay="320">
-  <article class="learning-link-card">
-    <p class="learning-kicker">官方文档</p>
-    <h2>先看权威资料</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://www.autodesk.com/education/industries/mechanical-engineering" target="_blank" rel="noopener noreferrer">Autodesk Mechanical Engineering Resources</a></li>
-      <li><a href="https://www.solidworks.com/solution/solidworks-academic-curriculum" target="_blank" rel="noopener noreferrer">SOLIDWORKS Academic Curriculum</a></li>
-      <li><a href="https://www.ansys.com/academic/learning-resources" target="_blank" rel="noopener noreferrer">Ansys Academic Learning Resources</a></li>
-      <li><a href="https://mitocw.ups.edu.ec/courses/mechanical-engineering/2-007-design-and-manufacturing-i-spring-2009/related-resources/drawing_and_sketching/" target="_blank" rel="noopener noreferrer">MIT Drawing and Sketching Guide</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">推荐视频</p>
-    <h2>跟着做更容易上手</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://www.youtube.com/@Mechanical.Design" target="_blank" rel="noopener noreferrer">Mechanical Design YouTube</a></li>
-      <li><a href="https://grabcad.com/tutorials" target="_blank" rel="noopener noreferrer">GrabCAD Tutorials</a></li>
-      <li><a href="https://solidprofessor.com/" target="_blank" rel="noopener noreferrer">SolidProfessor</a></li>
-      <li><a href="https://sourcecad.com/" target="_blank" rel="noopener noreferrer">SourceCAD</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">练习项目</p>
-    <h2>动手做最重要</h2>
-    <ul class="learning-link-list">
-      <li>机械臂支架 / 电机安装座设计</li>
-      <li>减速箱或传动机构建模</li>
-      <li>桌面夹具 / 固定支架 / 工装设计</li>
-      <li>简单夹爪或两自由度机构设计</li>
-      <li>对常见物体进行逆向建模和出图</li>
-    </ul>
-  </article>
 </section>

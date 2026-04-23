@@ -45,6 +45,14 @@ permalink: /resources/embodied-ai/
         <li>机器人常见结构与执行器</li>
         <li>控制、感知、规划的基本关系</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1C7411K7HP/" target="_blank" rel="noopener noreferrer">B站视频：工业机器人技术基础</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1QS1yBdEnG/" target="_blank" rel="noopener noreferrer">B站视频：零基础机器人入门指南</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1gL4y177s4/" target="_blank" rel="noopener noreferrer">B站视频：Robotics 机器人学合集</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -64,6 +72,14 @@ permalink: /resources/embodied-ai/
         <li>TF2 坐标变换与消息通信</li>
         <li>URDF / Xacro 机器人模型描述</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://docs.ros.org/en/rolling/index.html" target="_blank" rel="noopener noreferrer">官方：ROS2 Docs</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1AudeB6Ebv/" target="_blank" rel="noopener noreferrer">B站视频：ROS2 零基础入门</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1zt411G7Vn/" target="_blank" rel="noopener noreferrer">B站视频：古月居 ROS 入门21讲</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -83,6 +99,14 @@ permalink: /resources/embodied-ai/
         <li>传感器接入与状态反馈</li>
         <li>仿真环境中的调试与验证</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://moveit.picknik.ai/main/index.html" target="_blank" rel="noopener noreferrer">官方：MoveIt 2 Docs</a></li>
+          <li><a href="https://moveit.github.io/moveit_tutorials/" target="_blank" rel="noopener noreferrer">官方：MoveIt Tutorials</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1BP4y1o7pw/" target="_blank" rel="noopener noreferrer">B站视频：ROS 快速入门教程</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
@@ -99,46 +123,18 @@ permalink: /resources/embodied-ai/
         <li>感知、决策、执行的系统框架</li>
         <li>多模态数据与环境理解</li>
         <li>强化学习 / 模仿学习基础</li>
-        <li>仿真到现实（Sim2Real）���路</li>
+        <li>仿真到现实（Sim2Real）思路</li>
         <li>真实机器人项目实践与调试</li>
       </ul>
+      <div class="learning-resource-block">
+        <p class="learning-resource-title">资料</p>
+        <ul class="learning-resource-list">
+          <li><a href="https://www.bilibili.com/video/BV1rC4y1H7AU/" target="_blank" rel="noopener noreferrer">B站视频：ABB 机器人官方入门到精通</a></li>
+          <li><a href="https://github.com/ros-wg-embodied-ai" target="_blank" rel="noopener noreferrer">官方/社区：ROS Embodied AI Community</a></li>
+          <li><a href="https://docs.universal-robots.com/Universal_Robots_ROS_Documentation/doc/ur_tutorials/tutorial_index.html" target="_blank" rel="noopener noreferrer">官方：Universal Robots ROS Tutorials</a></li>
+        </ul>
+      </div>
     </div>
   </article>
 
-</section>
-
-<section class="container learning-links-grid" data-aos="fade-up" data-aos-delay="320">
-  <article class="learning-link-card">
-    <p class="learning-kicker">官方文档</p>
-    <h2>先从官方教程开始</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://docs.ros.org/en/rolling/index.html" target="_blank" rel="noopener noreferrer">ROS 2 Official Docs</a></li>
-      <li><a href="https://moveit.picknik.ai/main/index.html" target="_blank" rel="noopener noreferrer">MoveIt 2 Documentation</a></li>
-      <li><a href="https://moveit.github.io/moveit_tutorials/" target="_blank" rel="noopener noreferrer">MoveIt Tutorials</a></li>
-      <li><a href="https://docs.ros.org/en/humble/Tutorials/Intermediate/URDF/Using-URDF-with-robot-state-publisher.html" target="_blank" rel="noopener noreferrer">URDF / robot_state_publisher</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">推荐视频</p>
-    <h2>结合演示更容易理解</h2>
-    <ul class="learning-link-list">
-      <li><a href="https://www.youtube.com/c/moveitrobotics" target="_blank" rel="noopener noreferrer">MoveIt YouTube</a></li>
-      <li><a href="https://www.youtube.com/playlist?list=PLVhP23yRq7aqtLGojXn0A6CWE-Pn3NtfB" target="_blank" rel="noopener noreferrer">The Construct ROS2 Tutorials</a></li>
-      <li><a href="https://www.youtube.com/playlist?list=PLt5AfwLFPxWFbLzXjBfC2mY5bGXE69rvi" target="_blank" rel="noopener noreferrer">ROS for Beginners</a></li>
-      <li><a href="https://github.com/ros-wg-embodied-ai" target="_blank" rel="noopener noreferrer">ROS Embodied AI Community</a></li>
-    </ul>
-  </article>
-
-  <article class="learning-link-card">
-    <p class="learning-kicker">练习项目</p>
-    <h2>从仿真到实物</h2>
-    <ul class="learning-link-list">
-      <li>URDF 建模并在 RViz 中显示机械臂</li>
-      <li>ROS2 节点通信小系统</li>
-      <li>机械臂 MoveIt 轨迹规划</li>
-      <li>Gazebo 仿真中的抓取任务</li>
-      <li>ROS2 + 视觉 + 机械臂的简单 pick-and-place</li>
-    </ul>
-  </article>
 </section>
