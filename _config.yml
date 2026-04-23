@@ -1,21 +1,52 @@
-title: "Nous"
-email: "you@example.com"
-description: "Nous — Personal site · Portfolio · Blog · Docs"
-baseurl: "" # 如果托管在 https://nous3508.github.io/ 就保持空字符串
+title: "Nous の little nest"
+description: "Nous の little nest — projects, blog, learning, profile, and notes"
 url: "https://nous3508.github.io"
+baseurl: ""
 lang: "en"
-theme: null
-plugins: []
+
 markdown: kramdown
-paginate: 6
+highlighter: rouge
+permalink: pretty
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
 
 collections:
   projects:
     output: true
+    permalink: /projects/:name/
+  learning:
+    output: true
+    permalink: /learning/:name/
+  notes:
+    output: true
+    permalink: /notes/:name/
 
 defaults:
   - scope:
       path: ""
       type: "posts"
     values:
-      layout: "default"
+      layout: post
+      author: "Nous"
+      share: true
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: project
+  - scope:
+      path: ""
+      type: "learning"
+    values:
+      layout: page
+  - scope:
+      path: ""
+      type: "notes"
+    values:
+      layout: page
+
+paginate: 6
+paginate_path: "/blog/page:num/"
+excerpt_separator: "<!--more-->"

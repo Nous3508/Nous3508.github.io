@@ -1,0 +1,32 @@
+---
+layout: default
+---
+<article class="post-page container">
+  <header class="post-hero">
+    <p class="eyebrow">{{ page.category | default: "Blog" }}</p>
+    <h1>{{ page.title }}</h1>
+    <p class="post-meta">
+      <span>{{ page.date | date: "%Y-%m-%d" }}</span>
+      {% if page.author %}<span> · {{ page.author }}</span>{% endif %}
+      {% if page.reading_time %}<span> · {{ page.reading_time }} min read</span>{% endif %}
+    </p>
+    {% if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
+    <div class="share-row">
+      <button class="share-btn" data-share>Share</button>
+      <a class="share-btn secondary" href="#post-content">Read</a>
+    </div>
+  </header>
+
+  <div class="post-layout">
+    <aside class="post-toc-wrap">
+      <div class="toc-card">
+        <div class="toc-title">On this page</div>
+        <nav id="toc" class="toc"></nav>
+      </div>
+    </aside>
+
+    <section class="post-content prose" id="post-content">
+      {{ content }}
+    </section>
+  </div>
+</article>

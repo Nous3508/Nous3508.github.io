@@ -1,46 +1,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{ page.title | default: site.title }}</title>
-<meta name="description" content="{{ site.description }}">
+<meta name="description" content="{{ page.description | default: site.description }}">
 
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
 <link rel="icon" href="/assets/images/favicon.png">
 
-<!-- Open Graph -->
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
 <meta property="og:title" content="{{ page.title | default: site.title }}">
-<meta property="og:description" content="{{ site.description }}">
-<meta property="og:image" content="{{ site.url }}/assets/images/social-card.png">
+<meta property="og:description" content="{{ page.description | default: site.description }}">
 <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.url }}/assets/images/social-card.png{% endif %}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page.title | default: site.title }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description }}">
+<meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.url }}/assets/images/social-card.png{% endif %}">
 
-<!-- JSON-LD -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
+  "@type": "{% if page.layout == 'post' %}BlogPosting{% else %}WebSite{% endif %}",
   "name": "{{ site.title }}",
   "url": "{{ site.url }}",
-  "image": "{{ site.url }}/web-app-manifest-192x192.png",
-  "sameAs": [
-    "https://github.com/Nous3508"
-  ]
+  "description": "{{ site.description }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.data.profile.en.name }}"
+  }
 }
 </script>
 
-<!-- Analytics placeholders - 替换 MEASUREMENT_ID / domain / site id -->
-<!-- Google Analytics (GA4) -->
+<!-- Analytics placeholders -->
+{% if site.ga_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga_id }}"></script>
 <script>
-  // GA4 placeholder - 替换 'G-XXXXXXXXXX'
-  (function(){ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} window.gtag = gtag; })();
-  // gtag('js', new Date());
-  // gtag('config', 'G-XXXXXXXXXX');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ site.ga_id }}');
 </script>
+{% endif %}
 
-<!-- Plausible placeholder -->
-<!-- <script defer data-domain="example.com" src="https://plausible.io/js/plausible.js"></script> -->
+{% if site.plausible_domain %}
+<script defer data-domain="{{ site.plausible_domain }}" src="https://plausible.io/js/script.js"></script>
+{% endif %}
 
-<!-- Fathom placeholder -->
-<!-- <script src="https://cdn.usefathom.com/script.js" site="YOUR-FATHOM-SITE-ID" defer></script> -->
-
-<!-- FlexSearch (client-side) -->
-<script src="https://unpkg.com/flexsearch@0.7.31/dist/flexsearch.bundle.js"></script>
-
-<link rel="stylesheet" href="/assets/css/style.css">
+{% if site.fathom_id %}
+<script src="https://cdn.usefathom.com/script.js" data-site="{{ site.fathom_id }}" defer></script>
+{% endif %}

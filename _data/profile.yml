@@ -1,22 +1,71 @@
 en:
   name: "Nous"
-  tagline: "Student • Smart Manufacturing • Aspiring Embedded Engineer"
+  title: "Nous の little nest"
+  subtitle: "Student • Smart Manufacturing • Aspiring Embedded Engineer"
   location: "Guangdong, China"
-  about: >
-    I’m Nous, a student focused on Mechanical Design, Manufacturing & Automation (Smart Manufacturing), working toward becoming an Embedded Engineer. I enjoy building systems that combine mechanical design, electronics and software — building real things, learning fast, and iterating.
-  resume: "/assets/resume.pdf"
+  intro: >
+    I’m Nous, a student focused on Mechanical Design, Manufacturing & Automation.
+    I’m building toward embedded engineering and enjoy combining mechanics, electronics, and software into real systems.
+  resume: "https://github.com/Nous3508"
   social:
     github: "https://github.com/Nous3508"
+    email: "3508525674@qq.com"
+    station: "https://nous3508.github.io/"
     twitter: ""
     linkedin: ""
+  timeline:
+    - year: "Now"
+      title: "Embedded engineering focus"
+      desc: "Learning STM32, peripherals, control tasks, and practical system integration."
+    - year: "Recent"
+      title: "Robotics & motion planning"
+      desc: "Exploring ROS2, MoveIt, and robot arm control pipelines."
+    - year: "Earlier"
+      title: "Smart manufacturing foundation"
+      desc: "Mechanical design, automation, and cross-discipline engineering interests."
+  tags:
+    - C
+    - C++
+    - Python
+    - STM32
+    - ROS2
+    - MoveIt
+    - PCB
+    - SolidWorks
+    - AutoCAD
+
 zh:
   name: "Nous"
-  tagline: "学生 • 智能制造 • 未来嵌入式工程师"
+  title: "Nous の little nest"
+  subtitle: "学生 • 智能制造 • 未来嵌入式工程师"
   location: "广东，中国"
-  about: >
-    我是 Nous，专注于机械设计、制造与智能制造方向的学生，目标成为嵌入式工程师。我喜欢把机械、电子与软件结合成完整的系统，注重快速学习与迭代。
-  resume: "/assets/resume.pdf"
+  intro: >
+    我是 Nous，专注于机械设计、制造与自动化方向的学生。
+    目前正在向嵌入式工程师方向努力，喜欢把机械、电子和软件结合成真正可运行的系统。
+  resume: "https://github.com/Nous3508"
   social:
     github: "https://github.com/Nous3508"
+    email: "3508525674@qq.com"
+    station: "https://nous3508.github.io/"
     twitter: ""
     linkedin: ""
+  timeline:
+    - year: "现在"
+      title: "嵌入式工程学习"
+      desc: "学习 STM32、外设、控制任务和实际系统集成。"
+    - year: "最近"
+      title: "机器人与运动规划"
+      desc: "研究 ROS2、MoveIt 和机械臂控制流程。"
+    - year: "更早之前"
+      title: "智能制造基础"
+      desc: "机械设计、自动化，以及交叉学科工程兴趣。"
+  tags:
+    - C
+    - C++
+    - Python
+    - STM32
+    - ROS2
+    - MoveIt
+    - PCB
+    - SolidWorks
+    - AutoCAD
