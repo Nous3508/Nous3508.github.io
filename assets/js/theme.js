@@ -8,9 +8,9 @@
   }
 
   function apply(theme) {
-    const t = theme === "auto" ? systemTheme() : theme;
-    document.documentElement.dataset.theme = t;
-    if (icon) icon.textContent = t === "dark" ? "🌙" : "☀️";
+    const realTheme = theme === "auto" ? systemTheme() : theme;
+    document.documentElement.dataset.theme = realTheme;
+    if (icon) icon.textContent = realTheme === "dark" ? "🌙" : "☀️";
   }
 
   const saved = localStorage.getItem(key) || "auto";
@@ -24,6 +24,8 @@
   });
 
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-    if ((localStorage.getItem(key) || "auto") === "auto") apply("auto");
+    if ((localStorage.getItem(key) || "auto") === "auto") {
+      apply("auto");
+    }
   });
 })();

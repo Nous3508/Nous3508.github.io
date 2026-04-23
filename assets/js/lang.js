@@ -3,8 +3,12 @@
   const btn = document.getElementById("lang-btn");
 
   function apply(lang) {
-    document.querySelectorAll(".lang-en").forEach(el => el.style.display = lang === "en" ? "" : "none");
-    document.querySelectorAll(".lang-zh").forEach(el => el.style.display = lang === "zh" ? "" : "none");
+    document.querySelectorAll(".lang-en").forEach(el => {
+      el.style.display = lang === "en" ? "" : "none";
+    });
+    document.querySelectorAll(".lang-zh").forEach(el => {
+      el.style.display = lang === "zh" ? "" : "none";
+    });
     document.documentElement.lang = lang;
   }
 

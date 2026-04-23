@@ -28,10 +28,6 @@
     `;
   }
 
-  function mobileThumb(repo) {
-    return `<article class="mini-post-card"><h3>${repo.name}</h3></article>`;
-  }
-
   async function renderProjects() {
     const repos = await fetchRepos();
     const featured = repos.slice(0, 6);
