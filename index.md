@@ -16,7 +16,14 @@ permalink: /
     </p>
   </div>
 
-  <div class="search-panel" data-aos="fade-up" data-aos-delay="100">
+  <div class="quick-links" data-aos="fade-up" data-aos-delay="80">
+    <a class="quick-link-btn" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">Bilibili</a>
+    <a class="quick-link-btn" href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer">知网</a>
+    <a class="quick-link-btn" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" target="_blank" rel="noopener noreferrer">学校网站</a>
+    <a class="quick-link-btn" href="https://feishu.cn/" target="_blank" rel="noopener noreferrer">飞书</a>
+  </div>
+
+  <div class="search-panel" data-aos="fade-up" data-aos-delay="120">
     <div class="search-bar">
       <button id="search-mode-btn-inline" class="search-mode-btn" aria-label="toggle search mode">
         <span id="search-mode-icon-inline">🔍</span>
