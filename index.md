@@ -16,23 +16,23 @@ permalink: /
     </p>
   </div>
 
-<div class="quick-links" data-aos="fade-up" data-aos-delay="80">
-  <a data-v-31e0f8c9="" class="sakura-social-card" href="https://www.bilibili.com/" aria-label="Bilibili" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #fb7299;">
-    <div data-v-31e0f8c9="" class="i-ri-bilibili-line sakura-icon"></div>
-  </a>
+  <div class="quick-links" data-aos="fade-up" data-aos-delay="80">
+    <a data-v-31e0f8c9="" class="sakura-social-card" href="https://www.bilibili.com/" aria-label="Bilibili" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #fb7299;">
+      <div data-v-31e0f8c9="" class="i-ri-bilibili-line sakura-icon"></div>
+    </a>
 
-  <a data-v-31e0f8c9="" class="sakura-social-card" href="https://www.cnki.net/" aria-label="知网" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #2f6fbd;">
-    <div data-v-31e0f8c9="" class="i-ri-book-open-line sakura-icon"></div>
-  </a>
+    <a data-v-31e0f8c9="" class="sakura-social-card" href="https://www.cnki.net/" aria-label="知网" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #2f6fbd;">
+      <div data-v-31e0f8c9="" class="i-ri-book-open-line sakura-icon"></div>
+    </a>
 
-  <a data-v-31e0f8c9="" class="sakura-social-card" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" aria-label="信息门户" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #f59e0b;">
-    <div data-v-31e0f8c9="" class="i-ri-graduation-cap-line sakura-icon"></div>
-  </a>
+    <a data-v-31e0f8c9="" class="sakura-social-card" href="https://cas.scau.edu.cn/lyuapServer/login?service=https://portal.scau.edu.cn:8080/sso/toLogin" aria-label="学校网站" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #f59e0b;">
+      <div data-v-31e0f8c9="" class="i-ri-graduation-cap-line sakura-icon"></div>
+    </a>
 
-  <a data-v-31e0f8c9="" class="sakura-social-card" href="https://feishu.cn/" aria-label="飞书" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #2f6bff;">
-    <div data-v-31e0f8c9="" class="i-ri-cloud-line sakura-icon"></div>
-  </a>
-</div>
+    <a data-v-31e0f8c9="" class="sakura-social-card" href="https://feishu.cn/" aria-label="飞书" target="_blank" rel="noopener noreferrer" style="--sakura-color-icon: #2f6bff;">
+      <div data-v-31e0f8c9="" class="i-ri-cloud-line sakura-icon"></div>
+    </a>
+  </div>
 
   <div class="search-panel" data-aos="fade-up" data-aos-delay="120">
     <div class="search-bar">
