@@ -99,10 +99,46 @@ permalink: /resources/embodied-ai/
         <li>感知、决策、执行的系统框架</li>
         <li>多模态数据与环境理解</li>
         <li>强化学习 / 模仿学习基础</li>
-        <li>仿真到现实（Sim2Real）思路</li>
+        <li>仿真到现实（Sim2Real）���路</li>
         <li>真实机器人项目实践与调试</li>
       </ul>
     </div>
   </article>
 
+</section>
+
+<section class="container learning-links-grid" data-aos="fade-up" data-aos-delay="320">
+  <article class="learning-link-card">
+    <p class="learning-kicker">官方文档</p>
+    <h2>先从官方教程开始</h2>
+    <ul class="learning-link-list">
+      <li><a href="https://docs.ros.org/en/rolling/index.html" target="_blank" rel="noopener noreferrer">ROS 2 Official Docs</a></li>
+      <li><a href="https://moveit.picknik.ai/main/index.html" target="_blank" rel="noopener noreferrer">MoveIt 2 Documentation</a></li>
+      <li><a href="https://moveit.github.io/moveit_tutorials/" target="_blank" rel="noopener noreferrer">MoveIt Tutorials</a></li>
+      <li><a href="https://docs.ros.org/en/humble/Tutorials/Intermediate/URDF/Using-URDF-with-robot-state-publisher.html" target="_blank" rel="noopener noreferrer">URDF / robot_state_publisher</a></li>
+    </ul>
+  </article>
+
+  <article class="learning-link-card">
+    <p class="learning-kicker">推荐视频</p>
+    <h2>结合演示更容易理解</h2>
+    <ul class="learning-link-list">
+      <li><a href="https://www.youtube.com/c/moveitrobotics" target="_blank" rel="noopener noreferrer">MoveIt YouTube</a></li>
+      <li><a href="https://www.youtube.com/playlist?list=PLVhP23yRq7aqtLGojXn0A6CWE-Pn3NtfB" target="_blank" rel="noopener noreferrer">The Construct ROS2 Tutorials</a></li>
+      <li><a href="https://www.youtube.com/playlist?list=PLt5AfwLFPxWFbLzXjBfC2mY5bGXE69rvi" target="_blank" rel="noopener noreferrer">ROS for Beginners</a></li>
+      <li><a href="https://github.com/ros-wg-embodied-ai" target="_blank" rel="noopener noreferrer">ROS Embodied AI Community</a></li>
+    </ul>
+  </article>
+
+  <article class="learning-link-card">
+    <p class="learning-kicker">练习项目</p>
+    <h2>从仿真到实物</h2>
+    <ul class="learning-link-list">
+      <li>URDF 建模并在 RViz 中显示机械臂</li>
+      <li>ROS2 节点通信小系统</li>
+      <li>机械臂 MoveIt 轨迹规划</li>
+      <li>Gazebo 仿真中的抓取任务</li>
+      <li>ROS2 + 视觉 + 机械臂的简单 pick-and-place</li>
+    </ul>
+  </article>
 </section>

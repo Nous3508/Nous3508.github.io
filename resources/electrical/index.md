@@ -106,3 +106,39 @@ permalink: /resources/electrical/
   </article>
 
 </section>
+
+<section class="container learning-links-grid" data-aos="fade-up" data-aos-delay="320">
+  <article class="learning-link-card">
+    <p class="learning-kicker">官方文档</p>
+    <h2>先看官方资料</h2>
+    <ul class="learning-link-list">
+      <li><a href="https://www.st.com/content/st_com/en/support/learning/stm32-education.html" target="_blank" rel="noopener noreferrer">ST STM32 Education</a></li>
+      <li><a href="https://www.freertos.org/" target="_blank" rel="noopener noreferrer">FreeRTOS Official Docs</a></li>
+      <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html" target="_blank" rel="noopener noreferrer">STM32CubeIDE</a></li>
+      <li><a href="https://www.st.com/en/development-tools/stm32cubemx.html" target="_blank" rel="noopener noreferrer">STM32CubeMX</a></li>
+    </ul>
+  </article>
+
+  <article class="learning-link-card">
+    <p class="learning-kicker">推荐视频</p>
+    <h2>边学边做更快</h2>
+    <ul class="learning-link-list">
+      <li><a href="https://www.youtube.com/playlist?list=PLL85Snp_ZPNWHH1C4XsfTjabMzkiLr1aj" target="_blank" rel="noopener noreferrer">Embedded C programming for STM32</a></li>
+      <li><a href="https://controllerstech.com/introduction-to-free-rtos-in-stm32/?page" target="_blank" rel="noopener noreferrer">Controllerstech FreeRTOS Tutorial</a></li>
+      <li><a href="https://www.embeddedexplorer.com/stm32/" target="_blank" rel="noopener noreferrer">EmbeddedExplorer STM32 Tutorials</a></li>
+      <li><a href="https://github.com/oguzoktem/embedded-journey" target="_blank" rel="noopener noreferrer">Embedded Journey</a></li>
+    </ul>
+  </article>
+
+  <article class="learning-link-card">
+    <p class="learning-kicker">练习项目</p>
+    <h2>从简单到完整</h2>
+    <ul class="learning-link-list">
+      <li>LED 闪烁 + 按键输入</li>
+      <li>PWM 调光 + 电位器采样</li>
+      <li>串口通信小助手</li>
+      <li>温湿度采集 + OLED 显示</li>
+      <li>PID 电机调速控制器</li>
+    </ul>
+  </article>
+</section>

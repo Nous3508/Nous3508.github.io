@@ -1816,3 +1816,58 @@ body{
     font-size: 1.25rem;
   }
 }
+
+/* === LEARNING LINKS / RESOURCES BLOCK === */
+.learning-links-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-bottom: 28px;
+}
+
+.learning-link-card{
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.learning-link-card:hover{
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+}
+
+.learning-link-card h2{
+  margin: 0 0 12px;
+  font-size: 1.22rem;
+}
+
+.learning-link-list{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.learning-link-list li{
+  margin: 0.35rem 0;
+}
+
+.learning-link-list a{
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.learning-link-list a:hover{
+  color: var(--accent-solid);
+}
+
+@media (max-width: 900px){
+  .learning-links-grid{
+    grid-template-columns: 1fr;
+  }
+}
