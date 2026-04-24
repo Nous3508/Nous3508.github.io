@@ -1,29 +1,29 @@
 ---
 layout: default
 title: 电控方向
-description: "单片机、嵌入式、电路与控制系统学习资料"
+description: "电子信息与自动控制方向学习路径"
 permalink: /resources/electrical/
 ---
 <section class="container page-hero" data-aos="fade-up">
   <p class="eyebrow">Learning Path</p>
   <h1>电控方向 🔌</h1>
   <p class="lead">
-    从电路基础到嵌入式开发，再到控制与通信，逐步建立完整的电控能力。
+    电控组走的是电子信息 + 自动控制方向，核心是嵌入式软硬件开发与 ROS 上位机协同的完整技术链条。
   </p>
 </section>
 
 <section class="container learning-progress-note" data-aos="fade-up" data-aos-delay="60">
   <div class="learning-note-item">
-    <span>建议周期</span>
-    <strong>4 - 8 个月</strong>
+    <span>方向定位</span>
+    <strong>嵌入式软硬件 + ROS 协同</strong>
   </div>
   <div class="learning-note-item">
     <span>核心工具</span>
-    <strong>STM32 · Keil · CubeMX · 示波器</strong>
+    <strong>STM32 · ESP32 · ROS2 · MAVROS · MoveIt</strong>
   </div>
   <div class="learning-note-item">
     <span>最终目标</span>
-    <strong>能完成嵌入式控制与电机驱动项目</strong>
+    <strong>实现底层实时控制到高层智能决策闭环</strong>
   </div>
 </section>
 
@@ -35,22 +35,22 @@ permalink: /resources/electrical/
       <span class="learning-step-line"></span>
     </div>
     <div class="learning-card">
-      <p class="learning-kicker">基础入门 · 2-3 周</p>
-      <h2>先把底层概念打牢</h2>
-      <p class="learning-goal">目标：能看懂基础电路并完成简单测量与判断。</p>
+      <p class="learning-kicker">阶段一 · 电路与嵌入式基础</p>
+      <h2>先把底层硬件与单片机基础打牢</h2>
+      <p class="learning-goal">目标：具备独立搭建嵌入式系统的基础能力，能看懂原理图、焊接、调试和烧录程序。</p>
       <ul class="learning-list">
         <li>电阻、电容、电感、二极管、三极管基础</li>
-        <li>欧姆定律、基尔霍夫定律、分压分流</li>
-        <li>模拟电路与数字电路基础</li>
-        <li>万用表、示波器、电源使用方法</li>
-        <li>电路图识读与基础焊接</li>
+        <li>欧姆定律、基尔霍夫定律、模拟/数字电路基础</li>
+        <li>STM32 / ESP32 开发环境、C/C++ 嵌入式编程</li>
+        <li>GPIO、UART、I2C、SPI、ADC、PWM</li>
+        <li>万用表、示波器、电源、基础焊接与调试</li>
       </ul>
       <div class="learning-resource-block">
-        <p class="learning-resource-title">资料</p>
+        <p class="learning-resource-title">学习资料</p>
         <ul class="learning-resource-list">
           <li><a href="https://www.bilibili.com/video/BV1QE411R7pN/" target="_blank" rel="noopener noreferrer">B站视频：电子技术基础（清华大学）</a></li>
-          <li><a href="https://www.st.com/content/st_com/en/support/learning/stm32-education.html" target="_blank" rel="noopener noreferrer">官方：ST STM32 Education</a></li>
-          <li><a href="https://www.bilibili.com/video/BV1BV41197rY/" target="_blank" rel="noopener noreferrer">B站视频：零基础入门嵌入式</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1vt4y1k7DV" target="_blank" rel="noopener noreferrer">B站视频：STM32 HAL 库开发</a></li>
+          <li><a href="https://www.st.com/content/st_com/en/support/learning/stm32-education.html" target="_blank" rel="noopener noreferrer">官方文档：ST STM32 Education</a></li>
         </ul>
       </div>
     </div>
@@ -62,22 +62,22 @@ permalink: /resources/electrical/
       <span class="learning-step-line"></span>
     </div>
     <div class="learning-card">
-      <p class="learning-kicker">核心开发 · 4-6 周</p>
-      <h2>进入单片机与嵌入式</h2>
-      <p class="learning-goal">目标：能独立完成 MCU 外设开发和基础调试。</p>
+      <p class="learning-kicker">阶段二 · 下位机实时控制</p>
+      <h2>让芯片成为系统的“实时神经中枢”</h2>
+      <p class="learning-goal">目标：掌握主控芯片 + 外围电路的实时控制能力，完成传感器采集、执行器驱动和闭环控制。</p>
       <ul class="learning-list">
-        <li>C 语言基础与嵌入式 C 习惯</li>
-        <li>STM32 / 其他 MCU 开发环境搭建</li>
-        <li>GPIO、UART、I2C、SPI、ADC、PWM</li>
-        <li>中断、定时器、DMA、看门狗</li>
-        <li>传感器驱动与外设调试</li>
+        <li>中断、定时器、DMA、看门狗、RTC</li>
+        <li>电机驱动：直流电机、步进电机、舵机、无刷电机</li>
+        <li>编码器反馈、姿态解算、闭环控制</li>
+        <li>PID 控制与参数整定</li>
+        <li>FreeRTOS 任务调度与状态机设计</li>
       </ul>
       <div class="learning-resource-block">
-        <p class="learning-resource-title">资料</p>
+        <p class="learning-resource-title">学习资料</p>
         <ul class="learning-resource-list">
-          <li><a href="https://www.bilibili.com/video/BV1vt4y1k7DV" target="_blank" rel="noopener noreferrer">B站视频：STM32 HAL 库开发</a></li>
-          <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html" target="_blank" rel="noopener noreferrer">官方：STM32CubeIDE</a></li>
-          <li><a href="https://www.bilibili.com/video/BV1qP41187Pq/" target="_blank" rel="noopener noreferrer">B站视频：AutoCAD 机械制图入门（辅助硬件出图）</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1134y1C7zP" target="_blank" rel="noopener noreferrer">B站视频：STM32 电机应用控制</a></li>
+          <li><a href="https://www.bilibili.com/video/BV13x411E7Ac" target="_blank" rel="noopener noreferrer">B站视频：FreeRTOS 教程</a></li>
+          <li><a href="https://www.freertos.org/" target="_blank" rel="noopener noreferrer">官方文档：FreeRTOS</a></li>
         </ul>
       </div>
     </div>
@@ -89,22 +89,22 @@ permalink: /resources/electrical/
       <span class="learning-step-line"></span>
     </div>
     <div class="learning-card">
-      <p class="learning-kicker">控制与通信 · 3-5 周</p>
-      <h2>把系统真正跑起来</h2>
-      <p class="learning-goal">目标：能把电机、传感器、通信和控制组合成完整系统。</p>
+      <p class="learning-kicker">阶段三 · ROS 上位机协同</p>
+      <h2>让下位机与上位机组成完整智能系统</h2>
+      <p class="learning-goal">目标：掌握串口 / CAN / 网络通信，让底层控制与 ROS 节点协同工作。</p>
       <ul class="learning-list">
-        <li>PID 控制基础与参数整定</li>
-        <li>电机驱动：直流电机、步进电机、舵机、无刷电机</li>
-        <li>编码器反馈与闭环控制</li>
-        <li>UART、CAN、I2C、RS485 通信</li>
-        <li>FreeRTOS 与任务调度基础</li>
+        <li>ROS1 / ROS2 基础节点开发与通信机制</li>
+        <li>串口、CAN、WiFi、以太网通信协议设计</li>
+        <li>上下位机数据交互：传感器上传、动作指令下发</li>
+        <li>ROS 中控制算法与任务状态机实现</li>
+        <li>MoveIt! 机械臂控制与多模块协同</li>
       </ul>
       <div class="learning-resource-block">
-        <p class="learning-resource-title">资料</p>
+        <p class="learning-resource-title">学习资料</p>
         <ul class="learning-resource-list">
-          <li><a href="https://www.bilibili.com/video/BV1134y1C7zP" target="_blank" rel="noopener noreferrer">B站视频：STM32 电机应用控制</a></li>
-          <li><a href="https://www.bilibili.com/video/BV13x411E7Ac" target="_blank" rel="noopener noreferrer">B站视频：FreeRTOS 教程</a></li>
-          <li><a href="https://www.freertos.org/" target="_blank" rel="noopener noreferrer">官方：FreeRTOS</a></li>
+          <li><a href="https://docs.ros.org/en/rolling/index.html" target="_blank" rel="noopener noreferrer">官方文档：ROS2 Docs</a></li>
+          <li><a href="https://www.bilibili.com/video/BV1AudeB6Ebv/" target="_blank" rel="noopener noreferrer">B站视频：ROS2 入门教程</a></li>
+          <li><a href="https://moveit.picknik.ai/main/index.html" target="_blank" rel="noopener noreferrer">官方文档：MoveIt 2 Docs</a></li>
         </ul>
       </div>
     </div>
@@ -116,22 +116,22 @@ permalink: /resources/electrical/
       <span class="learning-step-line"></span>
     </div>
     <div class="learning-card">
-      <p class="learning-kicker">项目实践 · 持续迭代</p>
-      <h2>用项目把知识串起来</h2>
-      <p class="learning-goal">目标：做出一个可以稳定运行的完整电控项目。</p>
+      <p class="learning-kicker">阶段四 · 系统项目实践</p>
+      <h2>在智能车、无人机、机器人中完成闭环落地</h2>
+      <p class="learning-goal">目标：把嵌入式底层和 ROS 上位机整合成可运行的完整系统。</p>
       <ul class="learning-list">
-        <li>循迹��车 / 平衡车</li>
-        <li>电机调速系统</li>
-        <li>多传感器数据采集系统</li>
-        <li>机械臂底层控制模块</li>
-        <li>嵌入式综合实战项目</li>
+        <li>智能车：寻迹、避障、机械臂夹取、任务规划</li>
+        <li>无人机：飞控、姿态控制、MAVROS 上位机通信</li>
+        <li>机器人：机械臂控制、底盘协同、轨迹执行</li>
+        <li>多模块任务调度与系统联调</li>
+        <li>传感器融合与实时反馈闭环</li>
       </ul>
       <div class="learning-resource-block">
-        <p class="learning-resource-title">资料</p>
+        <p class="learning-resource-title">练习项目</p>
         <ul class="learning-resource-list">
-          <li><a href="https://github.com/oguzoktem/embedded-journey" target="_blank" rel="noopener noreferrer">练习参考：Embedded Journey</a></li>
-          <li><a href="https://www.bilibili.com/video/BV1BV41197rY/" target="_blank" rel="noopener noreferrer">B站视频：零基础入门嵌入式</a></li>
-          <li><a href="https://controllerstech.com/introduction-to-free-rtos-in-stm32/?page" target="_blank" rel="noopener noreferrer">B站/教程参考：FreeRTOS 实战</a></li>
+          <li>智能车：下位机循迹 + 上位机任务规划</li>
+          <li>无人机：飞控姿态稳定 + ROS 地面站监控</li>
+          <li>机器人：ROS 机械臂控制 + 末端执行器联动</li>
         </ul>
       </div>
     </div>
