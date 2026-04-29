@@ -7,12 +7,12 @@ permalink: /
 <section class="hero-home container">
   <div class="hero-copy" data-aos="fade-up">
     <p class="eyebrow">Nous の little nest</p>
-    <h1>Build real things.<br>Learn fast. Iterate.</h1>
-    <p class="hero-desc lang-en">
-      Student • Smart Manufacturing • Aspiring Embedded Engineer
-    </p>
-    <p class="hero-desc lang-zh" style="display:none">
-      学生 • 智能制造 • 未来嵌入式工程师
+    <h1 data-lang-en="Build real things.<br>Learn fast. Iterate."
+        data-lang-zh="动手实践。<br>快速学习。持续迭代。">Build real things.<br>Learn fast. Iterate.</h1>
+    <p class="hero-desc"
+       data-lang-en="Student • Smart Manufacturing • Aspiring Embedded Engineer"
+       data-lang-zh="学生 • 智能制造 • 未来嵌入式工程师">
+       Student • Smart Manufacturing • Aspiring Embedded Engineer
     </p>
   </div>
 
