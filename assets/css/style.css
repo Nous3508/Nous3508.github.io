@@ -1906,3 +1906,41 @@ body{
 .learning-resource-list a:hover{
   color: var(--accent-solid);
 }
+
+/* === 统一悬停交互 === */
+.project-card:hover,
+.blog-card:hover,
+.mini-post-card:hover,
+.content-card:hover,
+.profile-card:hover,
+.resource-card:hover,
+.learning-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* === 键盘焦点样式（仅键盘导航时显示）=== */
+/* 移除默认的 outline，替换为自定义焦点环 */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.project-card:focus-visible,
+.blog-card:focus-visible,
+.mini-post-card:focus-visible,
+.resource-card:focus-visible,
+.learning-card:focus-visible,
+.profile-card:focus-visible,
+.search-mode-btn:focus-visible,
+.sakura-social-card:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 3px;
+}
+
+/* 保留浏览器默认 outline，不强制覆盖 */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+}

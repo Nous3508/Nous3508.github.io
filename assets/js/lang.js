@@ -9,7 +9,7 @@
     document.querySelectorAll(".lang-zh").forEach(el => {
       el.style.display = lang === "zh" ? "" : "none";
     });
-    document.documentElement.lang = lang;
+    document.documentElement.setAttribute('lang', lang);
   }
 
   const saved = localStorage.getItem(key) || "en";
