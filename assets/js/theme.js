@@ -1,7 +1,6 @@
 (() => {
   const key = "nous-theme";
-  const btn = document.getElementById("theme-btn");
-  const icon = document.getElementById("theme-icon");
+  const btn = document.getElementById("theme-toggle"); // ✅ 修正 id
 
   function systemTheme() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -10,7 +9,8 @@
   function apply(theme) {
     const realTheme = theme === "auto" ? systemTheme() : theme;
     document.documentElement.dataset.theme = realTheme;
-    if (icon) icon.textContent = realTheme === "dark" ? "🌙" : "☀️";
+    // ✅ 直接更新按钮文字（去掉 theme-icon）
+    if (btn) btn.textContent = realTheme === "dark" ? "🌙" : "☀️";
   }
 
   const saved = localStorage.getItem(key) || "auto";

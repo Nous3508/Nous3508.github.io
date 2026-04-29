@@ -1,6 +1,6 @@
 (() => {
   const key = "nous-lang";
-  const btn = document.getElementById("lang-btn");
+  const btn = document.getElementById("lang-toggle"); // ✅ 修正 id
 
   function apply(lang) {
     document.querySelectorAll(".lang-en").forEach(el => {
@@ -9,7 +9,7 @@
     document.querySelectorAll(".lang-zh").forEach(el => {
       el.style.display = lang === "zh" ? "" : "none";
     });
-    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('lang', lang); // ✅ 同步 html lang
   }
 
   const saved = localStorage.getItem(key) || "en";
