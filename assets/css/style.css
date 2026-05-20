@@ -1609,7 +1609,7 @@ button:focus:not(:focus-visible) {
   z-index:100;
 }
 
-/* 让 gear dropdown 能相对于 title-row 定位 */
+/* 让 gear dropdown 能相对于 header 定位 */
 .bookmark-nav-header{
   position:relative;
 }
@@ -1617,92 +1617,6 @@ button:focus:not(:focus-visible) {
 /* ---- position: right ---- */
 .home-layout[data-nav-position="right"]{
   flex-direction:row-reverse;
-}
-
-/* ---- position: top ---- */
-.home-layout[data-nav-position="top"]{
-  flex-direction:column;
-}
-
-.home-layout[data-nav-position="top"] .bookmark-nav{
-  width:100%;
-  position:relative;
-  top:0;
-  max-height:none;
-}
-
-.home-layout[data-nav-position="top"] .bookmark-nav-inner{
-  flex-direction:row;
-  align-items:center;
-  max-height:none;
-}
-
-.home-layout[data-nav-position="top"] .bookmark-nav-header{
-  border-bottom:none;
-  border-right:1px solid var(--border);
-  flex-shrink:0;
-}
-
-.home-layout[data-nav-position="top"] .bookmark-list{
-  display:flex;
-  flex-direction:row;
-  gap:4px;
-  padding:6px 10px;
-  overflow-x:auto;
-  flex:1;
-}
-
-.home-layout[data-nav-position="top"] .bookmark-item{
-  flex-shrink:0;
-}
-
-.home-layout[data-nav-position="top"] .bm-gear-dropdown{
-  top:100%;
-  right:auto;
-  left:0;
-}
-
-/* ---- position: bottom ---- */
-.home-layout[data-nav-position="bottom"]{
-  flex-direction:column-reverse;
-}
-
-.home-layout[data-nav-position="bottom"] .bookmark-nav{
-  width:100%;
-  position:relative;
-  top:0;
-  max-height:none;
-}
-
-.home-layout[data-nav-position="bottom"] .bookmark-nav-inner{
-  flex-direction:row;
-  align-items:center;
-  max-height:none;
-}
-
-.home-layout[data-nav-position="bottom"] .bookmark-nav-header{
-  border-bottom:none;
-  border-right:1px solid var(--border);
-  flex-shrink:0;
-}
-
-.home-layout[data-nav-position="bottom"] .bookmark-list{
-  display:flex;
-  flex-direction:row;
-  gap:4px;
-  padding:6px 10px;
-  overflow-x:auto;
-  flex:1;
-}
-
-.home-layout[data-nav-position="bottom"] .bookmark-item{
-  flex-shrink:0;
-}
-
-.home-layout[data-nav-position="bottom"] .bm-gear-dropdown{
-  top:100%;
-  right:auto;
-  left:0;
 }
 
 /* ---- bookmark nav opacity ---- */
@@ -1717,7 +1631,6 @@ button:focus:not(:focus-visible) {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow:hidden;
   display:flex;
   flex-direction:column;
   max-height: calc(100vh - var(--nav-height) - 32px);
@@ -1803,6 +1716,12 @@ button:focus:not(:focus-visible) {
   box-shadow:var(--shadow-strong);
   z-index:999;
   overflow:hidden;
+}
+
+/* 在 right 模式下，下拉菜单从左侧弹出 */
+.home-layout[data-nav-position="right"] .bm-gear-dropdown{
+  right:auto;
+  left:10px;
 }
 
 .bm-gear-dropdown.open{
@@ -1938,6 +1857,7 @@ button:focus:not(:focus-visible) {
   padding: 8px 0;
   scrollbar-width:thin;
   scrollbar-color: var(--border) transparent;
+  -webkit-overflow-scrolling:touch;
 }
 
 .bookmark-list::-webkit-scrollbar{

@@ -57,7 +57,8 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length) return parsed;
+        // 允许空数组 []，只有非数组或 null 才重置
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (_) { /* ignore */ }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_BOOKMARKS));
@@ -114,6 +115,10 @@
   }
 
   // -------- 工具函数 --------
+  function getCurrentLang() {
+    return document.documentElement.getAttribute('lang') || 'en';
+  }
+
   function genId() {
     return 'bm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
   }
@@ -137,7 +142,8 @@
   function render() {
     if (!list) return;
     if (!bookmarks.length) {
-      list.innerHTML = `<div class="bookmark-empty" data-lang-en="Add bookmarks via ⚙" data-lang-zh="点击 ⚙ 添加收藏">Add bookmarks via ⚙</div>`;
+      const emptyMsg = getCurrentLang() === 'zh' ? '点击 ⚙ 添加收藏' : 'Add bookmarks via ⚙';
+      list.innerHTML = `<div class="bookmark-empty">${emptyMsg}</div>`;
       return;
     }
     list.innerHTML = bookmarks.map(b => `
@@ -152,7 +158,8 @@
   function renderPanel() {
     if (!panelList) return;
     if (!bookmarks.length) {
-      panelList.innerHTML = `<div class="bm-panel-empty" data-lang-en="No bookmarks yet. Add one below!" data-lang-zh="暂无收藏，在下方添加！">No bookmarks yet. Add one below!</div>`;
+      const emptyMsg = getCurrentLang() === 'zh' ? '暂无收藏，在下方添加！' : 'No bookmarks yet. Add one below!';
+      panelList.innerHTML = `<div class="bm-panel-empty">${emptyMsg}</div>`;
       return;
     }
     panelList.innerHTML = bookmarks.map(b => `
