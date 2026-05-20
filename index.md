@@ -13,9 +13,44 @@ permalink: /
             <span class="bookmark-toggle-icon">◀</span>
           </button>
           <span class="bookmark-nav-title" data-lang-en="Quick Nav" data-lang-zh="快捷导航">Quick Nav</span>
-          <button class="bookmark-gear-btn" id="bookmark-gear-btn" aria-label="Manage bookmarks" title="Manage bookmarks">⚙</button>
+          <button class="bookmark-gear-btn" id="bookmark-gear-btn" aria-label="Settings" title="Settings">⚙</button>
         </div>
       </div>
+
+      <!-- 齿轮下拉菜单 -->
+      <div class="bm-gear-dropdown" id="bm-gear-dropdown">
+        <div class="bm-dropdown-section">
+          <div class="bm-dropdown-label" data-lang-en="Position" data-lang-zh="位置">Position</div>
+          <div class="bm-dropdown-radio-group">
+            <label class="bm-radio bm-radio-left">
+              <input type="radio" name="bm-position" value="left" checked>
+              <span class="bm-radio-mark">◀</span>
+              <span data-lang-en="Left" data-lang-zh="左侧">Left</span>
+            </label>
+            <label class="bm-radio bm-radio-right">
+              <input type="radio" name="bm-position" value="right">
+              <span data-lang-en="Right" data-lang-zh="右侧">Right</span>
+              <span class="bm-radio-mark">▶</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bm-dropdown-section">
+          <div class="bm-dropdown-label" data-lang-en="Opacity" data-lang-zh="透明度">Opacity</div>
+          <div class="bm-dropdown-slider-row">
+            <input type="range" class="bm-opacity-slider" id="bm-opacity-slider" min="30" max="100" value="100">
+            <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
+          </div>
+        </div>
+
+        <div class="bm-dropdown-divider"></div>
+
+        <button class="bm-dropdown-manage-btn" id="bm-dropdown-manage-btn">
+          <span>📂</span>
+          <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+        </button>
+      </div>
+
       <div class="bookmark-list" id="bookmark-list"></div>
     </div>
   </aside>

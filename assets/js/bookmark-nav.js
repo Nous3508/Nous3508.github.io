@@ -8,6 +8,12 @@
 
   const STORAGE_KEY = 'nous_bookmarks';
   const NAV_KEY = 'nous_bookmark_nav_collapsed';
+  const SETTINGS_KEY = 'nous_bookmark_settings';
+
+  const DEFAULT_SETTINGS = {
+    position: 'left',
+    opacity: 100
+  };
 
   // -------- 默认预设 --------
   const DEFAULT_BOOKMARKS = [
@@ -30,12 +36,23 @@
   const panelTitle = document.getElementById('bm-panel-title');
   const panelAddBtn = document.getElementById('bm-panel-add-btn');
 
+  // 齿轮下拉菜单 DOM
+  const dropdown = document.getElementById('bm-gear-dropdown');
+  const positionRadios = document.querySelectorAll('input[name="bm-position"]');
+  const opacitySlider = document.getElementById('bm-opacity-slider');
+  const opacityValue = document.getElementById('bm-opacity-value');
+  const manageBtn = document.getElementById('bm-dropdown-manage-btn');
+
   // -------- 状态 --------
   let bookmarks = [];
   let isCollapsed = false;
   let isPanelOpen = false;
+  let isDropdownOpen = false;
   let hoverTimer = null;
   let isHovering = false;
+
+  // 设置
+  let settings = {};
 
   // 拖拽状态
   let dragSrcId = null;
@@ -64,6 +81,46 @@
 
   function saveCollapsedState(v) {
     localStorage.setItem(NAV_KEY, v ? 'true' : 'false');
+  }
+
+  // -------- 设置读写 --------
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return { ...DEFAULT_SETTINGS, ...parsed };
+        }
+      }
+    } catch (_) { /* ignore */ }
+    return { ...DEFAULT_SETTINGS };
+  }
+
+  function saveSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }
+
+  // -------- 应用设置 --------
+  function applySettings() {
+    // 位置
+    const homeLayout = document.querySelector('.home-layout');
+    if (homeLayout) {
+      homeLayout.setAttribute('data-nav-position', settings.position);
+    }
+    // 同步 radio
+    positionRadios.forEach(r => {
+      r.checked = r.value === settings.position;
+    });
+
+    // 透明度
+    const opacityVal = settings.opacity / 100;
+    if (nav) {
+      nav.style.setProperty('--bm-opacity-val', opacityVal);
+      nav.setAttribute('data-bm-opacity', '');
+    }
+    if (opacitySlider) opacitySlider.value = settings.opacity;
+    if (opacityValue) opacityValue.textContent = settings.opacity + '%';
   }
 
   // -------- 工具函数 --------
@@ -151,6 +208,43 @@
     panel?.classList.remove('open');
     backdrop?.classList.remove('open');
     document.body.style.overflow = '';
+  }
+
+  // ==================== 齿轮下拉菜单 ====================
+
+  function toggleDropdown(e) {
+    e?.stopPropagation();
+    if (isDropdownOpen) {
+      closeDropdown();
+    } else {
+      openDropdown();
+    }
+  }
+
+  function openDropdown() {
+    if (isDropdownOpen) return;
+    isDropdownOpen = true;
+    dropdown?.classList.add('open');
+  }
+
+  function closeDropdown() {
+    if (!isDropdownOpen) return;
+    isDropdownOpen = false;
+    dropdown?.classList.remove('open');
+  }
+
+  function handlePositionChange(e) {
+    settings.position = e.target.value;
+    saveSettings();
+    applySettings();
+  }
+
+  function handleOpacityChange() {
+    if (!opacitySlider) return;
+    const val = parseInt(opacitySlider.value, 10);
+    settings.opacity = val;
+    saveSettings();
+    applySettings();
   }
 
   // ==================== 拖拽排序 ====================
@@ -374,6 +468,7 @@
   function init() {
     bookmarks = loadBookmarks();
     isCollapsed = loadCollapsedState();
+    settings = loadSettings();
 
     if (nav) {
       nav.classList.toggle('collapsed', isCollapsed);
@@ -382,13 +477,22 @@
       if (toggleBtn) toggleBtn.setAttribute('aria-label', isCollapsed ? 'Expand quick nav' : 'Collapse quick nav');
     }
 
+    applySettings();
     render();
 
     // 事件绑定 — 侧边栏
     toggleBtn?.addEventListener('click', toggleCollapse);
-    gearBtn?.addEventListener('click', openPanel);
+    gearBtn?.addEventListener('click', toggleDropdown);
     nav?.addEventListener('mouseenter', onNavEnter);
     nav?.addEventListener('mouseleave', onNavLeave);
+
+    // 事件绑定 — 下拉菜单
+    positionRadios.forEach(r => r.addEventListener('change', handlePositionChange));
+    opacitySlider?.addEventListener('input', handleOpacityChange);
+    manageBtn?.addEventListener('click', () => {
+      closeDropdown();
+      openPanel();
+    });
 
     // 事件绑定 — 面板
     panelClose?.addEventListener('click', closePanel);
@@ -410,10 +514,19 @@
       }
     });
 
-    // Escape：在编辑模式时取消编辑，否则关闭面板
+    // 点击页面其他区域关闭下拉菜单
+    document.addEventListener('click', (e) => {
+      if (isDropdownOpen && dropdown && !dropdown.contains(e.target) && e.target !== gearBtn && !gearBtn?.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+
+    // Escape：关闭下拉菜单 / 取消编辑 / 关闭面板
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (isEditingId) {
+        if (isDropdownOpen) {
+          closeDropdown();
+        } else if (isEditingId) {
           cancelEdit();
         } else if (isPanelOpen) {
           closePanel();
