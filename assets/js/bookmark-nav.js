@@ -8,12 +8,6 @@
 
   const STORAGE_KEY = 'nous_bookmarks';
   const NAV_KEY = 'nous_bookmark_nav_collapsed';
-  const SETTINGS_KEY = 'nous_bookmark_settings';
-
-  const DEFAULT_SETTINGS = {
-    position: 'left',
-    opacity: 100
-  };
 
   // -------- 默认预设 --------
   const DEFAULT_BOOKMARKS = [
@@ -35,13 +29,10 @@
   const panelUrl = document.getElementById('bm-panel-url');
   const panelTitle = document.getElementById('bm-panel-title');
   const panelAddBtn = document.getElementById('bm-panel-add-btn');
-
-  // 齿轮下拉菜单 DOM
   const dropdown = document.getElementById('bm-gear-dropdown');
-  const positionRadios = document.querySelectorAll('input[name="bm-position"]');
-  const opacitySlider = document.getElementById('bm-opacity-slider');
+  const positionSelect = document.getElementById('bm-nav-position');
+  const opacitySlider = document.getElementById('bm-nav-opacity');
   const opacityValue = document.getElementById('bm-opacity-value');
-  const manageBtn = document.getElementById('bm-dropdown-manage-btn');
 
   // -------- 状态 --------
   let bookmarks = [];
@@ -51,12 +42,14 @@
   let hoverTimer = null;
   let isHovering = false;
 
-  // 设置
-  let settings = {};
-
   // 拖拽状态
   let dragSrcId = null;
   let dragEl = null;
+
+  // -------- 导航栏设置 --------
+  const SETTINGS_KEY = 'nous_bookmark_nav_settings';
+  const DEFAULT_SETTINGS = { position: 'left', opacity: 100 };
+  let navSettings = { ...DEFAULT_SETTINGS };
 
   // -------- 数据读写 --------
   function loadBookmarks() {
@@ -83,44 +76,41 @@
     localStorage.setItem(NAV_KEY, v ? 'true' : 'false');
   }
 
-  // -------- 设置读写 --------
-  function loadSettings() {
+  // -------- 导航栏设置 --------
+  function loadNavSettings() {
     try {
       const raw = localStorage.getItem(SETTINGS_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
-          return { ...DEFAULT_SETTINGS, ...parsed };
+          navSettings = { ...DEFAULT_SETTINGS, ...parsed };
+          return;
         }
       }
     } catch (_) { /* ignore */ }
-    return { ...DEFAULT_SETTINGS };
+    navSettings = { ...DEFAULT_SETTINGS };
   }
 
-  function saveSettings() {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  function saveNavSettings() {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(navSettings));
   }
 
-  // -------- 应用设置 --------
-  function applySettings() {
-    // 位置
-    const homeLayout = document.querySelector('.home-layout');
-    if (homeLayout) {
-      homeLayout.setAttribute('data-nav-position', settings.position);
+  function applyNavSettings() {
+    // 应用位置
+    const layout = document.querySelector('.home-layout');
+    if (layout) {
+      layout.setAttribute('data-nav-position', navSettings.position);
     }
-    // 同步 radio
-    positionRadios.forEach(r => {
-      r.checked = r.value === settings.position;
-    });
+    if (positionSelect) positionSelect.value = navSettings.position;
 
-    // 透明度
-    const opacityVal = settings.opacity / 100;
+    // 应用透明度
     if (nav) {
-      nav.style.setProperty('--bm-opacity-val', opacityVal);
-      nav.setAttribute('data-bm-opacity', '');
+      const opacity = navSettings.opacity / 100;
+      nav.setAttribute('data-nav-opacity', '');
+      nav.style.setProperty('--bm-opacity', opacity);
     }
-    if (opacitySlider) opacitySlider.value = settings.opacity;
-    if (opacityValue) opacityValue.textContent = settings.opacity + '%';
+    if (opacitySlider) opacitySlider.value = navSettings.opacity;
+    if (opacityValue) opacityValue.textContent = navSettings.opacity + '%';
   }
 
   // -------- 工具函数 --------
@@ -189,6 +179,55 @@
     });
   }
 
+  // ==================== 齿轮下拉菜单 ====================
+
+  function toggleDropdown(e) {
+    e?.stopPropagation();
+    isDropdownOpen = !isDropdownOpen;
+    dropdown?.classList.toggle('open', isDropdownOpen);
+    // 关闭下拉时同步更新 setting 控件状态
+    if (isDropdownOpen) {
+      if (positionSelect) positionSelect.value = navSettings.position;
+      if (opacitySlider) opacitySlider.value = navSettings.opacity;
+      if (opacityValue) opacityValue.textContent = navSettings.opacity + '%';
+    }
+  }
+
+  function closeDropdown() {
+    isDropdownOpen = false;
+    dropdown?.classList.remove('open');
+  }
+
+  function handleDropdownAction(e) {
+    const item = e.target.closest('.bm-dropdown-item');
+    if (!item) return;
+    const action = item.dataset.action;
+    if (action === 'manage') {
+      closeDropdown();
+      openPanel();
+    }
+  }
+
+  // ==================== 位置变更 ====================
+
+  function handlePositionChange() {
+    if (!positionSelect) return;
+    navSettings.position = positionSelect.value;
+    saveNavSettings();
+    applyNavSettings();
+  }
+
+  // ==================== 透明度变更 ====================
+
+  function handleOpacityChange() {
+    if (!opacitySlider || !opacityValue) return;
+    const val = parseInt(opacitySlider.value, 10);
+    navSettings.opacity = val;
+    saveNavSettings();
+    applyNavSettings();
+    opacityValue.textContent = val + '%';
+  }
+
   // ==================== 侧滑面板 ====================
 
   function openPanel() {
@@ -208,43 +247,6 @@
     panel?.classList.remove('open');
     backdrop?.classList.remove('open');
     document.body.style.overflow = '';
-  }
-
-  // ==================== 齿轮下拉菜单 ====================
-
-  function toggleDropdown(e) {
-    e?.stopPropagation();
-    if (isDropdownOpen) {
-      closeDropdown();
-    } else {
-      openDropdown();
-    }
-  }
-
-  function openDropdown() {
-    if (isDropdownOpen) return;
-    isDropdownOpen = true;
-    dropdown?.classList.add('open');
-  }
-
-  function closeDropdown() {
-    if (!isDropdownOpen) return;
-    isDropdownOpen = false;
-    dropdown?.classList.remove('open');
-  }
-
-  function handlePositionChange(e) {
-    settings.position = e.target.value;
-    saveSettings();
-    applySettings();
-  }
-
-  function handleOpacityChange() {
-    if (!opacitySlider) return;
-    const val = parseInt(opacitySlider.value, 10);
-    settings.opacity = val;
-    saveSettings();
-    applySettings();
   }
 
   // ==================== 拖拽排序 ====================
@@ -468,7 +470,7 @@
   function init() {
     bookmarks = loadBookmarks();
     isCollapsed = loadCollapsedState();
-    settings = loadSettings();
+    loadNavSettings();
 
     if (nav) {
       nav.classList.toggle('collapsed', isCollapsed);
@@ -477,7 +479,7 @@
       if (toggleBtn) toggleBtn.setAttribute('aria-label', isCollapsed ? 'Expand quick nav' : 'Collapse quick nav');
     }
 
-    applySettings();
+    applyNavSettings();
     render();
 
     // 事件绑定 — 侧边栏
@@ -487,11 +489,19 @@
     nav?.addEventListener('mouseleave', onNavLeave);
 
     // 事件绑定 — 下拉菜单
-    positionRadios.forEach(r => r.addEventListener('change', handlePositionChange));
+    dropdown?.addEventListener('click', handleDropdownAction);
+
+    // 事件绑定 — 位置 & 透明度
+    positionSelect?.addEventListener('change', handlePositionChange);
     opacitySlider?.addEventListener('input', handleOpacityChange);
-    manageBtn?.addEventListener('click', () => {
-      closeDropdown();
-      openPanel();
+
+    // 点击外部关闭下拉菜单和面板
+    document.addEventListener('click', (e) => {
+      // 关闭下拉菜单
+      if (isDropdownOpen && dropdown && gearBtn &&
+          !dropdown.contains(e.target) && !gearBtn.contains(e.target)) {
+        closeDropdown();
+      }
     });
 
     // 事件绑定 — 面板
@@ -514,14 +524,7 @@
       }
     });
 
-    // 点击页面其他区域关闭下拉菜单
-    document.addEventListener('click', (e) => {
-      if (isDropdownOpen && dropdown && !dropdown.contains(e.target) && e.target !== gearBtn && !gearBtn?.contains(e.target)) {
-        closeDropdown();
-      }
-    });
-
-    // Escape：关闭下拉菜单 / 取消编辑 / 关闭面板
+    // Escape：关闭下拉 / 取消编辑 / 关闭面板
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (isDropdownOpen) {

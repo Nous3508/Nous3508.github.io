@@ -19,36 +19,33 @@ permalink: /
 
       <!-- 齿轮下拉菜单 -->
       <div class="bm-gear-dropdown" id="bm-gear-dropdown">
+        <button class="bm-dropdown-item" data-action="manage">
+          <span class="bm-dropdown-icon">📂</span>
+          <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+        </button>
+        <div class="bm-dropdown-divider"></div>
         <div class="bm-dropdown-section">
-          <div class="bm-dropdown-label" data-lang-en="Position" data-lang-zh="位置">Position</div>
-          <div class="bm-dropdown-radio-group">
-            <label class="bm-radio bm-radio-left">
-              <input type="radio" name="bm-position" value="left" checked>
-              <span class="bm-radio-mark">◀</span>
-              <span data-lang-en="Left" data-lang-zh="左侧">Left</span>
-            </label>
-            <label class="bm-radio bm-radio-right">
-              <input type="radio" name="bm-position" value="right">
-              <span data-lang-en="Right" data-lang-zh="右侧">Right</span>
-              <span class="bm-radio-mark">▶</span>
-            </label>
+          <div class="bm-dropdown-section-title">
+            <span class="bm-dropdown-icon">🎨</span>
+            <span data-lang-en="Nav Settings" data-lang-zh="导航设置">Nav Settings</span>
           </div>
-        </div>
-
-        <div class="bm-dropdown-section">
-          <div class="bm-dropdown-label" data-lang-en="Opacity" data-lang-zh="透明度">Opacity</div>
-          <div class="bm-dropdown-slider-row">
-            <input type="range" class="bm-opacity-slider" id="bm-opacity-slider" min="30" max="100" value="100">
+          <!-- 位置 -->
+          <div class="bm-dropdown-row">
+            <label data-lang-en="Position" data-lang-zh="位置">Position</label>
+            <select id="bm-nav-position">
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+            </select>
+          </div>
+          <!-- 透明度 -->
+          <div class="bm-dropdown-row">
+            <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
+            <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
             <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
           </div>
         </div>
-
-        <div class="bm-dropdown-divider"></div>
-
-        <button class="bm-dropdown-manage-btn" id="bm-dropdown-manage-btn">
-          <span>📂</span>
-          <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
-        </button>
       </div>
 
       <div class="bookmark-list" id="bookmark-list"></div>
