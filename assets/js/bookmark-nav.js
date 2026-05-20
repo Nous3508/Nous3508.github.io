@@ -30,7 +30,7 @@
   const panelTitle = document.getElementById('bm-panel-title');
   const panelAddBtn = document.getElementById('bm-panel-add-btn');
   const dropdown = document.getElementById('bm-gear-dropdown');
-  const positionSelect = document.getElementById('bm-nav-position');
+  const posGroup = document.getElementById('bm-nav-position');
   const opacitySlider = document.getElementById('bm-nav-opacity');
   const opacityValue = document.getElementById('bm-opacity-value');
 
@@ -57,8 +57,7 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        // 允许空数组 []，只有非数组或 null 才重置
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length) return parsed;
       }
     } catch (_) { /* ignore */ }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_BOOKMARKS));
@@ -102,7 +101,12 @@
     if (layout) {
       layout.setAttribute('data-nav-position', navSettings.position);
     }
-    if (positionSelect) positionSelect.value = navSettings.position;
+    // 更新按钮组高亮
+    if (posGroup) {
+      posGroup.querySelectorAll('.bm-pos-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === navSettings.position);
+      });
+    }
 
     // 应用透明度
     if (nav) {
@@ -115,10 +119,6 @@
   }
 
   // -------- 工具函数 --------
-  function getCurrentLang() {
-    return document.documentElement.getAttribute('lang') || 'en';
-  }
-
   function genId() {
     return 'bm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
   }
@@ -142,8 +142,7 @@
   function render() {
     if (!list) return;
     if (!bookmarks.length) {
-      const emptyMsg = getCurrentLang() === 'zh' ? '点击 ⚙ 添加收藏' : 'Add bookmarks via ⚙';
-      list.innerHTML = `<div class="bookmark-empty">${emptyMsg}</div>`;
+      list.innerHTML = `<div class="bookmark-empty" data-lang-en="Add bookmarks via ⚙" data-lang-zh="点击 ⚙ 添加收藏">Add bookmarks via ⚙</div>`;
       return;
     }
     list.innerHTML = bookmarks.map(b => `
@@ -158,8 +157,7 @@
   function renderPanel() {
     if (!panelList) return;
     if (!bookmarks.length) {
-      const emptyMsg = getCurrentLang() === 'zh' ? '暂无收藏，在下方添加！' : 'No bookmarks yet. Add one below!';
-      panelList.innerHTML = `<div class="bm-panel-empty">${emptyMsg}</div>`;
+      panelList.innerHTML = `<div class="bm-panel-empty" data-lang-en="No bookmarks yet. Add one below!" data-lang-zh="暂无收藏，在下方添加！">No bookmarks yet. Add one below!</div>`;
       return;
     }
     panelList.innerHTML = bookmarks.map(b => `
@@ -192,9 +190,9 @@
     e?.stopPropagation();
     isDropdownOpen = !isDropdownOpen;
     dropdown?.classList.toggle('open', isDropdownOpen);
-    // 关闭下拉时同步更新 setting 控件状态
+    // 下拉打开时同步状态
     if (isDropdownOpen) {
-      if (positionSelect) positionSelect.value = navSettings.position;
+      applyNavSettings();
       if (opacitySlider) opacitySlider.value = navSettings.opacity;
       if (opacityValue) opacityValue.textContent = navSettings.opacity + '%';
     }
@@ -217,9 +215,10 @@
 
   // ==================== 位置变更 ====================
 
-  function handlePositionChange() {
-    if (!positionSelect) return;
-    navSettings.position = positionSelect.value;
+  function handlePositionClick(e) {
+    const btn = e.target.closest('.bm-pos-btn');
+    if (!btn || btn.classList.contains('active')) return;
+    navSettings.position = btn.dataset.value;
     saveNavSettings();
     applyNavSettings();
   }
@@ -498,8 +497,8 @@
     // 事件绑定 — 下拉菜单
     dropdown?.addEventListener('click', handleDropdownAction);
 
-    // 事件绑定 — 位置 & 透明度
-    positionSelect?.addEventListener('change', handlePositionChange);
+    // 事件绑定 — 位置按钮组 & 透明度
+    posGroup?.addEventListener('click', handlePositionClick);
     opacitySlider?.addEventListener('input', handleOpacityChange);
 
     // 点击外部关闭下拉菜单和面板

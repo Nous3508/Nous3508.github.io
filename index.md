@@ -15,38 +15,58 @@ permalink: /
           <span class="bookmark-nav-title" data-lang-en="Quick Nav" data-lang-zh="快捷导航">Quick Nav</span>
           <button class="bookmark-gear-btn" id="bookmark-gear-btn" aria-label="Settings" title="Settings">⚙</button>
         </div>
-        <!-- 齿轮下拉菜单（放在 header 内以便正确定位） -->
-        <div class="bm-gear-dropdown" id="bm-gear-dropdown">
-          <button class="bm-dropdown-item" data-action="manage">
-            <span class="bm-dropdown-icon">📂</span>
-            <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
-          </button>
-          <div class="bm-dropdown-divider"></div>
-          <div class="bm-dropdown-section">
-            <div class="bm-dropdown-section-title">
-              <span class="bm-dropdown-icon">🎨</span>
-              <span data-lang-en="Nav Settings" data-lang-zh="导航设置">Nav Settings</span>
+      </div>
+
+      <!-- 齿轮下拉菜单 -->
+      <div class="bm-gear-dropdown" id="bm-gear-dropdown">
+        <button class="bm-dropdown-item" data-action="manage">
+          <span class="bm-dropdown-icon">📂</span>
+          <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+        </button>
+        <div class="bm-dropdown-divider"></div>
+        <div class="bm-dropdown-section">
+          <div class="bm-dropdown-section-title">
+            <span class="bm-dropdown-icon">🎨</span>
+            <span data-lang-en="Nav Settings" data-lang-zh="导航设置">Nav Settings</span>
+          </div>
+          <!-- 位置 -->
+          <div class="bm-dropdown-row bm-dropdown-row--col">
+            <label data-lang-en="Position" data-lang-zh="位置">Position</label>
+            <div class="bm-pos-group" id="bm-nav-position">
+              <button class="bm-pos-btn" data-value="left" title="Left">Left</button>
+              <button class="bm-pos-btn" data-value="right" title="Right">Right</button>
+              <button class="bm-pos-btn" data-value="top" title="Top">Top</button>
+              <button class="bm-pos-btn" data-value="bottom" title="Bottom">Bottom</button>
             </div>
-            <!-- 位置（仅左右） -->
-            <div class="bm-dropdown-row">
-              <label data-lang-en="Position" data-lang-zh="位置">Position</label>
-              <select id="bm-nav-position">
-                <option value="left">Left</option>
-                <option value="right">Right</option>
-              </select>
-            </div>
-            <!-- 透明度 -->
-            <div class="bm-dropdown-row">
-              <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
-              <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
-              <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
-            </div>
+          </div>
+          <!-- 透明度 -->
+          <div class="bm-dropdown-row">
+            <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
+            <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
+            <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
           </div>
         </div>
       </div>
+
       <div class="bookmark-list" id="bookmark-list"></div>
     </div>
   </aside>
+
+  <!-- 侧滑编辑面板 -->
+  <div class="bookmark-panel-backdrop" id="bookmark-panel-backdrop"></div>
+  <div class="bookmark-slide-panel" id="bookmark-slide-panel">
+    <div class="bm-panel-header">
+      <span class="bm-panel-title" data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+      <button class="bm-panel-close" id="bookmark-panel-close" aria-label="Close panel">✕</button>
+    </div>
+    <div class="bm-panel-hint" data-lang-en="Drag ☰ to reorder" data-lang-zh="拖动 ☰ 调整顺序">Drag ☰ to reorder</div>
+    <div class="bm-panel-list" id="bookmark-panel-list"></div>
+    <div class="bm-panel-add-form" id="bookmark-panel-add-form">
+      <input type="text" class="bm-panel-input" id="bm-panel-url" placeholder="URL, e.g. https://example.com">
+      <input type="text" class="bm-panel-input" id="bm-panel-title" placeholder="Title (auto-filled)">
+      <button class="bm-panel-add-btn" id="bm-panel-add-btn" data-lang-en="Add Bookmark" data-lang-zh="添加书签">＋ Add Bookmark</button>
+    </div>
+  </div>
 
   <div class="home-main">
 <section class="hero-home container">
@@ -146,19 +166,3 @@ permalink: /
 
   </div><!-- /.home-main -->
 </div><!-- /.home-layout -->
-
-<!-- 侧滑编辑面板（放在 home-layout 外，避免 flex 干扰） -->
-<div class="bookmark-panel-backdrop" id="bookmark-panel-backdrop"></div>
-<div class="bookmark-slide-panel" id="bookmark-slide-panel">
-  <div class="bm-panel-header">
-    <span class="bm-panel-title" data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
-    <button class="bm-panel-close" id="bookmark-panel-close" aria-label="Close panel">✕</button>
-  </div>
-  <div class="bm-panel-hint" data-lang-en="Drag ☰ to reorder" data-lang-zh="拖动 ☰ 调整顺序">Drag ☰ to reorder</div>
-  <div class="bm-panel-list" id="bookmark-panel-list"></div>
-  <div class="bm-panel-add-form" id="bookmark-panel-add-form">
-    <input type="text" class="bm-panel-input" id="bm-panel-url" placeholder="URL, e.g. https://example.com">
-    <input type="text" class="bm-panel-input" id="bm-panel-title" placeholder="Title (auto-filled)">
-    <button class="bm-panel-add-btn" id="bm-panel-add-btn" data-lang-en="Add Bookmark" data-lang-zh="添加书签">＋ Add Bookmark</button>
-  </div>
-</div>
