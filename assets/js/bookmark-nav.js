@@ -1,6 +1,6 @@
 /**
  * bookmark-nav.js - 侧边快捷导航栏
- * 功能：收藏夹管理（增删改）、Favicon 自动获取、展开/收起切换
+ * 功能：收藏夹管理（增删改）、拖拽排序、Favicon 自动获取、展开/收起切换
  * 数据存储在 localStorage
  */
 (() => {
@@ -21,13 +21,25 @@
   const nav = document.getElementById('bookmark-nav');
   const list = document.getElementById('bookmark-list');
   const toggleBtn = document.getElementById('bookmark-toggle-btn');
-  const addBtn = document.getElementById('bookmark-add-btn');
+  const gearBtn = document.getElementById('bookmark-gear-btn');
+  const panel = document.getElementById('bookmark-slide-panel');
+  const backdrop = document.getElementById('bookmark-panel-backdrop');
+  const panelClose = document.getElementById('bookmark-panel-close');
+  const panelList = document.getElementById('bookmark-panel-list');
+  const panelUrl = document.getElementById('bm-panel-url');
+  const panelTitle = document.getElementById('bm-panel-title');
+  const panelAddBtn = document.getElementById('bm-panel-add-btn');
 
   // -------- 状态 --------
   let bookmarks = [];
   let isCollapsed = false;
+  let isPanelOpen = false;
   let hoverTimer = null;
   let isHovering = false;
+
+  // 拖拽状态
+  let dragSrcId = null;
+  let dragEl = null;
 
   // -------- 数据读写 --------
   function loadBookmarks() {
@@ -38,7 +50,6 @@
         if (Array.isArray(parsed) && parsed.length) return parsed;
       }
     } catch (_) { /* ignore */ }
-    // 首次使用：写入默认数据
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_BOOKMARKS));
     return DEFAULT_BOOKMARKS;
   }
@@ -55,12 +66,11 @@
     localStorage.setItem(NAV_KEY, v ? 'true' : 'false');
   }
 
-  // -------- 生成 ID --------
+  // -------- 工具函数 --------
   function genId() {
     return 'bm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
   }
 
-  // -------- Favicon URL --------
   function faviconUrl(url) {
     try {
       const u = new URL(url);
@@ -70,46 +80,258 @@
     }
   }
 
-  // -------- 渲染 --------
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  // -------- 侧边栏渲染 --------
   function render() {
     if (!list) return;
     if (!bookmarks.length) {
-      list.innerHTML = `<div class="bookmark-empty" data-lang-en="No bookmarks yet.<br>Click ＋ to add one." data-lang-zh="暂无收藏<br>点击 ＋ 添加">No bookmarks yet.<br>Click ＋ to add one.</div>`;
+      list.innerHTML = `<div class="bookmark-empty" data-lang-en="Add bookmarks via ⚙" data-lang-zh="点击 ⚙ 添加收藏">Add bookmarks via ⚙</div>`;
       return;
     }
     list.innerHTML = bookmarks.map(b => `
       <a class="bookmark-item" href="${escapeHtml(b.url)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(b.title)}" data-id="${b.id}">
         <img src="${faviconUrl(b.url)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="bm-title">${escapeHtml(b.title)}</span>
-        <span class="bm-actions">
-          <button class="bm-action-btn bm-edit" data-action="edit" title="Edit">✎</button>
-          <button class="bm-action-btn bm-delete" data-action="delete" title="Delete">✕</button>
-        </span>
       </a>
     `).join('');
   }
 
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+  // -------- 面板渲染 --------
+  function renderPanel() {
+    if (!panelList) return;
+    if (!bookmarks.length) {
+      panelList.innerHTML = `<div class="bm-panel-empty" data-lang-en="No bookmarks yet. Add one below!" data-lang-zh="暂无收藏，在下方添加！">No bookmarks yet. Add one below!</div>`;
+      return;
+    }
+    panelList.innerHTML = bookmarks.map(b => `
+      <div class="bm-panel-item" draggable="true" data-id="${b.id}">
+        <span class="drag-handle" draggable="false">☰</span>
+        <img src="${faviconUrl(b.url)}" alt="" loading="lazy" onerror="this.style.display='none'">
+        <span class="bm-panel-title-text">${escapeHtml(b.title)}</span>
+        <span class="bm-panel-actions">
+          <button class="bm-panel-action-btn bm-panel-edit" data-action="edit" title="Edit">✎</button>
+          <button class="bm-panel-action-btn bm-panel-delete" data-action="delete" title="Delete">✕</button>
+        </span>
+      </div>
+    `).join('');
+
+    // 为面板中的每一项绑定拖拽事件
+    const items = panelList.querySelectorAll('.bm-panel-item');
+    items.forEach(el => {
+      el.addEventListener('dragstart', handleDragStart);
+      el.addEventListener('dragend', handleDragEnd);
+      el.addEventListener('dragover', handleDragOver);
+      el.addEventListener('dragenter', handleDragEnter);
+      el.addEventListener('dragleave', handleDragLeave);
+      el.addEventListener('drop', handleDrop);
+    });
   }
 
-  // -------- 展开/收起 --------
-  function setCollapsed(collapsed, instant = false) {
+  // ==================== 侧滑面板 ====================
+
+  function openPanel() {
+    if (isPanelOpen) return;
+    isPanelOpen = true;
+    panel?.classList.add('open');
+    backdrop?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderPanel();
+    // 自动聚焦 URL 输入框
+    setTimeout(() => panelUrl?.focus(), 350);
+  }
+
+  function closePanel() {
+    if (!isPanelOpen) return;
+    isPanelOpen = false;
+    panel?.classList.remove('open');
+    backdrop?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ==================== 拖拽排序 ====================
+
+  function handleDragStart(e) {
+    const item = e.target.closest('.bm-panel-item');
+    if (!item) return;
+    dragSrcId = item.dataset.id;
+    dragEl = item;
+    item.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    // 让拖拽时鼠标下有半透明预览
+    e.dataTransfer.setData('text/plain', dragSrcId);
+  }
+
+  function handleDragEnd(e) {
+    const item = e.target.closest('.bm-panel-item');
+    if (item) item.classList.remove('dragging');
+    // 清除所有 drag-over 状态
+    document.querySelectorAll('.bm-panel-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+    dragSrcId = null;
+    dragEl = null;
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleDragEnter(e) {
+    e.preventDefault();
+    const target = e.target.closest('.bm-panel-item');
+    if (!target || target.dataset.id === dragSrcId) return;
+    target.classList.add('drag-over');
+  }
+
+  function handleDragLeave(e) {
+    const target = e.target.closest('.bm-panel-item');
+    if (target) target.classList.remove('drag-over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const target = e.target.closest('.bm-panel-item');
+    if (!target) return;
+    target.classList.remove('drag-over');
+
+    const fromId = dragSrcId;
+    const toId = target.dataset.id;
+    if (!fromId || fromId === toId) return;
+
+    const fromIdx = bookmarks.findIndex(b => b.id === fromId);
+    const toIdx = bookmarks.findIndex(b => b.id === toId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    // 移动元素
+    const [moved] = bookmarks.splice(fromIdx, 1);
+    bookmarks.splice(toIdx, 0, moved);
+
+    saveBookmarks();
+    render();
+    renderPanel();
+  }
+
+  // ==================== 添加 / 保存书签（面板内） ====================
+
+  function handlePanelAddOrSave() {
+    // 如果处于编辑模式，执行保存
+    if (isEditingId) {
+      commitEdit();
+      return;
+    }
+
+    // 否则添加新书签
+    let url = panelUrl?.value?.trim();
+    let title = panelTitle?.value?.trim();
+
+    if (!url) {
+      panelUrl?.focus();
+      return;
+    }
+
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+    try {
+      new URL(url);
+    } catch (_) {
+      panelUrl?.focus();
+      panelUrl?.select();
+      return;
+    }
+
+    if (!title) {
+      try {
+        const u = new URL(url);
+        title = u.hostname.replace(/^www\./, '');
+      } catch (_) {
+        title = url;
+      }
+    }
+
+    bookmarks.push({ id: genId(), title, url });
+    saveBookmarks();
+    render();
+    renderPanel();
+
+    // 清空输入框，方便连续添加
+    if (panelUrl) panelUrl.value = '';
+    if (panelTitle) panelTitle.value = '';
+    panelUrl?.focus();
+  }
+
+  // ==================== 编辑书签（面板内） ====================
+  let isEditingId = null;
+
+  function editBookmarkInPanel(id) {
+    const idx = bookmarks.findIndex(b => b.id === id);
+    if (idx === -1) return;
+    const bm = bookmarks[idx];
+
+    isEditingId = id;
+    if (panelUrl) panelUrl.value = bm.url;
+    if (panelTitle) panelTitle.value = bm.title;
+    if (panelAddBtn) {
+      panelAddBtn.textContent = '💾 Save';
+      panelAddBtn.dataset.editMode = 'true';
+    }
+    panelUrl?.focus();
+  }
+
+  function commitEdit() {
+    if (!isEditingId) return;
+    const idx = bookmarks.findIndex(b => b.id === isEditingId);
+    if (idx === -1) { cancelEdit(); return; }
+
+    let url = panelUrl?.value?.trim();
+    let title = panelTitle?.value?.trim();
+    if (!url) { panelUrl?.focus(); return; }
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    try { new URL(url); } catch (_) { panelUrl?.focus(); panelUrl?.select(); return; }
+    if (!title) {
+      try { const u = new URL(url); title = u.hostname.replace(/^www\./, ''); } catch (_) { title = url; }
+    }
+
+    bookmarks[idx] = { ...bookmarks[idx], title, url };
+    saveBookmarks();
+    render();
+    renderPanel();
+    cancelEdit();
+  }
+
+  function cancelEdit() {
+    isEditingId = null;
+    if (panelUrl) panelUrl.value = '';
+    if (panelTitle) panelTitle.value = '';
+    if (panelAddBtn) {
+      panelAddBtn.textContent = '＋ Add Bookmark';
+      delete panelAddBtn.dataset.editMode;
+    }
+  }
+
+  // ==================== 删除书签 ====================
+
+  function deleteBookmark(id) {
+    bookmarks = bookmarks.filter(b => b.id !== id);
+    saveBookmarks();
+    render();
+    renderPanel();
+  }
+
+  // ==================== 展开/收起 ====================
+
+  function setCollapsed(collapsed) {
     isCollapsed = collapsed;
     saveCollapsedState(collapsed);
     if (!nav) return;
     nav.classList.toggle('collapsed', collapsed);
     nav.classList.remove('hover-expand');
-    // 更新 toggle 图标
     const icon = toggleBtn?.querySelector('.bookmark-toggle-icon');
-    if (icon) {
-      icon.textContent = collapsed ? '▶' : '◀';
-    }
-    if (toggleBtn) {
-      toggleBtn.setAttribute('aria-label', collapsed ? 'Expand quick nav' : 'Collapse quick nav');
-    }
+    if (icon) icon.textContent = collapsed ? '▶' : '◀';
+    if (toggleBtn) toggleBtn.setAttribute('aria-label', collapsed ? 'Expand quick nav' : 'Collapse quick nav');
   }
 
   function toggleCollapse() {
@@ -134,174 +356,21 @@
     }, 200);
   }
 
-  // -------- 添加书签 --------
-  function showAddForm() {
-    if (!nav) return;
-    // 如果已存在编辑中的表单，移除之
-    const existing = nav.querySelector('.bookmark-add-form');
-    if (existing) existing.remove();
+  // ==================== 面板事件代理 ====================
 
-    const form = document.createElement('div');
-    form.className = 'bookmark-add-form';
-    form.innerHTML = `
-      <input type="text" class="bm-form-url" placeholder="URL, e.g. https://example.com" autofocus>
-      <input type="text" class="bm-form-title" placeholder="Title (auto-filled)">
-      <div class="bookmark-add-form-actions">
-        <button class="bookmark-form-confirm" data-action="confirm">Add</button>
-        <button class="bookmark-form-cancel" data-action="cancel">Cancel</button>
-      </div>
-    `;
+  function handlePanelClick(e) {
+    const actionBtn = e.target.closest('.bm-panel-action-btn');
+    const item = e.target.closest('.bm-panel-item');
+    if (!actionBtn || !item) return;
 
-    const inner = nav.querySelector('.bookmark-nav-inner');
-    inner?.appendChild(form);
-
-    const urlInput = form.querySelector('.bm-form-url');
-    const titleInput = form.querySelector('.bm-form-title');
-
-    // 自动填充标题：从 URL 提取
-    urlInput.addEventListener('blur', () => {
-      if (!titleInput.value && urlInput.value) {
-        try {
-          const u = new URL(urlInput.value);
-          titleInput.value = u.hostname.replace(/^www\./, '');
-        } catch (_) { /* ignore */ }
-      }
-    });
-
-    urlInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') confirmAdd(form);
-    });
-    titleInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') confirmAdd(form);
-    });
-
-    form.querySelector('[data-action="confirm"]')?.addEventListener('click', () => confirmAdd(form));
-    form.querySelector('[data-action="cancel"]')?.addEventListener('click', () => form.remove());
-
-    setTimeout(() => urlInput?.focus(), 50);
+    const id = item.dataset.id;
+    const action = actionBtn.dataset.action;
+    if (action === 'edit') editBookmarkInPanel(id);
+    else if (action === 'delete') deleteBookmark(id);
   }
 
-  function confirmAdd(form) {
-    const urlInput = form.querySelector('.bm-form-url');
-    const titleInput = form.querySelector('.bm-form-title');
-    let url = urlInput?.value?.trim();
-    let title = titleInput?.value?.trim();
+  // ==================== 初始化 ====================
 
-    if (!url) return;
-
-    // 补全协议
-    if (!/^https?:\/\//i.test(url)) {
-      url = 'https://' + url;
-    }
-
-    // 验证 URL
-    try {
-      new URL(url);
-    } catch (_) {
-      urlInput.focus();
-      urlInput.select();
-      return;
-    }
-
-    if (!title) {
-      try {
-        const u = new URL(url);
-        title = u.hostname.replace(/^www\./, '');
-      } catch (_) {
-        title = url;
-      }
-    }
-
-    bookmarks.push({ id: genId(), title, url });
-    saveBookmarks();
-    render();
-    form.remove();
-  }
-
-  // -------- 编辑书签 --------
-  function editBookmark(id) {
-    const idx = bookmarks.findIndex(b => b.id === id);
-    if (idx === -1) return;
-    const bm = bookmarks[idx];
-
-    // 移除已存在的表单
-    const existing = nav?.querySelector('.bookmark-add-form');
-    if (existing) existing.remove();
-
-    const form = document.createElement('div');
-    form.className = 'bookmark-add-form';
-    form.innerHTML = `
-      <input type="text" class="bm-form-url" value="${escapeHtml(bm.url)}" autofocus>
-      <input type="text" class="bm-form-title" value="${escapeHtml(bm.title)}">
-      <div class="bookmark-add-form-actions">
-        <button class="bookmark-form-confirm" data-action="confirm">Save</button>
-        <button class="bookmark-form-cancel" data-action="cancel">Cancel</button>
-      </div>
-    `;
-
-    const inner = nav?.querySelector('.bookmark-nav-inner');
-    inner?.appendChild(form);
-
-    const urlInput = form.querySelector('.bm-form-url');
-    const titleInput = form.querySelector('.bm-form-title');
-
-    function saveEdit() {
-      let url = urlInput?.value?.trim();
-      let title = titleInput?.value?.trim();
-      if (!url) return;
-
-      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-      try { new URL(url); } catch (_) { urlInput.focus(); urlInput.select(); return; }
-      if (!title) {
-        try { const u = new URL(url); title = u.hostname.replace(/^www\./, ''); } catch (_) { title = url; }
-      }
-
-      bookmarks[idx] = { ...bookmarks[idx], title, url };
-      saveBookmarks();
-      render();
-      form.remove();
-    }
-
-    urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveEdit(); });
-    titleInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveEdit(); });
-    form.querySelector('[data-action="confirm"]')?.addEventListener('click', saveEdit);
-    form.querySelector('[data-action="cancel"]')?.addEventListener('click', () => form.remove());
-
-    setTimeout(() => urlInput?.focus(), 50);
-  }
-
-  // -------- 删除书签 --------
-  function deleteBookmark(id) {
-    bookmarks = bookmarks.filter(b => b.id !== id);
-    saveBookmarks();
-    render();
-  }
-
-  // -------- 事件代理 --------
-  function handleListClick(e) {
-    const item = e.target.closest('.bookmark-item');
-    const actionBtn = e.target.closest('.bm-action-btn');
-
-    if (actionBtn && item) {
-      e.preventDefault();
-      e.stopPropagation();
-      const id = item.dataset.id;
-      const action = actionBtn.dataset.action;
-      if (action === 'edit') editBookmark(id);
-      else if (action === 'delete') deleteBookmark(id);
-      return;
-    }
-
-    // 点击空白区域关闭编辑表单
-    if (!e.target.closest('.bookmark-add-form') && !e.target.closest('.bookmark-add-btn')) {
-      const form = nav?.querySelector('.bookmark-add-form');
-      if (form && !e.target.closest('.bookmark-add-form')) {
-        form.remove();
-      }
-    }
-  }
-
-  // -------- 初始化 --------
   function init() {
     bookmarks = loadBookmarks();
     isCollapsed = loadCollapsedState();
@@ -315,25 +384,44 @@
 
     render();
 
-    // 事件绑定
+    // 事件绑定 — 侧边栏
     toggleBtn?.addEventListener('click', toggleCollapse);
-    addBtn?.addEventListener('click', showAddForm);
-    list?.addEventListener('click', handleListClick);
-
-    // 悬浮展开/收起
+    gearBtn?.addEventListener('click', openPanel);
     nav?.addEventListener('mouseenter', onNavEnter);
     nav?.addEventListener('mouseleave', onNavLeave);
 
-    // 点击页面其他地方收起编辑表单
-    document.addEventListener('click', (e) => {
-      if (nav && !nav.contains(e.target)) {
-        const form = nav.querySelector('.bookmark-add-form');
-        if (form) form.remove();
+    // 事件绑定 — 面板
+    panelClose?.addEventListener('click', closePanel);
+    backdrop?.addEventListener('click', closePanel);
+    panelAddBtn?.addEventListener('click', handlePanelAddOrSave);
+    panelList?.addEventListener('click', handlePanelClick);
+
+    // 面板输入框回车提交
+    panelUrl?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        panelTitle?.focus();
+      }
+    });
+    panelTitle?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handlePanelAddOrSave();
+      }
+    });
+
+    // Escape：在编辑模式时取消编辑，否则关闭面板
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (isEditingId) {
+          cancelEdit();
+        } else if (isPanelOpen) {
+          closePanel();
+        }
       }
     });
   }
 
-  // 等 DOM 加载完成
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

@@ -13,12 +13,28 @@ permalink: /
             <span class="bookmark-toggle-icon">◀</span>
           </button>
           <span class="bookmark-nav-title" data-lang-en="Quick Nav" data-lang-zh="快捷导航">Quick Nav</span>
-          <button class="bookmark-add-btn" id="bookmark-add-btn" aria-label="Add bookmark" title="Add bookmark">＋</button>
+          <button class="bookmark-gear-btn" id="bookmark-gear-btn" aria-label="Manage bookmarks" title="Manage bookmarks">⚙</button>
         </div>
       </div>
       <div class="bookmark-list" id="bookmark-list"></div>
     </div>
   </aside>
+
+  <!-- 侧滑编辑面板 -->
+  <div class="bookmark-panel-backdrop" id="bookmark-panel-backdrop"></div>
+  <div class="bookmark-slide-panel" id="bookmark-slide-panel">
+    <div class="bm-panel-header">
+      <span class="bm-panel-title" data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+      <button class="bm-panel-close" id="bookmark-panel-close" aria-label="Close panel">✕</button>
+    </div>
+    <div class="bm-panel-hint" data-lang-en="Drag ☰ to reorder" data-lang-zh="拖动 ☰ 调整顺序">Drag ☰ to reorder</div>
+    <div class="bm-panel-list" id="bookmark-panel-list"></div>
+    <div class="bm-panel-add-form" id="bookmark-panel-add-form">
+      <input type="text" class="bm-panel-input" id="bm-panel-url" placeholder="URL, e.g. https://example.com">
+      <input type="text" class="bm-panel-input" id="bm-panel-title" placeholder="Title (auto-filled)">
+      <button class="bm-panel-add-btn" id="bm-panel-add-btn" data-lang-en="Add Bookmark" data-lang-zh="添加书签">＋ Add Bookmark</button>
+    </div>
+  </div>
 
   <div class="home-main">
 <section class="hero-home container">
