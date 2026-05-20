@@ -4,6 +4,23 @@ title: Nous の little nest
 description: "Nous の little nest — projects first, search centered, clean blog preview"
 permalink: /
 ---
+<div class="home-layout">
+  <aside class="bookmark-nav" id="bookmark-nav">
+    <div class="bookmark-nav-inner">
+      <div class="bookmark-nav-header">
+        <div class="bookmark-nav-title-row">
+          <button class="bookmark-toggle-btn" id="bookmark-toggle-btn" aria-label="Toggle bookmark nav">
+            <span class="bookmark-toggle-icon">◀</span>
+          </button>
+          <span class="bookmark-nav-title" data-lang-en="Quick Nav" data-lang-zh="快捷导航">Quick Nav</span>
+          <button class="bookmark-add-btn" id="bookmark-add-btn" aria-label="Add bookmark" title="Add bookmark">＋</button>
+        </div>
+      </div>
+      <div class="bookmark-list" id="bookmark-list"></div>
+    </div>
+  </aside>
+
+  <div class="home-main">
 <section class="hero-home container">
   <div class="hero-copy" data-aos="fade-up">
     <p class="eyebrow">Nous の little nest</p>
@@ -98,3 +115,6 @@ permalink: /
     <a class="section-link" href="/blog/">View all posts →</a>
   </div>
 </section>
+
+  </div><!-- /.home-main -->
+</div><!-- /.home-layout -->
