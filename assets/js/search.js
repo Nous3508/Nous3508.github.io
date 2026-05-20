@@ -8,16 +8,21 @@
   const results = document.getElementById("search-results");
   const hints = document.getElementById("search-hints");
 
+  const LANG_KEY = "nous-lang";
   const key = "nous-search-mode";
   let mode = localStorage.getItem(key) || "site"; // site | web
   let index = null;
   let docs = [];
 
+  function t(en, zh) {
+    return (localStorage.getItem(LANG_KEY) || "en") === "zh" ? zh : en;
+  }
+
   function syncIcon() {
     const icon = mode === "site" ? "🔍" : "🌐";
     if (modeIcon) modeIcon.textContent = icon;
     if (modeIconInline) modeIconInline.textContent = icon;
-    if (hints) hints.textContent = mode === "site" ? "Site search: posts > projects" : "Browser search mode";
+    if (hints) hints.textContent = mode === "site" ? t("Site search: posts › projects", "站内搜索：文章 › 项目") : t("Browser search mode", "浏览器搜索模式");
   }
 
   async function loadDocs() {
@@ -79,7 +84,7 @@
     if (!results) return;
     results.innerHTML = "";
     if (!list.length) {
-      results.innerHTML = `<div class="search-result"><h4>No results</h4><p>Try a different keyword.</p></div>`;
+      results.innerHTML = `<div class="search-result"><h4>${t("No results", "无结果")}</h4><p>${t("Try a different keyword.", "试试其他关键词。")}</p></div>`;
       return;
     }
     list.forEach(item => {

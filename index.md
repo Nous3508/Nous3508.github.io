@@ -9,11 +9,11 @@ permalink: /
     <div class="bookmark-nav-inner">
       <div class="bookmark-nav-header">
         <div class="bookmark-nav-title-row">
-          <button class="bookmark-toggle-btn" id="bookmark-toggle-btn" aria-label="Toggle bookmark nav">
+          <button class="bookmark-toggle-btn" id="bookmark-toggle-btn" data-lang-en-aria-label="Toggle bookmark nav" data-lang-zh-aria-label="切换快捷导航" aria-label="Toggle bookmark nav">
             <span class="bookmark-toggle-icon">◀</span>
           </button>
           <span class="bookmark-nav-title" data-lang-en="Quick Nav" data-lang-zh="快捷导航">Quick Nav</span>
-          <button class="bookmark-add-btn" id="bookmark-add-btn" aria-label="Add bookmark" title="Add bookmark">＋</button>
+          <button class="bookmark-add-btn" id="bookmark-add-btn" data-lang-en-aria-label="Add bookmark" data-lang-zh-aria-label="添加书签" data-lang-en-title="Add bookmark" data-lang-zh-title="添加书签" aria-label="Add bookmark" title="Add bookmark">＋</button>
         </div>
       </div>
       <div class="bookmark-list" id="bookmark-list"></div>
@@ -24,7 +24,7 @@ permalink: /
 <section class="hero-home container">
   <div class="hero-copy" data-aos="fade-up">
     <p class="eyebrow">Nous の little nest</p>
-    <h1>Build real things.<br>Learn fast. Iterate.</h1>
+    <h1 data-lang-en="Build real things.<br>Learn fast. Iterate." data-lang-zh="动手做实物。<br>快速学习。迭代改进。">Build real things.<br>Learn fast. Iterate.</h1>
     <p class="hero-desc lang-en">
       Student • Smart Manufacturing • Aspiring Embedded Engineer
     </p>
@@ -69,8 +69,8 @@ permalink: /
       <button id="search-mode-btn-inline" class="search-mode-btn" aria-label="toggle search mode">
         <span id="search-mode-icon-inline">🔍</span>
       </button>
-      <input id="site-search-input" type="text" placeholder="Search posts / projects..." autocomplete="off">
-      <button id="site-search-btn" class="search-submit">Search</button>
+      <input id="site-search-input" type="text" data-lang-en-placeholder="Search posts / projects..." data-lang-zh-placeholder="搜索文章 / 项目..." placeholder="Search posts / projects..." autocomplete="off">
+      <button id="site-search-btn" class="search-submit" data-lang-en="Search" data-lang-zh="搜索">Search</button>
     </div>
     <div id="search-hints" class="search-hints"></div>
     <div id="search-results" class="search-results"></div>
@@ -79,20 +79,20 @@ permalink: /
 
 <section class="container section-gap hero-divider">
   <div class="section-head" data-aos="fade-up">
-    <p class="eyebrow">Featured</p>
-    <h2>Selected projects</h2>
+    <p class="eyebrow" data-lang-en="Featured" data-lang-zh="精选">Featured</p>
+    <h2 data-lang-en="Selected projects" data-lang-zh="精选项目">Selected projects</h2>
   </div>
   <div id="featured-project-grid" class="project-grid"></div>
   <div class="section-link-wrap">
-    <a class="section-link" href="/projects/">View all projects →</a>
+    <a class="section-link" href="/projects/" data-lang-en="View all projects →" data-lang-zh="查看全部项目 →">View all projects →</a>
   </div>
 </section>
 
 <section class="container section-gap blog-preview-block">
   <div class="section-head" data-aos="fade-up">
-    <p class="eyebrow">Blog</p>
-    <h2>Latest posts</h2>
-    <p class="lead">
+    <p class="eyebrow" data-lang-en="Blog" data-lang-zh="博客">Blog</p>
+    <h2 data-lang-en="Latest posts" data-lang-zh="最新文章">Latest posts</h2>
+    <p class="lead" data-lang-en="Clean notes and updates — short, readable, and easy to share." data-lang-zh="简洁的笔记与更新 — 短小、清晰、易于分享。">
       Clean notes and updates — short, readable, and easy to share.
     </p>
   </div>
@@ -104,15 +104,15 @@ permalink: /
       <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
       <p>{{ post.excerpt | strip_html | truncate: 120 }}</p>
       <div class="mini-actions">
-        <a class="read-btn secondary" href="{{ post.url }}">Read</a>
-        <button class="share-btn" data-share-url="{{ site.url }}{{ post.url }}" data-share-title="{{ post.title }}">Share</button>
+        <a class="read-btn secondary" href="{{ post.url }}" data-lang-en="Read" data-lang-zh="阅读">Read</a>
+        <button class="share-btn" data-share-url="{{ site.url }}{{ post.url }}" data-share-title="{{ post.title }}" data-lang-en="Share" data-lang-zh="分享">Share</button>
       </div>
     </article>
     {% endfor %}
   </div>
 
   <div class="section-link-wrap">
-    <a class="section-link" href="/blog/">View all posts →</a>
+    <a class="section-link" href="/blog/" data-lang-en="View all posts →" data-lang-zh="查看全部文章 →">View all posts →</a>
   </div>
 </section>
 

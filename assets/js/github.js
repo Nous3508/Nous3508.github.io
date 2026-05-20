@@ -2,6 +2,11 @@
   const owner = "Nous3508";
   const CACHE_KEY = "nous_github_repos_cache_v5";
   const CACHE_TTL = 1000 * 60 * 10;
+  const LANG_KEY = "nous-lang";
+
+  function t(en, zh) {
+    return (localStorage.getItem(LANG_KEY) || "en") === "zh" ? zh : en;
+  }
 
   async function fetchRepos() {
     try {
@@ -33,11 +38,11 @@
         <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
         <div class="project-body">
           <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
-          <p>${repo.description || "No description yet."}</p>
+          <p>${repo.description || t("No description yet.", "暂无描述")}</p>
           <div class="project-meta">
-            <span>Language: ${repo.language || "n/a"}</span>
-            <span>Stars: ${repo.stargazers_count || 0}</span>
-            <span>Updated: ${(repo.updated_at || "").slice(0, 10)}</span>
+            <span>${t("Language:", "语言:")} ${repo.language || "n/a"}</span>
+            <span>${t("Stars:", "星标:")} ${repo.stargazers_count || 0}</span>
+            <span>${t("Updated:", "更新:")} ${(repo.updated_at || "").slice(0, 10)}</span>
           </div>
           <div class="chip-row">${topics}</div>
         </div>
@@ -47,22 +52,22 @@
 
   function projectPageCard(repo) {
     const topics = (repo.topics || []).slice(0, 5).map(t => `<span class="chip">${t}</span>`).join("");
-    const summary = repo.description || "No description yet.";
+    const summary = repo.description || t("No description yet.", "暂无描述");
     return `
       <article class="project-card project-card--page" data-aos="fade-up">
-        <a class="project-card-link" href="${repo.html_url}" target="_blank" rel="noopener noreferrer" aria-label="Open ${repo.name} on GitHub">
+        <a class="project-card-link" href="${repo.html_url}" target="_blank" rel="noopener noreferrer" aria-label="${t("Open " + repo.name + " on GitHub", "在 GitHub 上打开 " + repo.name)}">
           <div class="project-thumb">${repo.name.slice(0, 1).toUpperCase()}</div>
           <div class="project-body">
-            <p class="project-kicker">GitHub Repository</p>
+            <p class="project-kicker">${t("GitHub Repository", "GitHub 仓库")}</p>
             <h3>${repo.name}</h3>
             <p class="project-summary">${summary}</p>
             <div class="project-meta">
-              <span>Language: ${repo.language || "n/a"}</span>
-              <span>Stars: ${repo.stargazers_count || 0}</span>
-              <span>Updated: ${(repo.updated_at || "").slice(0, 10)}</span>
+              <span>${t("Language:", "语言:")} ${repo.language || "n/a"}</span>
+              <span>${t("Stars:", "星标:")} ${repo.stargazers_count || 0}</span>
+              <span>${t("Updated:", "更新:")} ${(repo.updated_at || "").slice(0, 10)}</span>
             </div>
             <div class="chip-row">${topics}</div>
-            <div class="project-cta">Open on GitHub →</div>
+            <div class="project-cta">${t("Open on GitHub →", "在 GitHub 上打开 →")}</div>
           </div>
         </a>
       </article>
