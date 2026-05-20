@@ -17,44 +17,44 @@ permalink: /
         </div>
       </div>
 
-      <!-- 齿轮下拉菜单 -->
-      <div class="bm-gear-dropdown" id="bm-gear-dropdown">
-        <button class="bm-dropdown-item" data-action="manage">
-          <span class="bm-dropdown-icon">📂</span>
-          <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
-        </button>
-        <div class="bm-dropdown-divider"></div>
-        <div class="bm-dropdown-section">
-          <div class="bm-dropdown-section-title">
-            <span class="bm-dropdown-icon">🎨</span>
-            <span data-lang-en="Nav Settings" data-lang-zh="导航设置">Nav Settings</span>
-          </div>
-          <!-- 位置 -->
-          <div class="bm-dropdown-row bm-dropdown-row--col">
-            <label data-lang-en="Position" data-lang-zh="位置">Position</label>
-            <div class="bm-pos-group" id="bm-nav-position">
-              <button class="bm-pos-btn" data-value="left" title="Left">Left</button>
-              <button class="bm-pos-btn" data-value="right" title="Right">Right</button>
-              <button class="bm-pos-btn" data-value="top" title="Top">Top</button>
-              <button class="bm-pos-btn" data-value="bottom" title="Bottom">Bottom</button>
-            </div>
-          </div>
-          <!-- 透明度 -->
-          <div class="bm-dropdown-row">
-            <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
-            <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
-            <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
+      <div class="bookmark-list" id="bookmark-list"></div>
+    </div>
+
+    <!-- 齿轮下拉菜单（移出 overflow:hidden 容器，避免被裁切） -->
+    <div class="bm-gear-dropdown" id="bm-gear-dropdown">
+      <button class="bm-dropdown-item" data-action="manage">
+        <span class="bm-dropdown-icon">📂</span>
+        <span data-lang-en="Manage Bookmarks" data-lang-zh="管理收藏夹">Manage Bookmarks</span>
+      </button>
+      <div class="bm-dropdown-divider"></div>
+      <div class="bm-dropdown-section">
+        <div class="bm-dropdown-section-title">
+          <span class="bm-dropdown-icon">🎨</span>
+          <span data-lang-en="Nav Settings" data-lang-zh="导航设置">Nav Settings</span>
+        </div>
+        <!-- 位置 -->
+        <div class="bm-dropdown-row bm-dropdown-row--col">
+          <label data-lang-en="Position" data-lang-zh="位置">Position</label>
+          <div class="bm-pos-group" id="bm-nav-position">
+            <button class="bm-pos-btn" data-value="left" title="Left">Left</button>
+            <button class="bm-pos-btn" data-value="right" title="Right">Right</button>
+            <button class="bm-pos-btn" data-value="top" title="Top">Top</button>
+            <button class="bm-pos-btn" data-value="bottom" title="Bottom">Bottom</button>
           </div>
         </div>
-        <div class="bm-dropdown-divider"></div>
-        <button class="bm-dropdown-item" data-action="cloud-sync" id="bm-cloud-sync-btn">
-          <span class="bm-dropdown-icon" id="bm-cloud-sync-icon">☁️</span>
-          <span data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</span>
-          <span class="bm-sync-badge" id="bm-sync-badge" style="display:none"></span>
-        </button>
+        <!-- 透明度 -->
+        <div class="bm-dropdown-row">
+          <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
+          <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
+          <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
+        </div>
       </div>
-
-      <div class="bookmark-list" id="bookmark-list"></div>
+      <div class="bm-dropdown-divider"></div>
+      <button class="bm-dropdown-item" data-action="cloud-sync" id="bm-cloud-sync-btn">
+        <span class="bm-dropdown-icon" id="bm-cloud-sync-icon">☁️</span>
+        <span data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</span>
+        <span class="bm-sync-badge" id="bm-sync-badge" style="display:none"></span>
+      </button>
     </div>
   </aside>
 
