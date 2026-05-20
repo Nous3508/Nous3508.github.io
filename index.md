@@ -46,6 +46,12 @@ permalink: /
             <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
           </div>
         </div>
+        <div class="bm-dropdown-divider"></div>
+        <button class="bm-dropdown-item" data-action="cloud-sync" id="bm-cloud-sync-btn">
+          <span class="bm-dropdown-icon" id="bm-cloud-sync-icon">☁️</span>
+          <span data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</span>
+          <span class="bm-sync-badge" id="bm-sync-badge" style="display:none"></span>
+        </button>
       </div>
 
       <div class="bookmark-list" id="bookmark-list"></div>

@@ -210,6 +210,9 @@
     if (action === 'manage') {
       closeDropdown();
       openPanel();
+    } else if (action === 'cloud-sync') {
+      closeDropdown();
+      handleCloudSync();
     }
   }
 
@@ -471,9 +474,130 @@
     else if (action === 'delete') deleteBookmark(id);
   }
 
+  // ==================== 云端同步 ====================
+  let isCloudSynced = false;
+  let cloudUser = null;
+
+  /** 检查是否已登录并获取用户 */
+  async function checkCloudAuth() {
+    try {
+      if (typeof Auth !== 'undefined') {
+        const { data } = await Auth.getUser();
+        cloudUser = data?.user || null;
+        return cloudUser;
+      }
+    } catch (_) { /* ignore */ }
+    cloudUser = null;
+    return null;
+  }
+
+  /** 更新云端同步 UI 状态 */
+  function updateCloudUI() {
+    const badge = document.getElementById('bm-sync-badge');
+    const icon = document.getElementById('bm-cloud-sync-icon');
+    const btn = document.getElementById('bm-cloud-sync-btn');
+    if (!btn) return;
+
+    if (cloudUser) {
+      btn.classList.add('bm-cloud-active');
+      if (badge) {
+        badge.textContent = isCloudSynced ? '✅' : '🔄';
+        badge.style.display = 'inline';
+      }
+      if (icon) icon.textContent = isCloudSynced ? '☁️' : '⏳';
+    } else {
+      btn.classList.remove('bm-cloud-active');
+      if (badge) badge.style.display = 'none';
+      if (icon) icon.textContent = '☁️';
+    }
+  }
+
+  /** 同步当前书签到云端 */
+  async function syncToCloud() {
+    if (!cloudUser) return;
+    const btn = document.getElementById('bm-cloud-sync-btn');
+    if (btn) btn.style.opacity = '0.6';
+
+    try {
+      // 合并逻辑：将本地书签推送到云端
+      await BookmarkAPI.syncLocalToCloud(bookmarks);
+      // 再从云端拉取最新（获得带 ID 的完整列表）
+      const cloudData = await BookmarkAPI.fetchAll();
+      if (cloudData.length) {
+        // 把云端数据转成本地格式
+        bookmarks = cloudData.map(b => ({
+          id: b.id,
+          title: b.title,
+          url: b.url
+        }));
+        saveBookmarks();
+        render();
+        renderPanel();
+      }
+      isCloudSynced = true;
+    } catch (e) {
+      console.error('[Sync] Cloud sync failed:', e);
+      isCloudSynced = false;
+    }
+
+    if (btn) btn.style.opacity = '1';
+    updateCloudUI();
+  }
+
+  /** 登录后自动同步 */
+  async function onCloudLogin(user) {
+    cloudUser = user;
+    updateCloudUI();
+    await syncToCloud();
+  }
+
+  /** 登出后切回本地模式 */
+  function onCloudLogout() {
+    cloudUser = null;
+    isCloudSynced = false;
+    // 重新从 localStorage 加载
+    bookmarks = loadBookmarks();
+    render();
+    renderPanel();
+    updateCloudUI();
+  }
+
+  /** 处理云端同步按钮点击 */
+  async function handleCloudSync() {
+    if (cloudUser) {
+      // 已登录 → 执行同步
+      await syncToCloud();
+    } else {
+      // 未登录 → 弹出登录弹窗
+      if (typeof showLoginModal === 'function') {
+        showLoginModal();
+      }
+    }
+  }
+
+  // 在保存时也同步到云端
+  const origSaveBookmarks = saveBookmarks;
+  saveBookmarks = function() {
+    origSaveBookmarks();
+    // 如果已登录，异步同步到云端
+    if (cloudUser) {
+      // 延迟执行，避免频繁同步
+      if (window._syncTimer) clearTimeout(window._syncTimer);
+      window._syncTimer = setTimeout(async () => {
+        try {
+          await BookmarkAPI.syncLocalToCloud(bookmarks);
+          isCloudSynced = true;
+          updateCloudUI();
+        } catch (_) {
+          isCloudSynced = false;
+        }
+      }, 500);
+    }
+  };
+
   // ==================== 初始化 ====================
 
-  function init() {
+  async function init() {
     bookmarks = loadBookmarks();
     isCollapsed = loadCollapsedState();
     loadNavSettings();
@@ -487,6 +611,23 @@
 
     applyNavSettings();
     render();
+
+    // -------- 云端同步初始化 --------
+    await checkCloudAuth();
+    updateCloudUI();
+
+    // 监听登录/登出事件
+    window.addEventListener('auth:signin', (e) => {
+      onCloudLogin(e.detail?.user);
+    });
+    window.addEventListener('auth:signout', () => {
+      onCloudLogout();
+    });
+
+    // 如果已登录，自动执行同步
+    if (cloudUser) {
+      syncToCloud().catch(() => {});
+    }
 
     // 事件绑定 — 侧边栏
     toggleBtn?.addEventListener('click', toggleCollapse);
