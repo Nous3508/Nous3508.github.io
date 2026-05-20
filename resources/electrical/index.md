@@ -36,7 +36,7 @@ permalink: /resources/electrical/
     </div>
     <div class="learning-card">
       <p class="learning-kicker">阶段一 · C 语言入门</p>
-      <h2>��把编程基础打牢，再进入单片机</h2>
+      <h2>📖 把编程基础打牢，再进入单片机</h2>
       <p class="learning-goal">目标：能用 C 语言写出基本程序，理解变量、控制流、函数、数组等核心概念。</p>
       <ul class="learning-list">
         <li>3~7 天快速过一遍 C 语言语法</li>
@@ -69,7 +69,7 @@ permalink: /resources/electrical/
       <ul class="learning-list">
         <li>如果不想过渡，也可以直接进 STM32</li>
         <li>但建议先用 51 建立“单片机是什么”的直观认知</li>
-        <li>掌握 IO 输入输出���中断、定时器、串口</li>
+        <li>掌握 IO 输入输出、中断、定时器、串口</li>
         <li>熟悉 Keil 的安装与基本调试</li>
         <li>学会用最小系统板完成基础实验</li>
       </ul>

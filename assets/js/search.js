@@ -1,9 +1,7 @@
 (() => {
   const input = document.getElementById("site-search-input");
   const btn = document.getElementById("site-search-btn");
-  const modeBtn = document.getElementById("search-mode-btn");
   const modeBtnInline = document.getElementById("search-mode-btn-inline");
-  const modeIcon = document.getElementById("search-mode-icon");
   const modeIconInline = document.getElementById("search-mode-icon-inline");
   const results = document.getElementById("search-results");
   const hints = document.getElementById("search-hints");
@@ -15,18 +13,31 @@
 
   function syncIcon() {
     const icon = mode === "site" ? "🔍" : "🌐";
-    if (modeIcon) modeIcon.textContent = icon;
     if (modeIconInline) modeIconInline.textContent = icon;
     if (hints) hints.textContent = mode === "site" ? "Site search: posts > projects" : "Browser search mode";
+  }
+
+  async function fetchReposWithCache() {
+    const CACHE_KEY = 'nous_search_repos_cache';
+    const CACHE_TTL = 1000 * 60 * 10; // 10 分钟
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      if (cached && Date.now() - cached.t < CACHE_TTL) return cached.data;
+    } catch (_) {}
+    const res = await fetch('https://api.github.com/users/Nous3508/repos?per_page=100');
+    if (!res.ok) return [];
+    const data = await res.json();
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
+    return data;
   }
 
   async function loadDocs() {
     const [r1, r2] = await Promise.all([
       fetch("/search.json"),
-      fetch("https://api.github.com/users/Nous3508/repos?per_page=100")
+      fetchReposWithCache()
     ]);
     const searchData = await r1.json();
-    const repos = await r2.json();
+    const repos = r2;
 
     const posts = (searchData.posts || []).map(p => ({
       type: "post",
@@ -130,7 +141,6 @@
     else doWebSearch();
   });
 
-  modeBtn?.addEventListener("click", toggleMode);
   modeBtnInline?.addEventListener("click", toggleMode);
 
   input?.addEventListener("keydown", e => {
