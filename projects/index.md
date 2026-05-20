@@ -5,8 +5,8 @@ description: "Projects and engineering work by Nous"
 permalink: /projects/
 ---
 <section class="container page-hero" data-aos="fade-up">
-  <p class="eyebrow" data-lang-en="Projects" data-lang-zh="项目">Projects</p>
-  <h1 data-lang-en="Selected Projects" data-lang-zh="精选项目">Selected Projects</h1>
+  <p class="eyebrow">Projects</p>
+  <h1>Selected Projects</h1>
   <p class="lead lang-en">
     A collection of projects, experiments, and engineering work.
   </p>

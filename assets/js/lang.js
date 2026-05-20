@@ -2,13 +2,6 @@
   const key = "nous-lang";
   const btn = document.getElementById("lang-toggle");
 
-  // 需要额外切换的 HTML 属性列表
-  const ATTR_MAP = {
-    "placeholder": "placeholder",
-    "aria-label": "aria-label",
-    "title": "title"
-  };
-
   function apply(lang) {
     // 1. 更新 html lang 属性
     document.documentElement.setAttribute("lang", lang);
@@ -19,17 +12,7 @@
       if (text) el.textContent = text;
     });
 
-    // 3. 处理需要额外切换的 HTML 属性（placeholder / aria-label / title）
-    Object.entries(ATTR_MAP).forEach(([attrKey, attrName]) => {
-      document.querySelectorAll(`[data-lang-en-${attrKey}]`).forEach(el => {
-        const val = el.getAttribute(`data-lang-${lang}-${attrKey}`);
-        if (val !== null) {
-          el.setAttribute(attrName, val);
-        }
-      });
-    });
-
-    // 4. 切换 .lang-en / .lang-zh 块级内容的显示
+    // 3. 保留旧的 class 切换（兼容已有 .lang-en / .lang-zh 结构）
     document.querySelectorAll(".lang-en").forEach(el => {
       el.style.display = lang === "en" ? "" : "none";
     });

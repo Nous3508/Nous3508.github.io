@@ -23,12 +23,6 @@
   const toggleBtn = document.getElementById('bookmark-toggle-btn');
   const addBtn = document.getElementById('bookmark-add-btn');
 
-  // -------- 翻译 --------
-  const LANG_KEY = "nous-lang";
-  function t(en, zh) {
-    return (localStorage.getItem(LANG_KEY) || "en") === "zh" ? zh : en;
-  }
-
   // -------- 状态 --------
   let bookmarks = [];
   let isCollapsed = false;
@@ -88,8 +82,8 @@
         <img src="${faviconUrl(b.url)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="bm-title">${escapeHtml(b.title)}</span>
         <span class="bm-actions">
-          <button class="bm-action-btn bm-edit" data-action="edit" title="${t('Edit','编辑')}">✎</button>
-          <button class="bm-action-btn bm-delete" data-action="delete" title="${t('Delete','删除')}">✕</button>
+          <button class="bm-action-btn bm-edit" data-action="edit" title="Edit">✎</button>
+          <button class="bm-action-btn bm-delete" data-action="delete" title="Delete">✕</button>
         </span>
       </a>
     `).join('');
@@ -114,7 +108,7 @@
       icon.textContent = collapsed ? '▶' : '◀';
     }
     if (toggleBtn) {
-      toggleBtn.setAttribute('aria-label', collapsed ? t('Expand quick nav','展开快捷导航') : t('Collapse quick nav','收起快捷导航'));
+      toggleBtn.setAttribute('aria-label', collapsed ? 'Expand quick nav' : 'Collapse quick nav');
     }
   }
 
@@ -150,11 +144,11 @@
     const form = document.createElement('div');
     form.className = 'bookmark-add-form';
     form.innerHTML = `
-      <input type="text" class="bm-form-url" placeholder="${t('URL, e.g. https://example.com','URL，例如 https://example.com')}" autofocus>
-      <input type="text" class="bm-form-title" placeholder="${t('Title (auto-filled)','标题（自动填充）')}">
+      <input type="text" class="bm-form-url" placeholder="URL, e.g. https://example.com" autofocus>
+      <input type="text" class="bm-form-title" placeholder="Title (auto-filled)">
       <div class="bookmark-add-form-actions">
-        <button class="bookmark-form-confirm" data-action="confirm">${t('Add','添加')}</button>
-        <button class="bookmark-form-cancel" data-action="cancel">${t('Cancel','取消')}</button>
+        <button class="bookmark-form-confirm" data-action="confirm">Add</button>
+        <button class="bookmark-form-cancel" data-action="cancel">Cancel</button>
       </div>
     `;
 
@@ -240,8 +234,8 @@
       <input type="text" class="bm-form-url" value="${escapeHtml(bm.url)}" autofocus>
       <input type="text" class="bm-form-title" value="${escapeHtml(bm.title)}">
       <div class="bookmark-add-form-actions">
-        <button class="bookmark-form-confirm" data-action="confirm">${t('Save','保存')}</button>
-        <button class="bookmark-form-cancel" data-action="cancel">${t('Cancel','取消')}</button>
+        <button class="bookmark-form-confirm" data-action="confirm">Save</button>
+        <button class="bookmark-form-cancel" data-action="cancel">Cancel</button>
       </div>
     `;
 

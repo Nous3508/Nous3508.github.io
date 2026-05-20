@@ -5,8 +5,8 @@ description: "Blog posts, notes, and updates"
 permalink: /blog/
 ---
 <section class="container page-hero" data-aos="fade-up">
-  <p class="eyebrow" data-lang-en="Blog" data-lang-zh="博客">Blog</p>
-  <h1 data-lang-en="Blog posts" data-lang-zh="博客文章">Blog posts</h1>
+  <p class="eyebrow">Blog</p>
+  <h1>Blog posts</h1>
   <p class="lead lang-en">
     Clean reading experience with table of contents and share buttons.
   </p>
@@ -24,8 +24,8 @@ permalink: /blog/
       <p>{{ post.excerpt | strip_html | truncate: 180 }}</p>
     </div>
     <div class="blog-card-actions">
-      <a class="read-btn" href="{{ post.url }}" data-lang-en="Read" data-lang-zh="阅读">Read</a>
-      <button class="share-btn" data-share-url="{{ site.url }}{{ post.url }}" data-share-title="{{ post.title }}" data-lang-en="Share" data-lang-zh="分享">Share</button>
+      <a class="read-btn" href="{{ post.url }}">Read</a>
+      <button class="share-btn" data-share-url="{{ site.url }}{{ post.url }}" data-share-title="{{ post.title }}">Share</button>
     </div>
   </article>
   {% endfor %}
