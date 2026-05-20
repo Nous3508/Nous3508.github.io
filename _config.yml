@@ -2,7 +2,7 @@ title: "Nous の little nest"
 description: "Nous の little nest — projects, blog, learning, profile, and notes"
 url: "https://nous3508.github.io"
 baseurl: ""
-lang: "en"
+lang: "zh"
 
 markdown: kramdown
 highlighter: rouge
