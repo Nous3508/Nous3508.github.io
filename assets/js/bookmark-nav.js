@@ -194,7 +194,7 @@
     dropdown?.classList.remove('open');
   }
 
-  function handleDropdownAction(e) {
+  async function handleDropdownAction(e) {
     const item = e.target.closest('.bm-dropdown-item');
     if (!item) return;
     const action = item.dataset.action;
@@ -202,11 +202,12 @@
       closeDropdown();
       openPanel();
     } else if (action === 'push-cloud') {
+      // 先显示加载态，操作完成后再关闭菜单
+      await handlePushToCloud();
       closeDropdown();
-      handlePushToCloud();
     } else if (action === 'pull-cloud') {
+      await handlePullFromCloud();
       closeDropdown();
-      handlePullFromCloud();
     }
   }
 
@@ -434,13 +435,23 @@
     nav?.classList.add('hover-expand');
   }
 
+  /** 检查是否有同步操作正在进行 */
+  function isSyncInProgress() {
+    const pushBtn = dropdown?.querySelector('[data-action="push-cloud"]');
+    const pullBtn = dropdown?.querySelector('[data-action="pull-cloud"]');
+    return (pushBtn?.disabled || pullBtn?.disabled);
+  }
+
   function onNavLeave() {
     isHovering = false;
     clearTimeout(hoverTimer);
     hoverTimer = setTimeout(() => {
       if (!isHovering && isCollapsed) {
         nav?.classList.remove('hover-expand');
-        closeDropdown(); // 鼠标离开时同时关闭下拉菜单
+        // 同步进行中不关闭菜单，避免丢失加载态视觉反馈
+        if (!isSyncInProgress()) {
+          closeDropdown();
+        }
       }
     }, 200);
   }
@@ -506,7 +517,6 @@
     const btn = dropdown?.querySelector(`[data-action="${action}"]`);
     if (!btn) return;
     const iconSpan = btn.querySelector('.bm-dropdown-icon');
-    const textSpan = btn.querySelector('span:not(.bm-dropdown-icon)') || btn.querySelector('span[data-lang-en]');
     if (loading) {
       btn.classList.add('bm-dropdown-loading');
       btn.disabled = true;
@@ -675,10 +685,12 @@
 
     // 点击外部关闭下拉菜单和面板
     document.addEventListener('click', (e) => {
-      // 关闭下拉菜单
+      // 关闭下拉菜单（同步进行中不关闭）
       if (isDropdownOpen && dropdown && gearBtn &&
           !dropdown.contains(e.target) && !gearBtn.contains(e.target)) {
-        closeDropdown();
+        if (!isSyncInProgress()) {
+          closeDropdown();
+        }
       }
     });
 

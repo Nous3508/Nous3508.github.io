@@ -2125,7 +2125,6 @@ button:focus:not(:focus-visible) {
   transition: opacity .32s ease, max-height .32s ease, padding .32s ease, margin .32s ease;
   max-height:600px;
   opacity:1;
-  overflow:hidden;
 }
 
 .bookmark-nav.collapsed .bookmark-list,
@@ -2137,6 +2136,7 @@ button:focus:not(:focus-visible) {
   padding-bottom:0;
   margin-top:0;
   margin-bottom:0;
+  overflow:hidden;
   pointer-events:none;
 }
 
