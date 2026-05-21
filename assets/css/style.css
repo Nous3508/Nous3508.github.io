@@ -158,7 +158,7 @@ button, input{ font:inherit; }
   text-align:center;
 }
 
-/* === 首页 H1 渐变色流动动画 === */
+/* === 首页 H1 渐变色流动动画 可修改渐变周期 === */
 .hero-copy h1 {
   background: linear-gradient(
     90deg,
@@ -173,7 +173,7 @@ button, input{ font:inherit; }
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-flow 5s ease infinite;
+  animation: gradient-flow 50s ease infinite;   /* 渐变周期 */
 }
 
 @keyframes gradient-flow {
