@@ -519,21 +519,8 @@
     if (btn) btn.style.opacity = '0.6';
 
     try {
-      // 合并逻辑：将本地书签推送到云端
+      // 以本地顺序为基准，全量推送到云端
       await BookmarkAPI.syncLocalToCloud(bookmarks);
-      // 再从云端拉取最新（获得带 ID 的完整列表）
-      const cloudData = await BookmarkAPI.fetchAll();
-      if (cloudData.length) {
-        // 把云端数据转成本地格式
-        bookmarks = cloudData.map(b => ({
-          id: b.id,
-          title: b.title,
-          url: b.url
-        }));
-        saveBookmarks();
-        render();
-        renderPanel();
-      }
       isCloudSynced = true;
     } catch (e) {
       console.error('[Sync] Cloud sync failed:', e);

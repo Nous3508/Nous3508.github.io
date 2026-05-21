@@ -137,7 +137,14 @@ const BookmarkAPI = {
     if (error) throw error;
   },
 
-  /** 同步本地书签到云端（合并策略） */
+  /** 同步本地书签到云端（全量合并策略）
+   *
+   *  以本地顺序为基准，将本地书签的完整顺序、标题同步到云端：
+   *    - 本地有 & 云端有  → 更新 position + title
+   *    - 本地有 & 云端无  → 插入新记录
+   *    - 本地无 & 云端有  → 删除云端记录
+   *  同步完成后返回云端最新列表（与本地一致）。
+   */
   async syncLocalToCloud(localBookmarks) {
     if (!supabaseClient) throw new Error('Supabase not initialized');
     const user = await Auth.getUser();
@@ -146,24 +153,37 @@ const BookmarkAPI = {
 
     // 1. 获取云端已有书签
     const cloudBookmarks = await this.fetchAll();
-    const cloudUrls = new Set(cloudBookmarks.map(b => b.url));
 
-    // 2. 找出本地有但云端没有的
-    const toAdd = localBookmarks.filter(b => !cloudUrls.has(b.url));
-
-    // 3. 批量添加
-    for (const bm of toAdd) {
-      await supabaseClient
-        .from('bookmarks')
-        .insert([{
-          user_id: userId,
-          title: bm.title,
-          url: bm.url,
-          position: cloudBookmarks.length + toAdd.indexOf(bm)
-        }]);
+    // 建立云端 URL → 记录的映射
+    const cloudMap = new Map();
+    for (const cb of cloudBookmarks) {
+      cloudMap.set(cb.url, cb);
     }
 
-    // 4. 返回合并后的完整列表
+    // 2. 遍历本地书签，按顺序同步
+    for (let i = 0; i < localBookmarks.length; i++) {
+      const bm = localBookmarks[i];
+      const existing = cloudMap.get(bm.url);
+
+      if (existing) {
+        // 已存在 → 更新位置和标题（如果变了的话）
+        if (existing.position !== i || existing.title !== bm.title) {
+          await this.update(existing.id, { position: i, title: bm.title });
+        }
+        // 从 map 中移除，剩下的就是要删除的
+        cloudMap.delete(bm.url);
+      } else {
+        // 不存在 → 插入
+        await this.add(bm.title, bm.url, i);
+      }
+    }
+
+    // 3. 删除云端有但本地已没有的书签
+    for (const [, cb] of cloudMap) {
+      await this.remove(cb.id);
+    }
+
+    // 4. 重新拉取云端最新列表
     return this.fetchAll();
   }
 };
