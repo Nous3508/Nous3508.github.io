@@ -2800,3 +2800,124 @@ button:focus:not(:focus-visible) {
     padding:20px 18px;
   }
 }
+
+/* ==================== HOMEPAGE SETTINGS EDITOR ==================== */
+.hp-field-group{
+  margin: 14px 0;
+}
+
+.hp-field-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+  font-weight:700;
+  font-size:.9rem;
+  color:var(--text);
+}
+
+.hp-lang-tag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:22px;
+  border-radius:6px;
+  background:var(--accent);
+  color:#fff;
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  flex-shrink:0;
+}
+
+.hp-input{
+  width:100%;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:rgba(255,255,255,0.5);
+  color:var(--text);
+  font-size:.92rem;
+  outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+  box-sizing:border-box;
+}
+
+.hp-input:focus{
+  border-color:var(--accent-solid);
+  box-shadow:0 0 0 3px rgba(142,92,255,0.12);
+}
+
+[data-theme="dark"] .hp-input{
+  background:rgba(255,255,255,0.06);
+}
+
+.hp-input::placeholder{
+  color:var(--muted);
+  opacity:.6;
+}
+
+.hp-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+
+.hp-save-btn{
+  padding:10px 22px;
+  border:none;
+  border-radius:12px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:800;
+  font-size:.92rem;
+  cursor:pointer;
+  transition:opacity .2s ease, transform .2s ease;
+}
+
+.hp-save-btn:hover{
+  opacity:.85;
+  transform:translateY(-2px);
+}
+
+.hp-save-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.hp-reset-btn{
+  padding:10px 18px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:rgba(127,127,127,0.08);
+  color:var(--muted);
+  font-weight:700;
+  font-size:.88rem;
+  cursor:pointer;
+  transition:background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.hp-reset-btn:hover{
+  background:rgba(127,127,127,0.14);
+  color:var(--text);
+  transform:translateY(-2px);
+}
+
+.hp-status{
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--muted);
+  margin-left:4px;
+}
+
+.hp-status--ok{
+  color:#16a34a;
+}
+
+.hp-status--err{
+  color:#dc2626;
+}

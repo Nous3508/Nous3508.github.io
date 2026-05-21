@@ -170,9 +170,12 @@
       renderLoggedIn(session.user);
       // 通知 bookmark-nav 同步数据
       window.dispatchEvent(new CustomEvent('auth:signin', { detail: { user: session.user } }));
+      // 首页文案个性化
+      applyHomepageSettings();
     } else if (event === 'SIGNED_OUT') {
       renderLoggedOut();
       window.dispatchEvent(new CustomEvent('auth:signout'));
+      // 登出后恢复默认文案（刷新页面即可，不强制 reload）
     } else if (event === 'TOKEN_REFRESHED') {
       // Token 自动刷新，无需操作
     }
@@ -214,6 +217,9 @@
 
     // 同步状态
     updateSyncStatus();
+
+    // 首页文案设置
+    renderHomepageSettings();
   }
 
   async function updateSyncStatus() {
@@ -233,11 +239,132 @@
     }
   }
 
+  // ==================== 首页文案设置 ====================
+
+  /** 加载首页文案设置并填充表单 */
+  async function renderHomepageSettings() {
+    const isAccountPage = window.location.pathname.startsWith('/account/');
+    if (!isAccountPage) return;
+
+    const saveBtn = document.getElementById('hp-save-btn');
+    const resetBtn = document.getElementById('hp-reset-btn');
+    const statusEl = document.getElementById('hp-status');
+    if (!saveBtn) return; // 页面不存在该卡片时跳过
+
+    // 加载云端数据
+    let settings = null;
+    try {
+      settings = await HomepageSettings.fetch();
+    } catch (e) {
+      console.warn('[Homepage] Fetch error:', e.message);
+    }
+
+    if (settings) {
+      document.getElementById('hp-eyebrow-en').value = settings.eyebrow_en || '';
+      document.getElementById('hp-title-en').value = settings.title_en || '';
+      document.getElementById('hp-desc-en').value = settings.desc_en || '';
+      document.getElementById('hp-eyebrow-zh').value = settings.eyebrow_zh || '';
+      document.getElementById('hp-title-zh').value = settings.title_zh || '';
+      document.getElementById('hp-desc-zh').value = settings.desc_zh || '';
+    }
+
+    // 保存
+    saveBtn.addEventListener('click', async () => {
+      saveBtn.disabled = true;
+      statusEl.textContent = 'Saving...';
+      statusEl.className = 'hp-status';
+
+      try {
+        await HomepageSettings.save({
+          eyebrow_en: document.getElementById('hp-eyebrow-en').value.trim(),
+          title_en: document.getElementById('hp-title-en').value.trim(),
+          desc_en: document.getElementById('hp-desc-en').value.trim(),
+          eyebrow_zh: document.getElementById('hp-eyebrow-zh').value.trim(),
+          title_zh: document.getElementById('hp-title-zh').value.trim(),
+          desc_zh: document.getElementById('hp-desc-zh').value.trim()
+        });
+
+        statusEl.textContent = '✅ Saved!';
+        statusEl.className = 'hp-status hp-status--ok';
+      } catch (e) {
+        console.error('[Homepage] Save error:', e);
+        statusEl.textContent = '❌ Save failed';
+        statusEl.className = 'hp-status hp-status--err';
+      }
+
+      saveBtn.disabled = false;
+      setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    });
+
+    // 恢复默认
+    resetBtn.addEventListener('click', async () => {
+      document.getElementById('hp-eyebrow-en').value = '';
+      document.getElementById('hp-title-en').value = '';
+      document.getElementById('hp-desc-en').value = '';
+      document.getElementById('hp-eyebrow-zh').value = '';
+      document.getElementById('hp-title-zh').value = '';
+      document.getElementById('hp-desc-zh').value = '';
+      statusEl.textContent = 'Fields cleared. Save to apply.';
+      statusEl.className = 'hp-status';
+    });
+  }
+
+  // ==================== 首页应用个性化文案（非 account 页面） ====================
+
+  /** 在首页登录后替换静态文案 */
+  async function applyHomepageSettings() {
+    const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    if (!isHome) return;
+
+    // 确保登录后再拉取
+    const loggedIn = await Auth.isLoggedIn();
+    if (!loggedIn) return;
+
+    try {
+      const settings = await HomepageSettings.fetch();
+      if (!settings) return;
+
+      // 更新 eyebrow
+      const eyebrow = document.querySelector('.hero-copy .eyebrow');
+      if (eyebrow && settings.eyebrow_en) {
+        eyebrow.textContent = settings.eyebrow_en;
+        // 保存中文版本到 data 属性，供 lang.js 切换时使用
+        eyebrow.dataset.langEn = settings.eyebrow_en;
+        eyebrow.dataset.langZh = settings.eyebrow_zh || settings.eyebrow_en;
+      }
+
+      // 更新标题（h1）
+      const h1 = document.querySelector('.hero-copy h1');
+      if (h1 && settings.title_en) {
+        h1.innerHTML = settings.title_en.replace(/\n/g, '<br>');
+        h1.dataset.langEn = settings.title_en;
+        h1.dataset.langZh = settings.title_zh || settings.title_en;
+      }
+
+      // 更新英文描述
+      const descEn = document.querySelector('.hero-desc.lang-en');
+      if (descEn && settings.desc_en) {
+        descEn.textContent = settings.desc_en;
+        descEn.dataset.langEn = settings.desc_en;
+      }
+
+      // 更新中文描述
+      const descZh = document.querySelector('.hero-desc.lang-zh');
+      if (descZh && settings.desc_zh) {
+        descZh.textContent = settings.desc_zh;
+        descZh.dataset.langZh = settings.desc_zh;
+      }
+    } catch (e) {
+      console.warn('[Homepage] Apply error:', e.message);
+    }
+  }
+
   // -------- 启动 --------
   async function init() {
     await handleAuthCallback();
     initAuthUI();
     renderAccountPage();
+    applyHomepageSettings();
 
     // 每 30 秒刷新一次 session（保持登录状态）
     setInterval(() => {

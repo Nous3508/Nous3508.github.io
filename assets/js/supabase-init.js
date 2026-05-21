@@ -167,3 +167,50 @@ const BookmarkAPI = {
     return this.fetchAll();
   }
 };
+
+// -------- 首页文案 API --------
+const HomepageSettings = {
+  /** 获取当前用户的首页个性化文案 */
+  async fetch() {
+    if (!supabaseClient) throw new Error('Supabase not initialized');
+    const user = await Auth.getUser();
+    const userId = user?.data?.user?.id;
+    if (!userId) return null;
+
+    const { data, error } = await supabaseClient
+      .from('homepage_settings')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data || null;
+  },
+
+  /** 保存首页文案设置（upsert） */
+  async save(settings) {
+    if (!supabaseClient) throw new Error('Supabase not initialized');
+    const user = await Auth.getUser();
+    const userId = user?.data?.user?.id;
+    if (!userId) throw new Error('Not logged in');
+
+    const payload = {
+      user_id: userId,
+      eyebrow_en: settings.eyebrow_en || '',
+      eyebrow_zh: settings.eyebrow_zh || '',
+      title_en: settings.title_en || '',
+      title_zh: settings.title_zh || '',
+      desc_en: settings.desc_en || '',
+      desc_zh: settings.desc_zh || '',
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabaseClient
+      .from('homepage_settings')
+      .upsert(payload, { onConflict: 'user_id' })
+      .select();
+
+    if (error) throw error;
+    return data?.[0];
+  }
+};
