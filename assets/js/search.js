@@ -187,38 +187,38 @@
   }
 
   // ==================== 搜索建议（站外模式） ====================
-  let suggestAbort = null;
+  // 使用 Google Suggest API（JSONP）绕过 CORS 限制
   let suggestTimer = null;
   let suggestIndex = -1; // 键盘高亮索引
+  let suggestScriptEl = null; // 当前正在加载的 <script> 标签
 
-  async function fetchSuggestions(query) {
-    // 取消上一次未完成的请求
-    if (suggestAbort) suggestAbort.abort();
-    const controller = new AbortController();
-    suggestAbort = controller;
+  /** JSONP 回调：Google Suggest 返回后自动调用此函数 */
+  window.handleSuggest = function(data) {
+    // data 格式: ["query", ["sug1","sug2",...], [], {...}]
+    const items = (data && Array.isArray(data) && Array.isArray(data[1]))
+      ? data[1].filter(Boolean)
+      : [];
+    renderSuggestions(items);
+  };
 
-    try {
-      const resp = await fetch(
-        `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&format=json`,
-        { signal: controller.signal }
-      );
-      if (!resp.ok) return [];
-      const data = await resp.json();
-      // DuckDuckGo 返回格式: [ { phrase: "..." }, ... ] 或老格式 ["query", ["sugg1",...]]
-      if (Array.isArray(data)) {
-        if (data.length && typeof data[0] === 'string') {
-          // 老格式 ["query", ["sugg1","sugg2",...]]
-          return data[1] || [];
-        }
-        // 新格式 [{ phrase: "..." }, ...]
-        return data.map(item => item.phrase).filter(Boolean);
-      }
-      return [];
-    } catch (e) {
-      if (e.name === 'AbortError') return [];
-      console.warn('[Search] Suggestion fetch error:', e);
-      return [];
+  function fetchSuggestions(query) {
+    // 移除上一次的 script 标签（取消进行中的请求）
+    if (suggestScriptEl && suggestScriptEl.parentNode) {
+      suggestScriptEl.parentNode.removeChild(suggestScriptEl);
+      suggestScriptEl = null;
     }
+
+    // 创建新的 script 标签发起 JSONP 请求
+    const script = document.createElement('script');
+    script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggest`;
+    script.async = true;
+    script.onerror = () => {
+      console.warn('[Search] Google Suggest request failed');
+      hideSuggestions();
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    document.head.appendChild(script);
+    suggestScriptEl = script;
   }
 
   function renderSuggestions(items) {
@@ -263,9 +263,9 @@
       return;
     }
     clearTimeout(suggestTimer);
-    suggestTimer = setTimeout(async () => {
-      const items = await fetchSuggestions(q);
-      renderSuggestions(items);
+    suggestTimer = setTimeout(() => {
+      fetchSuggestions(q);
+      // 注意：fetchSuggestions 使用 JSONP，结果由 handleSuggest 回调处理
     }, 200);
   }
 
