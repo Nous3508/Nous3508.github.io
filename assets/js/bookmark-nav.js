@@ -31,8 +31,6 @@
   const panelAddBtn = document.getElementById('bm-panel-add-btn');
   const dropdown = document.getElementById('bm-gear-dropdown');
   const posGroup = document.getElementById('bm-nav-position');
-  const opacitySlider = document.getElementById('bm-nav-opacity');
-  const opacityValue = document.getElementById('bm-opacity-value');
 
   // -------- 状态 --------
   let bookmarks = [];
@@ -101,21 +99,17 @@
     if (layout) {
       layout.setAttribute('data-nav-position', navSettings.position);
     }
-    // 更新按钮组高亮
     if (posGroup) {
       posGroup.querySelectorAll('.bm-pos-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.value === navSettings.position);
       });
     }
 
-    // 应用透明度
+    // 应用透明度（通过 CSS 变量 --bm-opacity，仅影响 ::before 背景层）
     if (nav) {
       const opacity = navSettings.opacity / 100;
-      nav.setAttribute('data-nav-opacity', '');
       nav.style.setProperty('--bm-opacity', opacity);
     }
-    if (opacitySlider) opacitySlider.value = navSettings.opacity;
-    if (opacityValue) opacityValue.textContent = navSettings.opacity + '%';
   }
 
   // -------- 工具函数 --------
@@ -190,11 +184,8 @@
     e?.stopPropagation();
     isDropdownOpen = !isDropdownOpen;
     dropdown?.classList.toggle('open', isDropdownOpen);
-    // 下拉打开时同步状态
     if (isDropdownOpen) {
       applyNavSettings();
-      if (opacitySlider) opacitySlider.value = navSettings.opacity;
-      if (opacityValue) opacityValue.textContent = navSettings.opacity + '%';
     }
   }
 
@@ -210,9 +201,12 @@
     if (action === 'manage') {
       closeDropdown();
       openPanel();
-    } else if (action === 'cloud-sync') {
+    } else if (action === 'push-cloud') {
       closeDropdown();
-      handleCloudSync();
+      handlePushToCloud();
+    } else if (action === 'pull-cloud') {
+      closeDropdown();
+      handlePullFromCloud();
     }
   }
 
@@ -224,17 +218,6 @@
     navSettings.position = btn.dataset.value;
     saveNavSettings();
     applyNavSettings();
-  }
-
-  // ==================== 透明度变更 ====================
-
-  function handleOpacityChange() {
-    if (!opacitySlider || !opacityValue) return;
-    const val = parseInt(opacitySlider.value, 10);
-    navSettings.opacity = val;
-    saveNavSettings();
-    applyNavSettings();
-    opacityValue.textContent = val + '%';
   }
 
   // ==================== 侧滑面板 ====================
@@ -457,6 +440,7 @@
     hoverTimer = setTimeout(() => {
       if (!isHovering && isCollapsed) {
         nav?.classList.remove('hover-expand');
+        closeDropdown(); // 鼠标离开时同时关闭下拉菜单
       }
     }, 200);
   }
@@ -491,51 +475,68 @@
     return null;
   }
 
-  /** 更新云端同步 UI 状态 */
-  function updateCloudUI() {
-    const badge = document.getElementById('bm-sync-badge');
-    const icon = document.getElementById('bm-cloud-sync-icon');
-    const btn = document.getElementById('bm-cloud-sync-btn');
-    if (!btn) return;
-
-    if (cloudUser) {
-      btn.classList.add('bm-cloud-active');
-      if (badge) {
-        badge.textContent = isCloudSynced ? '✅' : '🔄';
-        badge.style.display = 'inline';
+  /** 推送到云端 */
+  async function pushToCloud() {
+    if (!cloudUser) {
+      if (typeof showLoginModal === 'function') {
+        showLoginModal();
       }
-      if (icon) icon.textContent = isCloudSynced ? '☁️' : '⏳';
-    } else {
-      btn.classList.remove('bm-cloud-active');
-      if (badge) badge.style.display = 'none';
-      if (icon) icon.textContent = '☁️';
+      return;
     }
-  }
-
-  /** 同步当前书签到云端 */
-  async function syncToCloud() {
-    if (!cloudUser) return;
-    const btn = document.getElementById('bm-cloud-sync-btn');
-    if (btn) btn.style.opacity = '0.6';
-
     try {
-      // 以本地顺序为基准，全量推送到云端
       await BookmarkAPI.syncLocalToCloud(bookmarks);
       isCloudSynced = true;
+      console.log('[Sync] Pushed to cloud successfully');
     } catch (e) {
-      console.error('[Sync] Cloud sync failed:', e);
+      console.error('[Sync] Push to cloud failed:', e);
       isCloudSynced = false;
     }
-
-    if (btn) btn.style.opacity = '1';
-    updateCloudUI();
   }
 
-  /** 登录后自动同步 */
+  /** 从云端拉取 */
+  async function pullFromCloud() {
+    if (!cloudUser) {
+      if (typeof showLoginModal === 'function') {
+        showLoginModal();
+      }
+      return;
+    }
+    try {
+      const cloudData = await BookmarkAPI.fetchAll();
+      if (!cloudData || !cloudData.length) {
+        console.log('[Sync] No cloud bookmarks to pull');
+        return;
+      }
+      // 将云端数据转换为本地格式
+      bookmarks = cloudData.map((cb, idx) => ({
+        id: 'bm-cloud-' + idx + '-' + Date.now(),
+        title: cb.title,
+        url: cb.url
+      }));
+      saveBookmarks();
+      render();
+      renderPanel();
+      isCloudSynced = true;
+      console.log('[Sync] Pulled from cloud successfully');
+    } catch (e) {
+      console.error('[Sync] Pull from cloud failed:', e);
+    }
+  }
+
+  /** 处理「推送到云端」按钮点击 */
+  async function handlePushToCloud() {
+    await pushToCloud();
+  }
+
+  /** 处理「从云端拉取」按钮点击 */
+  async function handlePullFromCloud() {
+    await pullFromCloud();
+  }
+
+  /** 登录后自动推送到云端 */
   async function onCloudLogin(user) {
     cloudUser = user;
-    updateCloudUI();
-    await syncToCloud();
+    await pushToCloud();
   }
 
   /** 登出后切回本地模式 */
@@ -546,35 +547,18 @@
     bookmarks = loadBookmarks();
     render();
     renderPanel();
-    updateCloudUI();
   }
 
-  /** 处理云端同步按钮点击 */
-  async function handleCloudSync() {
-    if (cloudUser) {
-      // 已登录 → 执行同步
-      await syncToCloud();
-    } else {
-      // 未登录 → 弹出登录弹窗
-      if (typeof showLoginModal === 'function') {
-        showLoginModal();
-      }
-    }
-  }
-
-  // 在保存时也同步到云端
+  // 在保存时也自动推送到云端
   const origSaveBookmarks = saveBookmarks;
   saveBookmarks = function() {
     origSaveBookmarks();
-    // 如果已登录，异步同步到云端
     if (cloudUser) {
-      // 延迟执行，避免频繁同步
       if (window._syncTimer) clearTimeout(window._syncTimer);
       window._syncTimer = setTimeout(async () => {
         try {
           await BookmarkAPI.syncLocalToCloud(bookmarks);
           isCloudSynced = true;
-          updateCloudUI();
         } catch (_) {
           isCloudSynced = false;
         }
@@ -601,9 +585,7 @@
 
     // -------- 云端同步初始化 --------
     await checkCloudAuth();
-    updateCloudUI();
 
-    // 监听登录/登出事件
     window.addEventListener('auth:signin', (e) => {
       onCloudLogin(e.detail?.user);
     });
@@ -611,9 +593,8 @@
       onCloudLogout();
     });
 
-    // 如果已登录，自动执行同步
     if (cloudUser) {
-      syncToCloud().catch(() => {});
+      pushToCloud().catch(() => {});
     }
 
     // 事件绑定 — 侧边栏
@@ -625,9 +606,7 @@
     // 事件绑定 — 下拉菜单
     dropdown?.addEventListener('click', handleDropdownAction);
 
-    // 事件绑定 — 位置按钮组 & 透明度
     posGroup?.addEventListener('click', handlePositionClick);
-    opacitySlider?.addEventListener('input', handleOpacityChange);
 
     // 点击外部关闭下拉菜单和面板
     document.addEventListener('click', (e) => {

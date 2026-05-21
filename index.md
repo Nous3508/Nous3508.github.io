@@ -42,18 +42,15 @@ permalink: /
             <button class="bm-pos-btn" data-value="bottom" title="Bottom">Bottom</button>
           </div>
         </div>
-        <!-- 透明度 -->
-        <div class="bm-dropdown-row">
-          <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
-          <input type="range" id="bm-nav-opacity" min="15" max="100" value="100">
-          <span class="bm-opacity-value" id="bm-opacity-value">100%</span>
-        </div>
       </div>
       <div class="bm-dropdown-divider"></div>
-      <button class="bm-dropdown-item" data-action="cloud-sync" id="bm-cloud-sync-btn">
-        <span class="bm-dropdown-icon" id="bm-cloud-sync-icon">☁️</span>
-        <span data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</span>
-        <span class="bm-sync-badge" id="bm-sync-badge" style="display:none"></span>
+      <button class="bm-dropdown-item" data-action="push-cloud">
+        <span class="bm-dropdown-icon">☁️⬆</span>
+        <span data-lang-en="Push to Cloud" data-lang-zh="推送到云端">Push to Cloud</span>
+      </button>
+      <button class="bm-dropdown-item" data-action="pull-cloud">
+        <span class="bm-dropdown-icon">☁️⬇</span>
+        <span data-lang-en="Pull from Cloud" data-lang-zh="从云端拉取">Pull from Cloud</span>
       </button>
     </div>
   </aside>

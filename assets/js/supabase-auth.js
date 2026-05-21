@@ -359,12 +359,111 @@
     }
   }
 
+  // ==================== 账户页透明度控制 ====================
+
+  const BM_OPACITY_KEY = 'nous_bookmark_nav_settings';
+  const CARD_OPACITY_KEY = 'nous_card_opacity';
+
+  /** 读取书签导航透明度设置 */
+  function loadBmOpacity() {
+    try {
+      const raw = localStorage.getItem(BM_OPACITY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.opacity === 'number') return parsed.opacity;
+      }
+    } catch (_) {}
+    return 100;
+  }
+
+  /** 保存书签导航透明度 */
+  function saveBmOpacity(val) {
+    try {
+      const raw = localStorage.getItem(BM_OPACITY_KEY);
+      const settings = raw ? JSON.parse(raw) : {};
+      settings.opacity = val;
+      localStorage.setItem(BM_OPACITY_KEY, JSON.stringify(settings));
+    } catch (_) {}
+  }
+
+  /** 读取全局卡片透明度 */
+  function loadCardOpacity() {
+    try {
+      const val = localStorage.getItem(CARD_OPACITY_KEY);
+      if (val !== null) return parseInt(val, 10);
+    } catch (_) {}
+    return 100;
+  }
+
+  /** 保存全局卡片透明度 */
+  function saveCardOpacity(val) {
+    localStorage.setItem(CARD_OPACITY_KEY, String(val));
+  }
+
+  /** 应用书签导航透明度 */
+  function applyBmOpacity(val) {
+    const opacity = val / 100;
+    const nav = document.getElementById('bookmark-nav');
+    if (nav) nav.style.setProperty('--bm-opacity', opacity);
+  }
+
+  /** 应用全局卡片透明度 */
+  function applyCardOpacity(val) {
+    const opacity = val / 100;
+    document.documentElement.style.setProperty('--card-bg-opacity', opacity);
+  }
+
+  /** 初始化账户页透明度滑块 */
+  function renderOpacityControls() {
+    const isAccountPage = window.location.pathname.startsWith('/account/');
+    if (!isAccountPage) return;
+
+    // ---- 书签导航透明度 ----
+    const bmSlider = document.getElementById('acct-bm-opacity');
+    const bmValue = document.getElementById('acct-bm-opacity-value');
+    if (bmSlider && bmValue) {
+      const savedBm = loadBmOpacity();
+      bmSlider.value = savedBm;
+      bmValue.textContent = savedBm + '%';
+      applyBmOpacity(savedBm);
+
+      bmSlider.addEventListener('input', () => {
+        const val = parseInt(bmSlider.value, 10);
+        bmValue.textContent = val + '%';
+        saveBmOpacity(val);
+        applyBmOpacity(val);
+      });
+    }
+
+    // ---- 全局卡片透明度 ----
+    const cardSlider = document.getElementById('acct-card-opacity');
+    const cardValue = document.getElementById('acct-card-opacity-value');
+    if (cardSlider && cardValue) {
+      const savedCard = loadCardOpacity();
+      cardSlider.value = savedCard;
+      cardValue.textContent = savedCard + '%';
+      applyCardOpacity(savedCard);
+
+      cardSlider.addEventListener('input', () => {
+        const val = parseInt(cardSlider.value, 10);
+        cardValue.textContent = val + '%';
+        saveCardOpacity(val);
+        applyCardOpacity(val);
+      });
+    }
+  }
+
   // -------- 启动 --------
   async function init() {
     await handleAuthCallback();
     initAuthUI();
     renderAccountPage();
+    renderOpacityControls();
     applyHomepageSettings();
+
+    // 所有页面加载时应用已保存的全局卡片透明度
+    const savedCardOpacity = loadCardOpacity();
+    applyCardOpacity(savedCardOpacity);
 
     // 每 30 秒刷新一次 session（保持登录状态）
     setInterval(() => {

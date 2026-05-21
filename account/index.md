@@ -102,6 +102,32 @@ permalink: /account/
   </article>
 
   <article class="acct-card" data-aos="fade-up" data-aos-delay="180">
+    <h2 data-lang-en="Sidebar Nav Opacity" data-lang-zh="侧边导航栏透明度">Sidebar Nav Opacity</h2>
+    <p data-lang-en="Adjust the background transparency of the sidebar bookmark nav. Text remains fully readable."
+       data-lang-zh="调整侧边书签导航栏的背景透明度，文字始终保持清晰可读。">
+      Adjust the background transparency of the sidebar bookmark nav. Text remains fully readable.
+    </p>
+    <div class="opacity-control-row">
+      <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
+      <input type="range" id="acct-bm-opacity" class="opacity-slider" min="15" max="100" value="100">
+      <span class="opacity-value" id="acct-bm-opacity-value">100%</span>
+    </div>
+  </article>
+
+  <article class="acct-card" data-aos="fade-up" data-aos-delay="200">
+    <h2 data-lang-en="Card Background Opacity" data-lang-zh="全局卡片透明度">Card Background Opacity</h2>
+    <p data-lang-en="Adjust the background transparency of all cards (projects, blog, profile, etc.). Sidebar nav is not affected. Text stays fully readable."
+       data-lang-zh="调整所有卡片（项目、博客、个人简介等）的背景透明度，侧边导航栏不受影响，文字始终保持清晰可读。">
+      Adjust the background transparency of all cards (projects, blog, profile, etc.). Sidebar nav is not affected. Text stays fully readable.
+    </p>
+    <div class="opacity-control-row">
+      <label data-lang-en="Opacity" data-lang-zh="透明度">Opacity</label>
+      <input type="range" id="acct-card-opacity" class="opacity-slider" min="15" max="100" value="100">
+      <span class="opacity-value" id="acct-card-opacity-value">100%</span>
+    </div>
+  </article>
+
+  <article class="acct-card" data-aos="fade-up" data-aos-delay="220">
     <h2 data-lang-en="Sign Out" data-lang-zh="退出登录">Sign Out</h2>
     <p data-lang-en="Sign out of your account. Local bookmarks will be preserved."
        data-lang-zh="退出登录。本地收藏夹会保留。">
