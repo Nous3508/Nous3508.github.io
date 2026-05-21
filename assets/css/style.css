@@ -1209,6 +1209,24 @@ body{
     var(--page-bg-image) center center / cover fixed no-repeat;
 }
 
+/* === 首页背景粒子 Canvas === */
+.bg-particles-canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:0;
+  display:block;
+}
+
+/* 确保 .home-layout 内的内容在粒子层之上 */
+.home-layout{
+  position:relative;
+  z-index:1;
+}
+
 .project-card,
 .blog-card,
 .mini-post-card,
