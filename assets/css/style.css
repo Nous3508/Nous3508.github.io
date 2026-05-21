@@ -294,6 +294,62 @@ button, input{ font:inherit; }
   color:var(--muted);
 }
 
+/* ---- search input wrap (for suggestion dropdown positioning) ---- */
+.search-input-wrap{
+  position:relative;
+  flex:1;
+}
+
+/* ---- search suggestion dropdown ---- */
+.search-suggestions{
+  position:absolute;
+  top:100%;
+  left:0;
+  right:0;
+  z-index:999;
+  background:var(--card-strong, var(--card));
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 18px 18px;
+  box-shadow:var(--shadow-strong);
+  overflow:hidden;
+  max-height:280px;
+  overflow-y:auto;
+}
+.search-suggestion-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 18px;
+  cursor:pointer;
+  font-size:.92rem;
+  color:var(--text);
+  transition:background .15s ease;
+}
+.search-suggestion-item:hover,
+.search-suggestion-item.highlighted{
+  background:rgba(127,127,127,0.10);
+}
+.search-suggestion-item .suggestion-icon{
+  flex-shrink:0;
+  color:var(--muted);
+  font-size:.82rem;
+}
+.search-suggestion-item .suggestion-text{
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.search-suggestion-empty{
+  padding:16px 18px;
+  color:var(--muted);
+  text-align:center;
+  font-size:.85rem;
+}
+
 .section-gap{
   padding: 18px 0 36px;
 }
@@ -581,10 +637,14 @@ button, input{ font:inherit; }
   .search-bar{
     flex-direction:column;
   }
+  .search-input-wrap,
   #site-search-input,
   .search-submit,
   .search-mode-btn{
     width:100%;
+  }
+  .search-suggestions{
+    border-radius:0 0 16px 16px;
   }
   .hero-home{
     min-height:auto;

@@ -6,15 +6,20 @@
   const results = document.getElementById("search-results");
   const hints = document.getElementById("search-hints");
 
+  const suggestBox = document.getElementById("search-suggestions");
+
   const key = "nous-search-mode";
   let mode = localStorage.getItem(key) || "site"; // site | web
   let index = null;
   let docs = [];
 
   function syncIcon() {
-    const icon = mode === "site" ? "🔍" : "🌐";
+    const isSite = mode === "site";
+    const icon = isSite ? "🔍" : "🌐";
     if (modeIconInline) modeIconInline.textContent = icon;
-    if (hints) hints.textContent = mode === "site" ? "Site search: posts > projects" : "Browser search mode";
+    if (hints) hints.textContent = isSite ? "Site search: posts > projects" : "Browser search mode";
+    // 更新输入框占位符
+    if (input) input.placeholder = isSite ? "Search posts / projects..." : "Search the web with Bing...";
   }
 
   async function fetchReposWithCache() {
@@ -171,30 +176,201 @@
     render(merged);
   }
 
-  function doWebSearch() {
-    const q = input?.value?.trim();
+  function doWebSearch(query) {
+    const q = (query || input?.value)?.trim();
     if (!q) return;
-    window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(q)}`;
+    window.open(`https://www.bing.com/search?q=${encodeURIComponent(q)}`, '_blank');
+    // 搜索后关闭建议下拉
+    hideSuggestions();
+    // 可选：聚焦回输入框
+    input?.focus();
+  }
+
+  // ==================== 搜索建议（站外模式） ====================
+  let suggestAbort = null;
+  let suggestTimer = null;
+  let suggestIndex = -1; // 键盘高亮索引
+
+  async function fetchSuggestions(query) {
+    // 取消上一次未完成的请求
+    if (suggestAbort) suggestAbort.abort();
+    const controller = new AbortController();
+    suggestAbort = controller;
+
+    try {
+      const resp = await fetch(
+        `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&format=json`,
+        { signal: controller.signal }
+      );
+      if (!resp.ok) return [];
+      const data = await resp.json();
+      // DuckDuckGo 返回格式: [ { phrase: "..." }, ... ] 或老格式 ["query", ["sugg1",...]]
+      if (Array.isArray(data)) {
+        if (data.length && typeof data[0] === 'string') {
+          // 老格式 ["query", ["sugg1","sugg2",...]]
+          return data[1] || [];
+        }
+        // 新格式 [{ phrase: "..." }, ...]
+        return data.map(item => item.phrase).filter(Boolean);
+      }
+      return [];
+    } catch (e) {
+      if (e.name === 'AbortError') return [];
+      console.warn('[Search] Suggestion fetch error:', e);
+      return [];
+    }
+  }
+
+  function renderSuggestions(items) {
+    if (!suggestBox) return;
+    if (!items || !items.length) {
+      hideSuggestions();
+      return;
+    }
+    suggestBox.style.display = 'block';
+    suggestBox.innerHTML = items.map((text, i) => `
+      <div class="search-suggestion-item" data-index="${i}" data-query="${text.replace(/"/g, '&quot;')}">
+        <span class="suggestion-icon">🌐</span>
+        <span class="suggestion-text">${escapeHtml(text)}</span>
+      </div>
+    `).join('');
+    suggestIndex = -1;
+  }
+
+  function hideSuggestions() {
+    if (suggestBox) suggestBox.style.display = 'none';
+    suggestIndex = -1;
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  // 防抖获取建议
+  function onInputChanged(e) {
+    // 程序化设置值时不重复请求
+    if (e?._suppressSuggest) return;
+
+    if (mode !== 'web') {
+      hideSuggestions();
+      return;
+    }
+    const q = input?.value?.trim();
+    if (!q || q.length < 2) {
+      hideSuggestions();
+      return;
+    }
+    clearTimeout(suggestTimer);
+    suggestTimer = setTimeout(async () => {
+      const items = await fetchSuggestions(q);
+      renderSuggestions(items);
+    }, 200);
+  }
+
+  // 选择一条建议
+  function pickSuggestion(text) {
+    if (input) {
+      input.value = text;
+      // 手动触发 input 事件，但标记为程序修改，避免重复请求建议
+      const evt = new Event('input', { bubbles: true });
+      evt._suppressSuggest = true;
+      input.dispatchEvent(evt);
+    }
+    hideSuggestions();
+    doWebSearch(text);
+  }
+
+  // 键盘导航
+  function onSuggestKeydown(e) {
+    if (!suggestBox || suggestBox.style.display === 'none') return;
+    const items = suggestBox.querySelectorAll('.search-suggestion-item');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      suggestIndex = Math.min(suggestIndex + 1, items.length - 1);
+      highlightSuggestion(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      suggestIndex = Math.max(suggestIndex - 1, -1);
+      highlightSuggestion(items);
+    } else if (e.key === 'Enter' && suggestIndex >= 0) {
+      e.preventDefault();
+      const text = items[suggestIndex]?.dataset?.query;
+      if (text) pickSuggestion(text);
+    } else if (e.key === 'Escape') {
+      hideSuggestions();
+      input?.blur();
+    }
+  }
+
+  function highlightSuggestion(items) {
+    items.forEach((el, i) => {
+      el.classList.toggle('highlighted', i === suggestIndex);
+    });
+    // 滚动到可见区域
+    if (suggestIndex >= 0 && items[suggestIndex]) {
+      items[suggestIndex].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  // 点击外部关闭建议
+  function onDocumentClick(e) {
+    if (suggestBox && !e.target.closest('.search-input-wrap') && !e.target.closest('#search-mode-btn-inline')) {
+      hideSuggestions();
+    }
   }
 
   function toggleMode() {
     mode = mode === "site" ? "web" : "site";
     localStorage.setItem(key, mode);
     syncIcon();
+    hideSuggestions();
+    // 切换模式时清空站内搜索结果
+    if (results) results.innerHTML = '';
   }
 
+  // --- 事件绑定 ---
+
   btn?.addEventListener("click", () => {
+    hideSuggestions();
     if (mode === "site") doSiteSearch();
     else doWebSearch();
   });
 
   modeBtnInline?.addEventListener("click", toggleMode);
 
+  // 输入框：回车 → 搜索；方向键 → 导航建议
   input?.addEventListener("keydown", e => {
+    // 如果有建议下拉且正在导航，交给 onSuggestKeydown 处理
+    if (suggestBox && suggestBox.style.display !== 'none' &&
+        (e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
+         (e.key === 'Enter' && suggestIndex >= 0) || e.key === 'Escape')) {
+      onSuggestKeydown(e);
+      return;
+    }
     if (e.key === "Enter") {
+      hideSuggestions();
       if (mode === "site") doSiteSearch();
       else doWebSearch();
     }
+  });
+
+  // 输入变化时获取建议
+  input?.addEventListener("input", onInputChanged);
+
+  // 点击建议项
+  document.addEventListener("click", e => {
+    const item = e.target.closest(".search-suggestion-item");
+    if (item) {
+      const text = item.dataset.query;
+      if (text) pickSuggestion(text);
+      return;
+    }
+    // 点击外部关闭
+    onDocumentClick(e);
   });
 
   syncIcon();

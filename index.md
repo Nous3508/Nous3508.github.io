@@ -123,7 +123,10 @@ permalink: /
       <button id="search-mode-btn-inline" class="search-mode-btn" aria-label="toggle search mode">
         <span id="search-mode-icon-inline">🔍</span>
       </button>
-      <input id="site-search-input" type="text" placeholder="Search posts / projects..." autocomplete="off">
+      <div class="search-input-wrap">
+        <input id="site-search-input" type="text" placeholder="Search posts / projects..." autocomplete="off">
+        <div id="search-suggestions" class="search-suggestions" style="display:none"></div>
+      </div>
       <button id="site-search-btn" class="search-submit">Search</button>
     </div>
     <div id="search-hints" class="search-hints"></div>
