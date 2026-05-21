@@ -322,20 +322,14 @@ button, input{ font:inherit; }
   color:var(--muted);
 }
 
-/* ---- search input wrap (for suggestion dropdown positioning) ---- */
+/* ---- search input wrap ---- */
 .search-input-wrap{
-  position:relative;
   flex:1;
   display:flex;
 }
 
-/* ---- search suggestion dropdown ---- */
+/* ---- search suggestion dropdown (normal flow) ---- */
 .search-suggestions{
-  position:absolute;
-  top:100%;
-  left:0;
-  right:0;
-  z-index:999;
   background:var(--card-strong, var(--card));
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
@@ -346,6 +340,7 @@ button, input{ font:inherit; }
   overflow:hidden;
   max-height:280px;
   overflow-y:auto;
+  margin-top:-1px; /* 与上方搜索框的边框重叠，消除缝隙 */
 }
 .search-suggestion-item{
   display:flex;

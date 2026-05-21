@@ -96,10 +96,10 @@ permalink: /
       </button>
       <div class="search-input-wrap">
         <input id="site-search-input" type="text" placeholder="Search posts / projects..." autocomplete="off">
-        <div id="search-suggestions" class="search-suggestions" style="display:none"></div>
       </div>
       <button id="site-search-btn" class="search-submit">Search</button>
     </div>
+    <div id="search-suggestions" class="search-suggestions" style="display:none"></div>
     <div id="search-hints" class="search-hints"></div>
     <div id="search-results" class="search-results"></div>
   </div>
