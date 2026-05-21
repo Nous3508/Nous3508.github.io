@@ -96,7 +96,11 @@ button, input{ font:inherit; }
 .nav-tools{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
+}
+.nav-login-btn,
+.nav-avatar{
+  margin-left:auto;
 }
 .icon-btn, .lang-btn{
   border:1px solid var(--border);
@@ -298,7 +302,6 @@ button, input{ font:inherit; }
 .search-input-wrap{
   position:relative;
   flex:1;
-  display:flex;
 }
 
 /* ---- search suggestion dropdown ---- */
@@ -2626,7 +2629,6 @@ button:focus:not(:focus-visible) {
   justify-content:center;
   height:36px;
   padding:0 16px;
-  margin-left:12px;
   border:1px solid var(--border);
   border-radius:999px;
   background:var(--accent);
@@ -2648,7 +2650,6 @@ button:focus:not(:focus-visible) {
   justify-content:center;
   width:36px;
   height:36px;
-  margin-left:8px;
   border-radius:50%;
   overflow:hidden;
   border:2px solid var(--border);
