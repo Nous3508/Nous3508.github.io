@@ -475,36 +475,95 @@
     return null;
   }
 
-  /** 推送到云端 */
-  async function pushToCloud() {
-    if (!cloudUser) {
-      if (typeof showLoginModal === 'function') {
-        showLoginModal();
-      }
-      return;
-    }
-    try {
-      await BookmarkAPI.syncLocalToCloud(bookmarks);
-      isCloudSynced = true;
-      console.log('[Sync] Pushed to cloud successfully');
-    } catch (e) {
-      console.error('[Sync] Push to cloud failed:', e);
-      isCloudSynced = false;
+  // ==================== Toast 通知 ====================
+
+  let toastTimer = null;
+
+  function showToast(message, type) {
+    // 移除已有 toast
+    const old = document.querySelector('.bm-toast');
+    if (old) old.remove();
+    if (toastTimer) clearTimeout(toastTimer);
+
+    const toast = document.createElement('div');
+    toast.className = 'bm-toast bm-toast--' + (type || 'info');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // 入场动画
+    requestAnimationFrame(() => toast.classList.add('bm-toast--show'));
+
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('bm-toast--show');
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+      toastTimer = null;
+    }, 2800);
+  }
+
+  // ==================== 按钮加载态 ====================
+
+  function setSyncButtonLoading(action, loading) {
+    const btn = dropdown?.querySelector(`[data-action="${action}"]`);
+    if (!btn) return;
+    const iconSpan = btn.querySelector('.bm-dropdown-icon');
+    const textSpan = btn.querySelector('span:not(.bm-dropdown-icon)') || btn.querySelector('span[data-lang-en]');
+    if (loading) {
+      btn.classList.add('bm-dropdown-loading');
+      btn.disabled = true;
+      // 保存原始图标文字
+      btn._origIcon = iconSpan?.textContent || '';
+      if (iconSpan) iconSpan.textContent = '⏳';
+    } else {
+      btn.classList.remove('bm-dropdown-loading');
+      btn.disabled = false;
+      // 恢复原始图标文字
+      if (iconSpan && btn._origIcon) iconSpan.textContent = btn._origIcon;
     }
   }
 
-  /** 从云端拉取 */
-  async function pullFromCloud() {
+  // ==================== 云端同步（带反馈） ====================
+
+  /** 推送到云端 */
+  async function pushToCloud(showFeedback) {
     if (!cloudUser) {
       if (typeof showLoginModal === 'function') {
         showLoginModal();
       }
       return;
     }
+    if (showFeedback) setSyncButtonLoading('push-cloud', true);
+    try {
+      await BookmarkAPI.syncLocalToCloud(bookmarks);
+      isCloudSynced = true;
+      if (showFeedback) {
+        showToast('☁️ 已推送到云端', 'success');
+      }
+    } catch (e) {
+      console.error('[Sync] Push to cloud failed:', e);
+      isCloudSynced = false;
+      if (showFeedback) {
+        showToast('❌ 推送到云端失败', 'error');
+      }
+    }
+    if (showFeedback) setSyncButtonLoading('push-cloud', false);
+  }
+
+  /** 从云端拉取 */
+  async function pullFromCloud(showFeedback) {
+    if (!cloudUser) {
+      if (typeof showLoginModal === 'function') {
+        showLoginModal();
+      }
+      return;
+    }
+    if (showFeedback) setSyncButtonLoading('pull-cloud', true);
     try {
       const cloudData = await BookmarkAPI.fetchAll();
       if (!cloudData || !cloudData.length) {
-        console.log('[Sync] No cloud bookmarks to pull');
+        if (showFeedback) {
+          showToast('☁️ 云端暂无书签数据', 'info');
+        }
+        if (showFeedback) setSyncButtonLoading('pull-cloud', false);
         return;
       }
       // 将云端数据转换为本地格式
@@ -517,20 +576,26 @@
       render();
       renderPanel();
       isCloudSynced = true;
-      console.log('[Sync] Pulled from cloud successfully');
+      if (showFeedback) {
+        showToast('☁️ 已从云端拉取 ' + bookmarks.length + ' 个书签', 'success');
+      }
     } catch (e) {
       console.error('[Sync] Pull from cloud failed:', e);
+      if (showFeedback) {
+        showToast('❌ 从云端拉取失败', 'error');
+      }
     }
+    if (showFeedback) setSyncButtonLoading('pull-cloud', false);
   }
 
-  /** 处理「推送到云端」按钮点击 */
+  /** 处理「推送到云端」按钮点击（带反馈） */
   async function handlePushToCloud() {
-    await pushToCloud();
+    await pushToCloud(true);
   }
 
-  /** 处理「从云端拉取」按钮点击 */
+  /** 处理「从云端拉取」按钮点击（带反馈） */
   async function handlePullFromCloud() {
-    await pullFromCloud();
+    await pullFromCloud(true);
   }
 
   /** 登录后自动推送到云端 */

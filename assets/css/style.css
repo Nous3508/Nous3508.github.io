@@ -1918,6 +1918,13 @@ button:focus:not(:focus-visible) {
   background:rgba(127,127,127,0.08);
 }
 
+.bm-dropdown-item:disabled,
+.bm-dropdown-item.bm-dropdown-loading{
+  opacity:0.5;
+  cursor:wait;
+  pointer-events:none;
+}
+
 .bm-dropdown-icon{
   font-size:1rem;
   flex-shrink:0;
@@ -3108,4 +3115,53 @@ button:focus:not(:focus-visible) {
 
 .hp-status--err{
   color:#dc2626;
+}
+
+/* ==================== TOAST NOTIFICATION ==================== */
+.bm-toast{
+  position:fixed;
+  top:calc(var(--nav-height, 72px) + 16px);
+  right:24px;
+  z-index:99999;
+  padding:14px 24px;
+  border-radius:16px;
+  background:var(--card-strong, var(--card));
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-strong);
+  font-weight:700;
+  font-size:.92rem;
+  color:var(--text);
+  transform:translateY(-20px);
+  opacity:0;
+  transition:transform .32s cubic-bezier(.4,0,.2,1), opacity .32s ease;
+  pointer-events:none;
+  max-width:360px;
+}
+
+.bm-toast--show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.bm-toast--success{
+  border-left:4px solid #16a34a;
+}
+
+.bm-toast--error{
+  border-left:4px solid #dc2626;
+}
+
+.bm-toast--info{
+  border-left:4px solid var(--accent-solid);
+}
+
+@media (max-width: 600px){
+  .bm-toast{
+    right:12px;
+    left:12px;
+    max-width:none;
+    text-align:center;
+  }
 }
