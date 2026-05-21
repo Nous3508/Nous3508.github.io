@@ -173,7 +173,7 @@ button, input{ font:inherit; }
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-flow 50s ease infinite;   /* 渐变周期 */
+  animation: gradient-flow 30s ease infinite;   /* 渐变周期 */
 }
 
 @keyframes gradient-flow {
