@@ -32,12 +32,29 @@
   }
 
   async function loadDocs() {
-    const [r1, r2] = await Promise.all([
-      fetch("/search.json"),
-      fetchReposWithCache()
-    ]);
-    const searchData = await r1.json();
-    const repos = r2;
+    let r1, r2, repos;
+    try {
+      [r1, r2] = await Promise.all([
+        fetch("/search.json"),
+        fetchReposWithCache()
+      ]);
+    } catch (e) {
+      console.error('[Search] Network error loading search data:', e);
+      throw e;
+    }
+
+    if (!r1.ok) {
+      throw new Error(`Failed to fetch search.json: ${r1.status} ${r1.statusText}`);
+    }
+
+    let searchData;
+    try {
+      searchData = await r1.json();
+    } catch (e) {
+      console.error('[Search] Invalid JSON from search.json:', e);
+      throw e;
+    }
+    repos = r2;
 
     const posts = (searchData.posts || []).map(p => ({
       type: "post",
@@ -105,21 +122,51 @@
   }
 
   async function doSiteSearch() {
-    if (!index) await loadDocs();
+    // 先清除旧结果（显示加载状态）
+    if (results) results.innerHTML = '<div class="search-result"><h4>Searching…</h4></div>';
+
+    try {
+      if (!index) await loadDocs();
+    } catch (e) {
+      console.error('[Search] Failed to load index:', e);
+      if (results) results.innerHTML = '<div class="search-result"><h4>Index failed to load</h4><p>Check console for details.</p></div>';
+      return;
+    }
+
     const q = input?.value?.trim();
-    if (!q) return;
-    const raw = index.search(q, { enrich: true });
+    if (!q) {
+      if (results) results.innerHTML = '';
+      return;
+    }
+
+    if (!index || typeof index.search !== 'function') {
+      if (results) results.innerHTML = '<div class="search-result"><h4>Search not ready</h4><p>Please try again later.</p></div>';
+      return;
+    }
+
+    let raw;
+    try {
+      raw = index.search(q, { enrich: true });
+    } catch (e) {
+      console.error('[Search] Search error:', e);
+      if (results) results.innerHTML = '<div class="search-result"><h4>Search error</h4><p>Please try again.</p></div>';
+      return;
+    }
+
     const merged = [];
     const seen = new Set();
-    raw.forEach(group => {
-      group.result.forEach(row => {
-        const item = row.doc;
-        if (!seen.has(item.url)) {
-          seen.add(item.url);
-          merged.push(item);
-        }
+    if (raw && raw.length) {
+      raw.forEach(group => {
+        if (!group || !group.result) return;
+        group.result.forEach(row => {
+          const item = row && row.doc;
+          if (item && item.url && !seen.has(item.url)) {
+            seen.add(item.url);
+            merged.push(item);
+          }
+        });
       });
-    });
+    }
     merged.sort((a, b) => (a.priority || 9) - (b.priority || 9));
     render(merged);
   }
@@ -151,5 +198,5 @@
   });
 
   syncIcon();
-  loadDocs().catch(() => {});
+  loadDocs().catch(err => console.warn('[Search] Initial load failed (will retry on first search):', err));
 })();
