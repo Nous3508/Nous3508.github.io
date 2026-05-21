@@ -157,6 +157,30 @@ button, input{ font:inherit; }
   font-weight:900;
   text-align:center;
 }
+
+/* === 首页 H1 渐变色流动动画 === */
+.hero-copy h1 {
+  background: linear-gradient(
+    90deg,
+    var(--accent-solid) 0%,
+    #23d5ff 20%,
+    #9b5cff 40%,
+    #f59e0b 60%,
+    #23d5ff 80%,
+    var(--accent-solid) 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 .hero-desc,
 .lead,
 .post-meta,
