@@ -298,6 +298,7 @@ button, input{ font:inherit; }
 .search-input-wrap{
   position:relative;
   flex:1;
+  display:flex;
 }
 
 /* ---- search suggestion dropdown ---- */
