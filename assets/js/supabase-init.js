@@ -260,3 +260,44 @@ const HomepageSettings = {
     return data?.[0];
   }
 };
+
+// -------- AI 对话设置云 API --------
+const ChatSettingsAPI = {
+  /** 从云端获取对话设置 */
+  async fetch() {
+    if (!supabaseClient) throw new Error('Supabase not initialized');
+    const { data, error } = await supabaseClient
+      .from('chat_settings')
+      .select('*')
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  /** 保存对话设置到云端 */
+  async save(settings) {
+    if (!supabaseClient) throw new Error('Supabase not initialized');
+    const user = await Auth.getUser();
+    const userId = user?.data?.user?.id;
+    if (!userId) throw new Error('Not logged in');
+
+    const payload = {
+      user_id: userId,
+      avatar_data: settings.avatar_data || '',
+      avatar_type: settings.avatar_type || 'emoji',
+      default_provider: settings.default_provider || 'deepseek',
+      default_model: settings.default_model || 'deepseek-chat',
+      api_keys: settings.api_keys || {},
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabaseClient
+      .from('chat_settings')
+      .upsert(payload, { onConflict: 'user_id' })
+      .select();
+
+    if (error) throw error;
+    return data?.[0];
+  }
+};

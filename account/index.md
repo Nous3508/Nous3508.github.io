@@ -135,4 +135,108 @@ permalink: /account/
     </p>
     <button id="acct-signout" class="acct-signout-btn" data-lang-en="Sign Out" data-lang-zh="退出登录">Sign Out</button>
   </article>
+
+  <!-- ======================================== -->
+  <!-- AI 对话设置                              -->
+  <!-- ======================================== -->
+  <article class="acct-card" data-aos="fade-up" data-aos-delay="240">
+    <h2 data-lang-en="🤖 AI Chat Settings" data-lang-zh="🤖 AI 对话设置">🤖 AI Chat Settings</h2>
+    <p data-lang-en="Configure AI avatar, API keys, and default models. Settings are stored locally and can be synced to the cloud."
+       data-lang-zh="配置 AI 头像、API Key 和默认模型。设置存储在本地，可同步到云端。">
+      Configure AI avatar, API keys, and default models. Settings are stored locally and can be synced to the cloud.
+    </p>
+
+    <!-- AI 头像 -->
+    <div class="acct-section">
+      <label class="acct-label" data-lang-en="AI Avatar" data-lang-zh="AI 头像">AI Avatar</label>
+      <div class="chat-avatar-setup">
+        <div class="chat-avatar-preview" id="chat-avatar-preview">🤖</div>
+        <div class="chat-avatar-options">
+          <button class="chat-avatar-option" data-avatar="🤖">🤖</button>
+          <button class="chat-avatar-option" data-avatar="🧠">🧠</button>
+          <button class="chat-avatar-option" data-avatar="🚀">🚀</button>
+          <button class="chat-avatar-option" data-avatar="💡">💡</button>
+          <button class="chat-avatar-option" data-avatar="🤯">🤯</button>
+          <button class="chat-avatar-option" data-avatar="✨">✨</button>
+          <button class="chat-avatar-option" data-avatar="🎯">🎯</button>
+          <button class="chat-avatar-option" data-avatar="⚡">⚡</button>
+          <button class="chat-avatar-option" data-avatar="🌟">🌟</button>
+          <button class="chat-avatar-option" data-avatar="🔮">🔮</button>
+        </div>
+        <label class="chat-avatar-upload-label">
+          <span data-lang-en="Upload Image" data-lang-zh="上传图片">Upload Image</span>
+          <input type="file" id="chat-avatar-upload" accept="image/png,image/jpeg,image/gif,image/webp" class="chat-avatar-upload-input">
+        </label>
+      </div>
+    </div>
+
+    <hr class="acct-divider">
+
+    <!-- API Key 管理 -->
+    <div class="acct-section">
+      <label class="acct-label" data-lang-en="API Keys" data-lang-zh="API Key 管理">API Keys</label>
+      <p class="acct-hint" data-lang-en="Keys are stored in your browser. You can manually push/pull them to the cloud."
+         data-lang-zh="Key 存储在浏览器本地，可以手动上传/拉取到云端。">
+        Keys are stored in your browser. You can manually push/pull them to the cloud.
+      </p>
+      <div id="acct-api-list"></div>
+      <details class="acct-details">
+        <summary data-lang-en="+ Add Custom API" data-lang-zh="+ 添加自定义 API">+ Add Custom API</summary>
+        <div class="acct-custom-form">
+          <label>
+            <span data-lang-en="Name" data-lang-zh="名称">Name</span>
+            <input type="text" id="acct-custom-name" placeholder="e.g. My Worker">
+          </label>
+          <label>
+            <span data-lang-en="Base URL" data-lang-zh="接口地址">Base URL</span>
+            <input type="url" id="acct-custom-baseurl" placeholder="https://your-worker.workers.dev/v1">
+          </label>
+          <label>
+            <span data-lang-en="API Key" data-lang-zh="API Key">API Key</span>
+            <input type="password" id="acct-custom-key" placeholder="sk-...">
+          </label>
+          <label>
+            <span data-lang-en="Models (comma-separated)" data-lang-zh="模型列表（逗号分隔）">Models (comma-separated)</span>
+            <input type="text" id="acct-custom-models" placeholder="gpt-4, gpt-3.5-turbo">
+          </label>
+          <button class="acct-btn" id="acct-custom-add-btn" data-lang-en="Add" data-lang-zh="添加">＋ Add</button>
+        </div>
+      </details>
+    </div>
+
+    <hr class="acct-divider">
+
+    <!-- 默认模型 -->
+    <div class="acct-section">
+      <label class="acct-label" data-lang-en="Default Model" data-lang-zh="默认模型">Default Model</label>
+      <div class="acct-inline-row">
+        <select id="acct-default-provider" class="acct-select">
+          <option value="deepseek">DeepSeek</option>
+          <option value="siliconflow">SiliconFlow</option>
+          <option value="openai">OpenAI</option>
+          <option value="moonshot">Moonshot</option>
+          <option value="groq">Groq</option>
+        </select>
+        <select id="acct-default-model" class="acct-select">
+          <option value="">-- Model --</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="acct-divider">
+
+    <!-- 云端同步 -->
+    <div class="acct-section">
+      <label class="acct-label" data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</label>
+      <p class="acct-hint" data-lang-en="Your chat settings (avatar, model prefs) can be synced to the cloud. API keys are only pushed/pulled manually."
+         data-lang-zh="对话设置（头像、模型偏好等）可同步到云端。API Key 需要手动上传/拉取。">
+        Your chat settings (avatar, model prefs) can be synced to the cloud. API keys are only pushed/pulled manually.
+      </p>
+      <div class="acct-sync-actions">
+        <button class="acct-btn" id="acct-chat-push-btn" data-lang-en="☁️ Push to Cloud" data-lang-zh="☁️ 推送到云端">☁️ Push to Cloud</button>
+        <button class="acct-btn" id="acct-chat-pull-btn" data-lang-en="☁️ Pull from Cloud" data-lang-zh="☁️ 从云端拉取">☁️ Pull from Cloud</button>
+        <span id="acct-chat-sync-status" class="acct-sync-status"></span>
+      </div>
+    </div>
+  </article>
 </section>

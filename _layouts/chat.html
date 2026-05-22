@@ -74,7 +74,6 @@
                 </button>
               </div>
             </div>
-            <button class="chat-topbar-btn chat-topbar-btn--icon" id="chat-settings-btn" aria-label="Settings" title="Settings">⚙️</button>
           </div>
         </div>
 
@@ -116,11 +115,6 @@
               <select id="chat-model-select" class="chat-select" aria-label="Select model">
                 <option value="">-- Model --</option>
               </select>
-              <div class="chat-tool-chip" id="chat-depth-control">
-                <label class="chat-depth-label" for="chat-depth-slider" data-lang-en="🧠 Depth" data-lang-zh="🧠 深度">🧠 Depth</label>
-                <input type="range" id="chat-depth-slider" class="chat-depth-slider" min="0" max="2" step="0.1" value="0.7">
-                <span class="chat-depth-value" id="chat-depth-value">0.7</span>
-              </div>
               <button class="chat-tool-chip chat-web-toggle" id="chat-web-toggle" aria-label="Toggle web search" title="联网搜索">
                 <span id="chat-web-icon">🌐</span>
                 <span data-lang-en="Search" data-lang-zh="联网">Search</span>
@@ -136,44 +130,6 @@
           </div>
         </div>
       </main>
-    </div>
-
-    <!-- API 设置模态框 -->
-    <div class="chat-modal-backdrop" id="chat-modal-backdrop" style="display:none"></div>
-    <div class="chat-modal" id="chat-settings-modal" style="display:none">
-      <div class="chat-modal-header">
-        <h3 data-lang-en="⚙️ API Settings" data-lang-zh="⚙️ API 设置">⚙️ API Settings</h3>
-        <button class="chat-modal-close" id="chat-modal-close" aria-label="Close">✕</button>
-      </div>
-      <div class="chat-modal-body">
-        <p class="chat-modal-desc" data-lang-en="Manage your API keys. Keys are stored in your browser's localStorage and sent directly to the LLM API."
-           data-lang-zh="管理 API Key。Key 仅存储在浏览器本地，直接发送给 LLM API。">
-          Manage your API keys. Keys are stored in your browser's localStorage and sent directly to the LLM API.
-        </p>
-        <div id="chat-api-list"></div>
-        <details class="chat-custom-api-details">
-          <summary data-lang-en="+ Add Custom API" data-lang-zh="+ 添加自定义 API">+ Add Custom API</summary>
-          <div class="chat-custom-api-form">
-            <label>
-              <span data-lang-en="Name" data-lang-zh="名称">Name</span>
-              <input type="text" id="chat-custom-name" placeholder="e.g. My Worker">
-            </label>
-            <label>
-              <span data-lang-en="Base URL" data-lang-zh="接口地址">Base URL</span>
-              <input type="url" id="chat-custom-baseurl" placeholder="https://your-worker.workers.dev/v1">
-            </label>
-            <label>
-              <span data-lang-en="API Key" data-lang-zh="API Key">API Key</span>
-              <input type="password" id="chat-custom-key" placeholder="sk-...">
-            </label>
-            <label>
-              <span data-lang-en="Models (comma-separated)" data-lang-zh="模型列表（逗号分隔）">Models (comma-separated)</span>
-              <input type="text" id="chat-custom-models" placeholder="gpt-4, gpt-3.5-turbo">
-            </label>
-            <button class="chat-btn chat-btn--primary" id="chat-custom-add-btn" data-lang-en="Add" data-lang-zh="添加">Add</button>
-          </div>
-        </details>
-      </div>
     </div>
 
     <!-- Supabase SDK -->

@@ -16,12 +16,6 @@
   const stopBtn = $('chat-stop-btn-bar');
   const providerSelect = $('chat-provider-select');
   const modelSelect = $('chat-model-select');
-  const settingsBtn = $('chat-settings-btn');
-  const settingsModal = $('chat-settings-modal');
-  const modalBackdrop = $('chat-modal-backdrop');
-  const modalClose = $('chat-modal-close');
-  const apiListEl = $('chat-api-list');
-  const customAddBtn = $('chat-custom-add-btn');
   const sidebar = $('chat-sidebar');
   const sidebarList = $('chat-sidebar-list');
   const sidebarToggle = $('chat-sidebar-toggle');
@@ -33,15 +27,12 @@
   const exportJsonBtn = $('chat-export-json-btn');
   const clearBtn = $('chat-clear-btn');
   const expandBtn = $('chat-expand-btn');
-  const depthSlider = $('chat-depth-slider');
-  const depthValue = $('chat-depth-value');
   const webToggle = $('chat-web-toggle');
 
   // ==================== 状态 ====================
   const state = {
     provider: '',
     model: '',
-    temperature: 0.7,
     messages: [],           // [{role, content}]
     isStreaming: false,
     abortController: null,
@@ -60,11 +51,6 @@
     const savedConfig = apiManager.getConfig();
     state.provider = savedConfig.provider || 'deepseek';
     state.model = savedConfig.model || '';
-    state.temperature = savedConfig.temperature ?? 0.7;
-
-    // 恢复深度滑块
-    if (depthSlider) depthSlider.value = state.temperature;
-    if (depthValue) depthValue.textContent = state.temperature;
 
     // 填充提供商下拉
     populateProviders();
@@ -89,6 +75,16 @@
     // 异步获取用户头像
     getUserAvatarUrl();
     renderSidebarHistory();
+    // 更新欢迎界面头像
+    const welcomeIcon = document.querySelector('.chat-welcome-icon');
+    if (welcomeIcon) {
+      const aiAvatar = getAiAvatar();
+      if (aiAvatar && aiAvatar.startsWith('data:')) {
+        welcomeIcon.innerHTML = `<img src="${aiAvatar}" alt="AI" style="width:3rem;height:3rem;border-radius:50%;object-fit:cover">`;
+      } else {
+        welcomeIcon.textContent = aiAvatar;
+      }
+    }
     bindEvents();
   }
 
@@ -158,7 +154,7 @@
     const config = {
       provider: state.provider,
       model: state.model,
-      temperature: state.temperature
+      temperature: 0.7
     };
 
     // 保存配置
@@ -248,8 +244,15 @@
       } else {
         avatar.textContent = '👤';
       }
+    } else if (role === 'ai') {
+      const aiAvatar = getAiAvatar();
+      if (aiAvatar && aiAvatar.startsWith('data:')) {
+        avatar.innerHTML = `<img src="${aiAvatar}" alt="AI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+      } else {
+        avatar.textContent = aiAvatar;
+      }
     } else {
-      avatar.textContent = role === 'ai' ? '🤖' : '⚙️';
+      avatar.textContent = '⚙️';
     }
 
     const bubble = document.createElement('div');
@@ -400,93 +403,11 @@
     clearMessages();
   }
 
-  // ==================== 设置面板 ====================
-  function openSettings() {
-    renderApiList();
-    if (settingsModal) settingsModal.style.display = '';
-    if (modalBackdrop) modalBackdrop.style.display = '';
-  }
-
-  function closeSettings() {
-    if (settingsModal) settingsModal.style.display = 'none';
-    if (modalBackdrop) modalBackdrop.style.display = 'none';
-  }
-
-  function renderApiList() {
-    if (!apiListEl) return;
-    const { PROVIDERS, apiManager } = ChatAPI;
-    const keys = apiManager.getKeys();
-
-    apiListEl.innerHTML = '';
-
-    // 内置提供商
-    Object.entries(PROVIDERS).forEach(([id, cfg]) => {
-      const keyData = keys[id] || {};
-      const hasKey = !!keyData.key;
-      apiListEl.appendChild(createApiCard(id, cfg.name, hasKey, keyData));
-    });
-
-    // 自定义提供商
-    Object.entries(keys).forEach(([id, keyData]) => {
-      if (PROVIDERS[id]) return; // 跳过内置
-      if (!keyData.custom) return;
-      apiListEl.appendChild(createApiCard(id, keyData.customName || id, !!keyData.key, keyData, true));
-    });
-  }
-
-  function createApiCard(id, displayName, hasKey, keyData, isCustom = false) {
-    const card = document.createElement('div');
-    card.className = 'chat-api-card';
-
-    const statusEl = document.createElement('span');
-    statusEl.className = 'chat-api-status';
-    statusEl.textContent = hasKey ? '✅' : '❌';
-
-    const nameEl = document.createElement('span');
-    nameEl.className = 'chat-api-name';
-    nameEl.textContent = displayName;
-
-    const keyInput = document.createElement('input');
-    keyInput.type = 'password';
-    keyInput.className = 'chat-api-key-input';
-    keyInput.placeholder = 'sk-...';
-    keyInput.value = keyData.key || '';
-
-    const urlInput = document.createElement('input');
-    urlInput.type = 'url';
-    urlInput.className = 'chat-api-url-input';
-    urlInput.placeholder = 'Base URL (optional)';
-    urlInput.value = keyData.customBaseUrl || '';
-
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'chat-btn chat-btn--small';
-    saveBtn.textContent = hasKey ? '更新' : '保存';
-    saveBtn.addEventListener('click', () => {
-      ChatAPI.apiManager.setKey(id, {
-        key: keyInput.value,
-        customBaseUrl: urlInput.value || ''
-      });
-      renderApiList();
-    });
-
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'chat-btn chat-btn--small chat-btn--danger';
-    deleteBtn.textContent = '删除';
-    deleteBtn.style.display = isCustom ? '' : 'none';
-    deleteBtn.addEventListener('click', () => {
-      ChatAPI.apiManager.removeKey(id);
-      populateProviders();
-      renderApiList();
-    });
-
-    card.appendChild(statusEl);
-    card.appendChild(nameEl);
-    card.appendChild(keyInput);
-    card.appendChild(urlInput);
-    card.appendChild(saveBtn);
-    card.appendChild(deleteBtn);
-
-    return card;
+  // ==================== 侧栏折叠 ====================
+  function toggleSidebar() {
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    if (!sidebar) return;
+    sidebar.classList.toggle('chat-sidebar--collapsed', state.sidebarCollapsed);
   }
 
   // ==================== 侧栏历史 ====================
@@ -573,6 +494,15 @@
   }
 
   // ==================== 工具函数 ====================
+  function getAiAvatar() {
+    const type = localStorage.getItem('nous_chat_avatar_type') || 'emoji';
+    const data = localStorage.getItem('nous_chat_avatar') || '🤖';
+    if (type === 'upload' && data.startsWith('data:')) {
+      return data; // data URL — 由 CSS background-image 处理
+    }
+    return data;
+  }
+
   function escapeHtml(str) {
     const d = document.createElement('div');
     d.textContent = str;
@@ -593,18 +523,13 @@
 
   // ==================== 事件绑定 ====================
   function bindEvents() {
-    // 发送
     sendBtn?.addEventListener('click', () => sendMessage());
-    // 停止
     stopBtn?.addEventListener('click', stopStreaming);
-    // 回车发送
     textarea?.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
-    // 自动高度
     textarea?.addEventListener('input', autoResizeTextarea);
 
-    // 提供商
     providerSelect?.addEventListener('change', () => {
       state.provider = providerSelect.value;
       state.model = '';
@@ -615,25 +540,16 @@
         modelSelect.innerHTML = '<option value="">-- Model --</option>';
       }
     });
-    // 模型
     modelSelect?.addEventListener('change', () => {
       state.model = modelSelect.value;
       if (state.model) ChatAPI.apiManager.setConfig({ model: state.model });
     });
 
-    // 深度滑块
-    depthSlider?.addEventListener('input', () => {
-      state.temperature = parseFloat(depthSlider.value);
-      if (depthValue) depthValue.textContent = state.temperature.toFixed(1);
-    });
-
-    // 联网搜索
     webToggle?.addEventListener('click', () => {
       state.webSearchEnabled = !state.webSearchEnabled;
       webToggle.classList.toggle('chat-web-toggle--active', state.webSearchEnabled);
     });
 
-    // 展开输入框
     expandBtn?.addEventListener('click', () => {
       if (!textarea) return;
       const isExpanded = textarea.style.maxHeight === '400px';
@@ -641,46 +557,19 @@
       autoResizeTextarea();
     });
 
-    // 侧栏
     sidebarToggle?.addEventListener('click', toggleSidebar);
     sidebarToggleMobile?.addEventListener('click', toggleSidebar);
     sidebarNewBtn?.addEventListener('click', newChat);
 
-    // 设置
-    settingsBtn?.addEventListener('click', openSettings);
-    modalClose?.addEventListener('click', closeSettings);
-    modalBackdrop?.addEventListener('click', closeSettings);
-
-    // More 下拉
     moreBtn?.addEventListener('click', toggleMoreDropdown);
     document.addEventListener('click', closeMoreDropdown);
     moreDropdown?.addEventListener('click', e => e.stopPropagation());
 
-    // 导出
     exportMdBtn?.addEventListener('click', () => exportChat('markdown'));
     exportJsonBtn?.addEventListener('click', () => exportChat('json'));
-
-    // 清空
     clearBtn?.addEventListener('click', () => {
       if (state.messages.length && confirm('确定清空当前对话？')) newChat();
       closeMoreDropdown();
-    });
-
-    // 自定义 API
-    customAddBtn?.addEventListener('click', () => {
-      const name = $('chat-custom-name')?.value?.trim();
-      const baseUrl = $('chat-custom-baseurl')?.value?.trim();
-      const key = $('chat-custom-key')?.value?.trim();
-      const models = $('chat-custom-models')?.value?.trim();
-      if (!name || !baseUrl || !key || !models) { showToast('请填写所有字段'); return; }
-      ChatAPI.apiManager.addCustomProvider(name, baseUrl, key, models);
-      populateProviders();
-      renderApiList();
-      showToast('自定义 API 已添加');
-      $('chat-custom-name').value = '';
-      $('chat-custom-baseurl').value = '';
-      $('chat-custom-key').value = '';
-      $('chat-custom-models').value = '';
     });
   }
 
