@@ -206,6 +206,7 @@
     state.isStreaming = streaming;
     if (sendBtn) sendBtn.style.display = streaming ? 'none' : '';
     if (stopBtn) stopBtn.style.display = streaming ? '' : 'none';
+    if (stopBtnBar) stopBtnBar.style.display = streaming ? '' : 'none';
     if (textarea) textarea.disabled = streaming;
   }
 
@@ -567,6 +568,7 @@
     sendBtn?.addEventListener('click', () => sendMessage());
     // 停止
     stopBtn?.addEventListener('click', stopStreaming);
+    stopBtnBar?.addEventListener('click', stopStreaming);
     // 回车发送
     textarea?.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
