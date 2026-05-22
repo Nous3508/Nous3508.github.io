@@ -22,6 +22,18 @@
   // ==================== 初始化 ====================
   function init() {
     renderAvatarPreview();
+
+    // ChatAPI 可能未加载（chat-api.js 未引入时降级）
+    if (typeof ChatAPI === 'undefined' || !ChatAPI) {
+      console.warn('[AccountChat] ChatAPI not available — API Key & model features disabled.');
+      const apiSection = document.querySelector('.acct-section');
+      if (apiSection) {
+        apiSection.innerHTML = '<p style="color:var(--muted);font-size:.88rem">⚠️ ChatAPI 未加载，请刷新页面或检查网络。</p>';
+      }
+      bindEvents();
+      return;
+    }
+
     renderApiKeyList();
     populateDefaultProvider();
     bindEvents();
@@ -182,7 +194,7 @@
 
     apiManager.removeKey(providerId);
     renderApiKeyStatusBar();
-    showSyncStatus(`已删除 ${providerName} 的 API Key`, 'ok');
+    showApiKeyStatus(`已删除 ${providerName} 的 API Key`, 'ok');
 
     // 如果当前选中的就是被删除的提供商，清空输入
     if (_selectedProviderId === providerId) {
