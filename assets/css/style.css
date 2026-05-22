@@ -2118,24 +2118,37 @@ button:focus:not(:focus-visible) {
   overflow:visible;
 }
 
-/* 收起动画：用 opacity + max-height + padding 平滑过渡，替代 abrupt display:none */
-.bookmark-list,
-.bookmark-gear-btn,
-.bookmark-nav-title{
+/* 收起动画：list 用 max-height 平滑折叠，title/gear 用 opacity 淡出后隐藏 */
+.bookmark-list{
   transition: opacity .32s ease, max-height .32s ease, padding .32s ease, margin .32s ease;
   max-height:600px;
   opacity:1;
 }
 
-.bookmark-nav.collapsed .bookmark-list,
-.bookmark-nav.collapsed .bookmark-gear-btn,
-.bookmark-nav.collapsed .bookmark-nav-title{
+.bookmark-gear-btn,
+.bookmark-nav-title{
+  transition: opacity .28s ease;
+  opacity:1;
+}
+
+.bookmark-nav.collapsed .bookmark-list{
   max-height:0;
   opacity:0;
   padding-top:0;
   padding-bottom:0;
   margin-top:0;
   margin-bottom:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.bookmark-nav.collapsed .bookmark-gear-btn,
+.bookmark-nav.collapsed .bookmark-nav-title{
+  opacity:0;
+  width:0;
+  min-width:0;
+  padding-left:0;
+  padding-right:0;
   overflow:hidden;
   pointer-events:none;
 }
@@ -2159,10 +2172,20 @@ button:focus:not(:focus-visible) {
   width: 220px;
 }
 
-.bookmark-nav.hover-expand .bookmark-list,
-.bookmark-nav.hover-expand .bookmark-gear-btn,
-.bookmark-nav.hover-expand .bookmark-nav-title{
+.bookmark-nav.hover-expand .bookmark-list{
   max-height:600px;
+  opacity:1;
+  pointer-events:auto;
+}
+
+.bookmark-nav.hover-expand .bookmark-gear-btn{
+  width:32px;
+  opacity:1;
+  pointer-events:auto;
+}
+
+.bookmark-nav.hover-expand .bookmark-nav-title{
+  width:auto;
   opacity:1;
   pointer-events:auto;
 }
