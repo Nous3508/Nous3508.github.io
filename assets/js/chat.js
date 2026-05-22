@@ -14,6 +14,7 @@
   const textarea = $('chat-textarea');
   const sendBtn = $('chat-send-btn');
   const stopBtn = $('chat-stop-btn');
+  const stopBtnBar = $('chat-stop-btn-bar');
   const providerSelect = $('chat-provider-select');
   const modelSelect = $('chat-model-select');
   const settingsBtn = $('chat-settings-btn');
@@ -86,6 +87,8 @@
       setTimeout(() => sendMessage(initialQuery), 300);
     }
 
+    // 异步获取用户头像
+    getUserAvatarUrl();
     renderSidebarHistory();
     bindEvents();
   }
@@ -210,6 +213,26 @@
     if (textarea) textarea.disabled = streaming;
   }
 
+  // ==================== 用户头像（与导航栏一致） ====================
+  let _userAvatarUrl = '';
+  async function getUserAvatarUrl() {
+    if (_userAvatarUrl) return _userAvatarUrl;
+    try {
+      if (typeof Auth !== 'undefined' && Auth.getUser) {
+        const { data } = await Auth.getUser();
+        const user = data?.user;
+        if (user) {
+          const identities = user.identities || [];
+          const githubIdentity = identities.find(id => id.provider === 'github');
+          _userAvatarUrl = githubIdentity?.identity_data?.avatar_url
+            || user.user_metadata?.avatar_url
+            || '';
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return _userAvatarUrl;
+  }
+
   // ==================== 消息渲染 ====================
   function appendMessage(role, content, extraClass = '') {
     if (welcomeEl) welcomeEl.style.display = 'none';
@@ -219,7 +242,16 @@
 
     const avatar = document.createElement('div');
     avatar.className = 'chat-msg-avatar';
-    avatar.textContent = role === 'user' ? '👤' : role === 'ai' ? '🤖' : '⚙️';
+    if (role === 'user') {
+      const url = _userAvatarUrl;
+      if (url) {
+        avatar.innerHTML = `<img class="nav-avatar-img" src="${url}" alt="avatar" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+      } else {
+        avatar.textContent = '👤';
+      }
+    } else {
+      avatar.textContent = role === 'ai' ? '🤖' : '⚙️';
+    }
 
     const bubble = document.createElement('div');
     bubble.className = 'chat-msg-bubble';

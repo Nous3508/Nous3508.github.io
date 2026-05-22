@@ -215,15 +215,24 @@
 
       const abortController = new AbortController();
 
+      const isDeepSeekReasoner = provider === 'deepseek' && (model.includes('reasoner') || model.includes('r1'));
+
       const body = {
         model,
         messages,
-        temperature: temperature ?? 0.7,
         stream: true
       };
 
+      // DeepSeek 思考模式：不需要 temperature（API 会忽略）
+      if (isDeepSeekReasoner) {
+        body.reasoning_effort = 'high';
+        body.extra_body = { thinking: { type: 'enabled' } };
+      } else {
+        body.temperature = temperature ?? 0.7;
+      }
+
       // 如果提供商是 DeepSeek，添加前缀（非 reasoning 模型才加）
-      if (provider === 'deepseek' && model !== 'deepseek-reasoner') {
+      if (provider === 'deepseek' && !isDeepSeekReasoner) {
         body.messages = [
           { role: 'system', content: 'You are a helpful assistant. Please answer in the language the user uses.' },
           ...messages

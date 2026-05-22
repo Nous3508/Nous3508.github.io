@@ -29,16 +29,18 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  transition: width 0.32s cubic-bezier(.4,0,.2,1), margin 0.32s ease, opacity 0.32s ease;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
   overflow: hidden;
   padding: 10px 0 10px 10px;
+  transform: translateX(0);
 }
 
 .chat-sidebar.chat-sidebar--collapsed {
-  width: 0;
-  margin-left: -220px;
+  transform: translateX(-110%);
   opacity: 0;
   padding: 0;
+  pointer-events: none;
+  width: 220px;
 }
 
 .chat-sidebar-inner {
@@ -921,9 +923,11 @@
     z-index: 100;
     width: 220px;
     padding: 10px 0 10px 10px;
+    transform: translateX(0);
   }
   .chat-sidebar.chat-sidebar--collapsed {
-    margin-left: -230px;
+    transform: translateX(-110%);
+    margin-left: 0;
   }
   .chat-layout {
     position: relative;
