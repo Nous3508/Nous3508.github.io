@@ -2333,6 +2333,23 @@ button:focus:not(:focus-visible) {
   background:rgba(255,255,255,0.04);
 }
 
+/* API Key 状态提示 */
+.acct-api-key-status{
+  font-size:.82rem;
+  font-weight:600;
+  min-height:1.2em;
+  margin-top:6px;
+  transition:color .2s ease;
+}
+
+.acct-api-key-status--ok{
+  color:#16a34a;
+}
+
+.acct-api-key-status--err{
+  color:#dc2626;
+}
+
 /* 自定义 API 表单 */
 .acct-details{
   margin-top:10px;

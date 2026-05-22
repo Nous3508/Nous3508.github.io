@@ -199,6 +199,7 @@ permalink: /account/
         <input type="password" id="acct-api-key-input" class="acct-api-input" placeholder="sk-..." style="flex:2">
         <button id="acct-api-save-btn" class="acct-btn acct-btn--primary" data-lang-en="💾 Save Key" data-lang-zh="💾 保存 Key">💾 保存 Key</button>
       </div>
+      <div id="acct-api-key-status" class="acct-api-key-status"></div>
 
       <!-- 已保存的 Key 概览 -->
       <div style="margin-top:16px">

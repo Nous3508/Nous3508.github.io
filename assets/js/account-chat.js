@@ -70,7 +70,7 @@
   function populateProviderSelect() {
     const sel = $('acct-api-provider');
     if (!sel) return;
-    const { PROVIDERS, apiManager } = ChatAPI;
+    const { apiManager } = ChatAPI;
     const allProviders = apiManager.getAllProviders();
 
     sel.innerHTML = '<option value="">— 选择提供商 —</option>';
@@ -80,13 +80,6 @@
       opt.textContent = cfg.name + (cfg.custom ? ' ⚡' : '');
       sel.appendChild(opt);
     });
-
-    // 如果有已保存的 key，默认选中第一个有 key 的提供商
-    const keys = apiManager.getKeys();
-    const savedIds = Object.keys(keys).filter(k => keys[k].key);
-    if (savedIds.length > 0 && sel.value === '') {
-      // 不自动选中，让用户自己选
-    }
   }
 
   /** 提供商切换时更新模型列表 */
@@ -133,11 +126,22 @@
     }
   }
 
+  /** 显示 API Key 区域的本地状态提示 */
+  function showApiKeyStatus(msg, type) {
+    const el = $('acct-api-key-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'acct-api-key-status' + (type === 'ok' ? ' acct-api-key-status--ok' : type === 'err' ? ' acct-api-key-status--err' : '');
+    if (type === 'ok' || type === 'err') {
+      setTimeout(() => { el.textContent = ''; el.className = 'acct-api-key-status'; }, 3500);
+    }
+  }
+
   /** 保存当前选中提供商的 API Key */
   function saveCurrentApiKey() {
     const providerId = _selectedProviderId;
     if (!providerId) {
-      showSyncStatus('请先选择一个提供商', 'err');
+      showApiKeyStatus('⚠️ 请先选择一个提供商', 'err');
       return;
     }
 
@@ -147,7 +151,7 @@
 
     const key = keyInput.value.trim();
     if (!key) {
-      showSyncStatus('请输入 API Key', 'err');
+      showApiKeyStatus('⚠️ 请输入 API Key', 'err');
       keyInput.focus();
       return;
     }
@@ -159,7 +163,7 @@
     });
 
     renderApiKeyStatusBar();
-    showSyncStatus('✅ API Key 已保存 (' + (apiManager.getAllProviders()[providerId]?.name || providerId) + ')', 'ok');
+    showApiKeyStatus('✅ 已保存 (' + (apiManager.getAllProviders()[providerId]?.name || providerId) + ')', 'ok');
 
     // 更新按钮文案
     const saveBtn = $('acct-api-save-btn');
@@ -193,7 +197,7 @@
   function renderApiKeyStatusBar() {
     const bar = $('acct-api-status-bar');
     if (!bar) return;
-    const { PROVIDERS, apiManager } = ChatAPI;
+    const { apiManager } = ChatAPI;
     const allProviders = apiManager.getAllProviders();
     const keys = apiManager.getKeys();
 
