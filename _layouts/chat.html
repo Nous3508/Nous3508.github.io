@@ -28,15 +28,18 @@
     {% include nav.html %}
 
     <div class="chat-layout">
-      <!-- ========== 左侧边栏 ========== -->
+      <!-- ========== 左侧边栏（仿 bookmark-nav 风格） ========== -->
       <aside class="chat-sidebar" id="chat-sidebar">
         <div class="chat-sidebar-inner">
+          <!-- 伪元素 ::before 提供毛玻璃背景 -->
           <div class="chat-sidebar-header">
-            <button class="chat-sidebar-collapse-btn" id="chat-sidebar-collapse" aria-label="Collapse sidebar" title="折叠侧栏">◀</button>
-            <button class="chat-sidebar-new-btn" id="chat-sidebar-new-btn">
-              <span class="chat-sidebar-new-icon">✏️</span>
-              <span data-lang-en="New Chat" data-lang-zh="新对话">New Chat</span>
-            </button>
+            <div class="chat-sidebar-title-row">
+              <button class="chat-sidebar-toggle-btn" id="chat-sidebar-toggle" aria-label="Toggle sidebar">
+                <span class="chat-sidebar-toggle-icon">◀</span>
+              </button>
+              <span class="chat-sidebar-title" data-lang-en="History" data-lang-zh="历史">History</span>
+              <button class="chat-sidebar-new-btn" id="chat-sidebar-new-btn" aria-label="New Chat" title="New Chat">✏️</button>
+            </div>
           </div>
           <div class="chat-sidebar-list" id="chat-sidebar-list">
             <div class="chat-sidebar-empty" data-lang-en="No history yet" data-lang-zh="暂无历史记录">No history yet</div>
@@ -44,14 +47,12 @@
         </div>
       </aside>
 
-      <!-- 侧栏折叠后的窄条触发区 -->
-      <button class="chat-sidebar-trigger" id="chat-sidebar-trigger" aria-label="Open sidebar" style="display:none">▶</button>
-
       <!-- ========== 主区域 ========== -->
       <main class="chat-main" id="chat-main">
-        <!-- 顶部栏 -->
+        <!-- 顶部栏（简化，去掉 More 改放齿轮） -->
         <div class="chat-topbar">
           <div class="chat-topbar-left">
+            <button class="chat-sidebar-toggle-btn chat-sidebar-toggle-btn--mobile" id="chat-sidebar-toggle-mobile" aria-label="Toggle sidebar">☰</button>
             <span class="chat-topbar-title">🤖 AI Chat</span>
           </div>
           <div class="chat-topbar-right">
@@ -93,19 +94,21 @@
           </div>
         </div>
 
-        <!-- ========== 底部输入栏 ========== -->
-        <div class="chat-input-area">
-          <!-- 第一行：展开按钮 + 输入框 + 发送/停止按钮 -->
+        <!-- ========== 底部一体化输入栏（仿 search-panel 风格） ========== -->
+        <div class="chat-input-panel">
+          <!-- 第一行：输入框区域 -->
           <div class="chat-input-row chat-input-row--main">
             <button class="chat-expand-btn" id="chat-expand-btn" aria-label="Expand input" title="展开输入框">⇅</button>
             <div class="chat-input-wrap">
               <textarea class="chat-textarea" id="chat-textarea" rows="1"
-                placeholder="Ask AI anything..."></textarea>
+                placeholder="Ask AI anything..."
+                data-lang-en="Ask AI anything..."
+                data-lang-zh="向 AI 提问..."></textarea>
             </div>
             <button class="chat-send-btn" id="chat-send-btn" aria-label="Send" title="发送">↑</button>
             <button class="chat-stop-btn" id="chat-stop-btn" aria-label="Stop" style="display:none">⏹</button>
           </div>
-          <!-- 第二行：模型选择 + 思考深度 + 联网搜索 + 停止 -->
+          <!-- 第二行：工具条 -->
           <div class="chat-input-row chat-input-row--tools">
             <div class="chat-input-tools-left">
               <select id="chat-provider-select" class="chat-select" aria-label="Select provider">

@@ -25,8 +25,8 @@
   const customAddBtn = $('chat-custom-add-btn');
   const sidebar = $('chat-sidebar');
   const sidebarList = $('chat-sidebar-list');
-  const sidebarCollapse = $('chat-sidebar-collapse');
-  const sidebarTrigger = $('chat-sidebar-trigger');
+  const sidebarToggle = $('chat-sidebar-toggle');
+  const sidebarToggleMobile = $('chat-sidebar-toggle-mobile');
   const sidebarNewBtn = $('chat-sidebar-new-btn');
   const moreBtn = $('chat-more-btn');
   const moreDropdown = $('chat-more-dropdown');
@@ -527,9 +527,7 @@
   function toggleSidebar() {
     state.sidebarCollapsed = !state.sidebarCollapsed;
     if (!sidebar) return;
-    sidebar.classList.toggle('chat-sidebar--collapsed', state.sidebarCollapsed);
-    if (sidebarTrigger) sidebarTrigger.style.display = state.sidebarCollapsed ? '' : 'none';
-    if (sidebarCollapse) sidebarCollapse.textContent = state.sidebarCollapsed ? '▶' : '◀';
+    sidebar.classList.toggle('collapsed', state.sidebarCollapsed);
   }
 
   // ==================== More 下拉 ====================
@@ -646,8 +644,8 @@
     });
 
     // 侧栏
-    sidebarCollapse?.addEventListener('click', toggleSidebar);
-    sidebarTrigger?.addEventListener('click', toggleSidebar);
+    sidebarToggle?.addEventListener('click', toggleSidebar);
+    sidebarToggleMobile?.addEventListener('click', toggleSidebar);
     sidebarNewBtn?.addEventListener('click', newChat);
 
     // 设置
