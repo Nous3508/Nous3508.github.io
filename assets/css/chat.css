@@ -509,7 +509,7 @@
   margin: 0 0 8px;
 }
 
-.chat-input-area > .chat-input-row--main {
+.chat-input-panel .chat-input-row--main {
   position: relative;
   border: 1px solid var(--border);
   border-radius: 28px;
@@ -520,7 +520,7 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.chat-input-area > .chat-input-row--main:focus-within {
+.chat-input-panel .chat-input-row--main:focus-within {
   border-color: var(--accent-solid);
   box-shadow: 0 0 0 2px rgba(155, 92, 255, 0.15), var(--shadow-strong);
 }

@@ -13,8 +13,7 @@
   const welcomeEl = $('chat-welcome');
   const textarea = $('chat-textarea');
   const sendBtn = $('chat-send-btn');
-  const stopBtn = $('chat-stop-btn');
-  const stopBtnBar = $('chat-stop-btn-bar');
+  const stopBtn = $('chat-stop-btn-bar');
   const providerSelect = $('chat-provider-select');
   const modelSelect = $('chat-model-select');
   const settingsBtn = $('chat-settings-btn');
@@ -209,7 +208,6 @@
     state.isStreaming = streaming;
     if (sendBtn) sendBtn.style.display = streaming ? 'none' : '';
     if (stopBtn) stopBtn.style.display = streaming ? '' : 'none';
-    if (stopBtnBar) stopBtnBar.style.display = streaming ? '' : 'none';
     if (textarea) textarea.disabled = streaming;
   }
 
@@ -218,7 +216,8 @@
   async function getUserAvatarUrl() {
     if (_userAvatarUrl) return _userAvatarUrl;
     try {
-      if (typeof Auth !== 'undefined' && Auth.getUser) {
+      const Auth = window.Auth;
+      if (Auth && typeof Auth.getUser === 'function') {
         const { data } = await Auth.getUser();
         const user = data?.user;
         if (user) {
@@ -598,7 +597,6 @@
     sendBtn?.addEventListener('click', () => sendMessage());
     // 停止
     stopBtn?.addEventListener('click', stopStreaming);
-    stopBtnBar?.addEventListener('click', stopStreaming);
     // 回车发送
     textarea?.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
