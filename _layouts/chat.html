@@ -24,147 +24,76 @@
     <meta property="og:image" content="{{ site.url }}/assets/images/social-card.png">
     <meta name="twitter:card" content="summary_large_image">
   </head>
-  <body>
+  <body class="chat-body">
     {% include nav.html %}
 
     <main id="chat-app" class="chat-app">
-      <!-- ===== 顶栏：右上角设置 ===== -->
-      <div class="chat-top-bar">
-        <div class="chat-top-bar-left"></div>
-        <div class="chat-top-bar-right">
-          <button class="chat-top-btn" id="chat-more-btn" title="More" aria-label="More">⋮</button>
-          <button class="chat-top-btn" id="chat-settings-btn" title="Settings" aria-label="Settings">⚙️</button>
+      <!-- 聊天消息列表 -->
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-welcome" id="chat-welcome">
+          <div class="chat-welcome-icon">🤖</div>
+          <h2 data-lang-en="AI Chat" data-lang-zh="AI 对话">AI Chat</h2>
+          <p data-lang-en="Select a model and start chatting. Your API keys are stored locally."
+             data-lang-zh="选择模型后开始对话。API Key 仅存储在本地浏览器中。">
+            Select a model and start chatting. Your API keys are stored locally.
+          </p>
+          <div class="chat-welcome-hints" data-lang-en="Type a message below or append ?q=your question to the URL."
+               data-lang-zh="在下方输入消息，或在 URL 后添加 ?q=你的问题。">
+            Type a message below or append ?q=your question to the URL.
+          </div>
         </div>
       </div>
 
-      <!-- ===== 主体布局：侧边栏 + 聊天区 ===== -->
-      <div class="chat-layout">
-        <!-- 左侧边栏（可收纳） -->
-        <aside class="chat-sidebar" id="chat-sidebar">
-          <div class="chat-sidebar-inner">
-            <button class="chat-sidebar-btn chat-sidebar-btn--icon chat-sidebar-btn--close" id="chat-sidebar-close" title="Close sidebar">◀</button>
-            <button class="chat-sidebar-btn" id="chat-new-btn" title="New Chat">
-              <span class="chat-sidebar-btn-icon">＋</span>
-              <span class="chat-sidebar-btn-label" data-lang-en="New Chat" data-lang-zh="新对话">新对话</span>
-            </button>
-            <button class="chat-sidebar-btn" id="chat-history-btn" title="History">
-              <span class="chat-sidebar-btn-icon">📋</span>
-              <span class="chat-sidebar-btn-label" data-lang-en="History" data-lang-zh="历史记录">历史记录</span>
-            </button>
+      <!-- 输入区域 -->
+      <div class="chat-input-bar">
+        <div class="chat-input-row">
+          <div class="chat-model-selector">
+            <select id="chat-provider-select" class="chat-select" aria-label="Select provider">
+              <option value="">-- Provider --</option>
+            </select>
+            <select id="chat-model-select" class="chat-select" aria-label="Select model">
+              <option value="">-- Model --</option>
+            </select>
           </div>
-          <!-- 展开侧边栏的按钮（侧边栏收起时显示） -->
-          <button class="chat-sidebar-open-btn" id="chat-sidebar-open" title="Open sidebar">☰</button>
-        </aside>
-
-        <!-- 主聊天区 -->
-        <div class="chat-main">
-          <!-- 消息列表 -->
-          <div class="chat-messages" id="chat-messages">
-            <div class="chat-welcome" id="chat-welcome">
-              <div class="chat-welcome-icon">🤖</div>
-              <h2 data-lang-en="AI Chat" data-lang-zh="AI 对话">AI Chat</h2>
-              <p data-lang-en="Select a model and start chatting. Your API keys are stored locally."
-                 data-lang-zh="选择模型后开始对话。API Key 仅存储在本地浏览器中。">
-                Select a model and start chatting. Your API keys are stored locally.
-              </p>
-              <div class="chat-welcome-hints" data-lang-en="Type a message below or append ?q=your question to the URL."
-                   data-lang-zh="在下方输入消息，或在 URL 后添加 ?q=你的问题。">
-                Type a message below or append ?q=your question to the URL.
-              </div>
-            </div>
-          </div>
-
-          <!-- 输入区域 -->
-          <div class="chat-input-area">
-            <!-- 第一行：展开按钮 + 输入框 + 发送 -->
-            <div class="chat-input-row-1">
-              <button class="chat-expand-btn" id="chat-expand-btn" title="Toggle options">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
-                </svg>
-              </button>
-              <div class="chat-input-wrap">
-                <textarea class="chat-textarea" id="chat-textarea" rows="1"
-                  placeholder="Ask AI anything..."
-                  data-lang-en="Ask AI anything..."
-                  data-lang-zh="向 AI 提问..."></textarea>
-              </div>
-              <button class="chat-send-btn" id="chat-send-btn" aria-label="Send">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 5v14M5 12l7-7 7 7"/>
-                </svg>
-              </button>
-              <button class="chat-stop-btn" id="chat-stop-btn" aria-label="Stop" style="display:none">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-              </button>
-            </div>
-
-            <!-- 第二行：联网搜索 + 深度思考 + 模型选择（可折叠） -->
-            <div class="chat-input-row-2" id="chat-input-row-2">
-              <div class="chat-toggles">
-                <label class="chat-toggle-label" id="chat-websearch-label">
-                  <input type="checkbox" class="chat-toggle-input" id="chat-websearch">
-                  <span class="chat-toggle-switch"></span>
-                  <span class="chat-toggle-text" data-lang-en="Web Search" data-lang-zh="联网搜索">联网搜索</span>
-                </label>
-                <label class="chat-toggle-label" id="chat-deepthink-label">
-                  <input type="checkbox" class="chat-toggle-input" id="chat-deepthink">
-                  <span class="chat-toggle-switch"></span>
-                  <span class="chat-toggle-text" data-lang-en="Deep Think" data-lang-zh="深度思考">深度思考</span>
-                </label>
-              </div>
-              <div class="chat-model-selector">
-                <select id="chat-provider-select" class="chat-select" aria-label="Select provider">
-                  <option value="">-- Provider --</option>
-                </select>
-                <select id="chat-model-select" class="chat-select" aria-label="Select model">
-                  <option value="">-- Model --</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <button class="chat-settings-btn" id="chat-settings-btn" aria-label="Settings" title="Settings">⚙️</button>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-textarea" id="chat-textarea" rows="1"
+            placeholder="Ask AI anything..."
+            data-lang-en="Ask AI anything..."
+            data-lang-zh="向 AI 提问..."></textarea>
+          <button class="chat-send-btn" id="chat-send-btn" aria-label="Send">➤</button>
+          <button class="chat-stop-btn" id="chat-stop-btn" aria-label="Stop" style="display:none">⏹</button>
+        </div>
+        <div class="chat-input-hint">
+          <span data-lang-en="Enter to send · Shift+Enter for new line"
+                data-lang-zh="Enter 发送 · Shift+Enter 换行">Enter to send · Shift+Enter for new line</span>
         </div>
       </div>
     </main>
 
-    <!-- ===== More 弹出菜单 ===== -->
-    <div class="chat-popover" id="chat-more-popover" style="display:none">
-      <button class="chat-popover-item" id="chat-export-md-btn">
-        <span class="chat-popover-icon">📝</span>
-        <span data-lang-en="Export as Markdown" data-lang-zh="导出 Markdown">导出 Markdown</span>
-      </button>
-      <button class="chat-popover-item" id="chat-export-json-btn">
-        <span class="chat-popover-icon">📄</span>
-        <span data-lang-en="Export as JSON" data-lang-zh="导出 JSON">导出 JSON</span>
-      </button>
-      <button class="chat-popover-item" id="chat-clear-btn">
-        <span class="chat-popover-icon">🗑️</span>
-        <span data-lang-en="Clear Chat" data-lang-zh="清空对话">清空对话</span>
-      </button>
-    </div>
-
-    <!-- ===== API 设置模态框 ===== -->
+    <!-- API 设置模态框 -->
     <div class="chat-modal-backdrop" id="chat-modal-backdrop" style="display:none"></div>
     <div class="chat-modal" id="chat-settings-modal" style="display:none">
       <div class="chat-modal-header">
-        <h3 data-lang-en="⚙️ API Settings" data-lang-zh="⚙️ API 设置">⚙️ API 设置</h3>
+        <h3 data-lang-en="⚙️ API Settings" data-lang-zh="⚙️ API 设置">⚙️ API Settings</h3>
         <button class="chat-modal-close" id="chat-modal-close" aria-label="Close">✕</button>
       </div>
       <div class="chat-modal-body">
         <p class="chat-modal-desc" data-lang-en="Manage your API keys. Keys are stored in your browser's localStorage and sent directly to the LLM API."
            data-lang-zh="管理 API Key。Key 仅存储在浏览器本地，直接发送给 LLM API。">
-          管理 API Key。Key 仅存储在浏览器本地，直接发送给 LLM API。
+          Manage your API keys. Keys are stored in your browser's localStorage and sent directly to the LLM API.
         </p>
         <div id="chat-api-list"></div>
         <details class="chat-custom-api-details">
-          <summary data-lang-en="+ Add Custom API" data-lang-zh="+ 添加自定义 API">+ 添加自定义 API</summary>
+          <summary data-lang-en="+ Add Custom API" data-lang-zh="+ 添加自定义 API">+ Add Custom API</summary>
           <div class="chat-custom-api-form">
             <label>
-              <span data-lang-en="Name" data-lang-zh="名称">名称</span>
+              <span data-lang-en="Name" data-lang-zh="名称">Name</span>
               <input type="text" id="chat-custom-name" placeholder="e.g. My Worker">
             </label>
             <label>
-              <span data-lang-en="Base URL" data-lang-zh="接口地址">接口地址</span>
+              <span data-lang-en="Base URL" data-lang-zh="接口地址">Base URL</span>
               <input type="url" id="chat-custom-baseurl" placeholder="https://your-worker.workers.dev/v1">
             </label>
             <label>
@@ -172,20 +101,20 @@
               <input type="password" id="chat-custom-key" placeholder="sk-...">
             </label>
             <label>
-              <span data-lang-en="Models (comma-separated)" data-lang-zh="模型列表（逗号分隔）">模型列表（逗号分隔）</span>
+              <span data-lang-en="Models (comma-separated)" data-lang-zh="模型列表（逗号分隔）">Models (comma-separated)</span>
               <input type="text" id="chat-custom-models" placeholder="gpt-4, gpt-3.5-turbo">
             </label>
-            <button class="chat-btn chat-btn--primary" id="chat-custom-add-btn" data-lang-en="Add" data-lang-zh="添加">添加</button>
+            <button class="chat-btn chat-btn--primary" id="chat-custom-add-btn" data-lang-en="Add" data-lang-zh="添加">Add</button>
           </div>
         </details>
       </div>
     </div>
 
-    <!-- ===== 对话历史模态框 ===== -->
+    <!-- 对话历史模态框 -->
     <div class="chat-modal-backdrop" id="chat-history-backdrop" style="display:none"></div>
     <div class="chat-modal" id="chat-history-modal" style="display:none">
       <div class="chat-modal-header">
-        <h3 data-lang-en="📋 Chat History" data-lang-zh="📋 对话历史">📋 对话历史</h3>
+        <h3 data-lang-en="📋 Chat History" data-lang-zh="📋 对话历史">📋 Chat History</h3>
         <button class="chat-modal-close" id="chat-history-close" aria-label="Close">✕</button>
       </div>
       <div class="chat-modal-body">
@@ -193,14 +122,15 @@
       </div>
     </div>
 
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/lang.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/lib/marked.umd.min.js"></script>
     <script>
+      // 配置 marked
       if (window.marked && window.marked.setOptions) {
         window.marked.setOptions({ breaks: true, gfm: true });
       }
     </script>
-    <script src="/assets/js/theme.js"></script>
-    <script src="/assets/js/lang.js"></script>
     <script src="/assets/js/chat-api.js"></script>
     <script src="/assets/js/chat.js"></script>
   </body>

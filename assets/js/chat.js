@@ -27,19 +27,6 @@
   const historyClose = $('chat-history-close');
   const historyListEl = $('chat-history-list');
 
-  // 新布局元素
-  const sidebar = $('chat-sidebar');
-  const sidebarOpen = $('chat-sidebar-open');
-  const sidebarClose = $('chat-sidebar-close');
-  const newChatBtn = $('chat-new-btn');
-  const historyBtn = $('chat-history-btn');
-  const expandBtn = $('chat-expand-btn');
-  const inputRow2 = $('chat-input-row-2');
-  const moreBtn = $('chat-more-btn');
-  const morePopover = $('chat-more-popover');
-  const websearchToggle = $('chat-websearch');
-  const deepthinkToggle = $('chat-deepthink');
-
   // ==================== 状态 ====================
   const state = {
     provider: '',
@@ -232,6 +219,18 @@
 
     div.appendChild(avatar);
     div.appendChild(bubble);
+
+    // 添加时间戳
+    if (role === 'user' || role === 'ai') {
+      const time = document.createElement('div');
+      time.className = 'chat-msg-time';
+      time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      if (role === 'user') {
+        div.appendChild(time);
+      } else {
+        div.insertBefore(time, div.firstChild);
+      }
+    }
 
     messagesEl.appendChild(div);
     scrollToBottom();
@@ -614,71 +613,35 @@
       $('chat-custom-models').value = '';
     });
 
-    // === 侧边栏：展开/收起 ===
-    sidebarOpen?.addEventListener('click', () => {
-      sidebar.classList.remove('chat-sidebar--hidden');
-      sidebar.classList.add('chat-sidebar--expanded');
-    });
+    // 注入头部工具栏按钮
+    injectToolbar();
+  }
 
-    sidebarClose?.addEventListener('click', () => {
-      sidebar.classList.remove('chat-sidebar--expanded');
-    });
+  /** 在消息列表上方添加工具栏 */
+  function injectToolbar() {
+    const toolbar = document.createElement('div');
+    toolbar.className = 'chat-toolbar';
+    toolbar.innerHTML = `
+      <div class="chat-toolbar-left">
+        <span class="chat-toolbar-title" data-lang-en="🤖 AI Chat" data-lang-zh="🤖 AI 对话">🤖 AI Chat</span>
+      </div>
+      <div class="chat-toolbar-right">
+        <button class="chat-toolbar-btn" id="chat-new-btn" title="New Chat" data-lang-en="New Chat" data-lang-zh="新对话">➕</button>
+        <button class="chat-toolbar-btn" id="chat-history-btn" title="History" data-lang-en="History" data-lang-zh="历史记录">📋</button>
+        <button class="chat-toolbar-btn" id="chat-export-md-btn" title="Export Markdown" data-lang-en="Export Markdown" data-lang-zh="导出 Markdown">📝</button>
+        <button class="chat-toolbar-btn" id="chat-export-json-btn" title="Export JSON" data-lang-en="Export JSON" data-lang-zh="导出 JSON">📄</button>
+        <button class="chat-toolbar-btn" id="chat-clear-btn" title="Clear" data-lang-en="Clear" data-lang-zh="清空">🗑️</button>
+      </div>
+    `;
 
-    // 点击侧边栏空白区域展开
-    sidebar?.addEventListener('mouseenter', () => {
-      if (!sidebar.classList.contains('chat-sidebar--hidden')) {
-        sidebar.classList.add('chat-sidebar--expanded');
-      }
-    });
+    messagesEl.parentNode.insertBefore(toolbar, messagesEl);
 
-    sidebar?.addEventListener('mouseleave', () => {
-      sidebar.classList.remove('chat-sidebar--expanded');
-    });
-
-    // === 侧边栏按钮 ===
-    newChatBtn?.addEventListener('click', newChat);
-    historyBtn?.addEventListener('click', openHistoryModal);
-
-    // === 展开按钮（显示/隐藏第二行） ===
-    expandBtn?.addEventListener('click', () => {
-      const isHidden = inputRow2?.classList.contains('chat-input-row-2--hidden');
-      if (isHidden) {
-        inputRow2?.classList.remove('chat-input-row-2--hidden');
-        expandBtn.classList.add('chat-expand-btn--active');
-      } else {
-        inputRow2?.classList.add('chat-input-row-2--hidden');
-        expandBtn.classList.remove('chat-expand-btn--active');
-      }
-    });
-
-    // 初始化：第二行默认隐藏
-    if (inputRow2) inputRow2.classList.add('chat-input-row-2--hidden');
-
-    // === More 弹出菜单 ===
-    moreBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isVisible = morePopover?.style.display === 'block';
-      morePopover.style.display = isVisible ? 'none' : 'block';
-    });
-
-    // 点击外部关闭 More 菜单
-    document.addEventListener('click', (e) => {
-      if (morePopover && !e.target.closest('#chat-more-popover') && !e.target.closest('#chat-more-btn')) {
-        morePopover.style.display = 'none';
-      }
-    });
-
-    // More 菜单项
-    $('chat-export-md-btn')?.addEventListener('click', () => {
-      morePopover.style.display = 'none';
-      exportChat('markdown');
-    });
-    $('chat-export-json-btn')?.addEventListener('click', () => {
-      morePopover.style.display = 'none';
-      exportChat('json');
-    });
+    // 绑定工具栏按钮
+    $('chat-new-btn')?.addEventListener('click', newChat);
+    $('chat-history-btn')?.addEventListener('click', openHistoryModal);
+    $('chat-export-md-btn')?.addEventListener('click', () => exportChat('markdown'));
+    $('chat-export-json-btn')?.addEventListener('click', () => exportChat('json'));
     $('chat-clear-btn')?.addEventListener('click', () => {
-      morePopover.style.display = 'none';
       if (state.messages.length && confirm('确定清空当前对话？')) {
         newChat();
       }
