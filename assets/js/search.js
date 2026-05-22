@@ -9,17 +9,25 @@
   const suggestBox = document.getElementById("search-suggestions");
 
   const key = "nous-search-mode";
-  let mode = localStorage.getItem(key) || "site"; // site | web
+  let mode = localStorage.getItem(key) || "site"; // site | web | chat
   let index = null;
   let docs = [];
 
   function syncIcon() {
-    const isSite = mode === "site";
-    const icon = isSite ? "🔍" : "🌐";
-    if (modeIconInline) modeIconInline.textContent = icon;
-    if (hints) hints.textContent = isSite ? "Site search: posts > projects" : "Browser search mode";
-    // 更新输入框占位符
-    if (input) input.placeholder = isSite ? "Search posts / projects..." : "Search the web with Bing...";
+    const icons = { site: "🔍", web: "🌐", chat: "🤖" };
+    const hintsText = {
+      site: "Site search: posts > projects",
+      web: "Browser search mode",
+      chat: "AI Chat mode"
+    };
+    const placeholders = {
+      site: "Search posts / projects...",
+      web: "Search the web with Bing...",
+      chat: "Ask AI anything..."
+    };
+    if (modeIconInline) modeIconInline.textContent = icons[mode] || "🔍";
+    if (hints) hints.textContent = hintsText[mode] || hintsText.site;
+    if (input) input.placeholder = placeholders[mode] || placeholders.site;
   }
 
   async function fetchReposWithCache() {
@@ -324,7 +332,9 @@
   }
 
   function toggleMode() {
-    mode = mode === "site" ? "web" : "site";
+    const modes = ["site", "web", "chat"];
+    const idx = modes.indexOf(mode);
+    mode = modes[(idx + 1) % modes.length];
     localStorage.setItem(key, mode);
     syncIcon();
     hideSuggestions();
@@ -332,11 +342,19 @@
     if (results) results.innerHTML = '';
   }
 
+  function doChatSearch(query) {
+    const q = (query || input?.value)?.trim();
+    if (!q) return;
+    window.location.href = `/chat/?q=${encodeURIComponent(q)}`;
+    hideSuggestions();
+  }
+
   // --- 事件绑定 ---
 
   btn?.addEventListener("click", () => {
     hideSuggestions();
     if (mode === "site") doSiteSearch();
+    else if (mode === "chat") doChatSearch();
     else doWebSearch();
   });
 
@@ -354,6 +372,7 @@
     if (e.key === "Enter") {
       hideSuggestions();
       if (mode === "site") doSiteSearch();
+      else if (mode === "chat") doChatSearch();
       else doWebSearch();
     }
   });
