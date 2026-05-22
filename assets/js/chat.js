@@ -22,10 +22,20 @@
   const modalClose = $('chat-modal-close');
   const apiListEl = $('chat-api-list');
   const customAddBtn = $('chat-custom-add-btn');
-  const historyBackdrop = $('chat-history-backdrop');
-  const historyModal = $('chat-history-modal');
-  const historyClose = $('chat-history-close');
-  const historyListEl = $('chat-history-list');
+  const sidebar = $('chat-sidebar');
+  const sidebarList = $('chat-sidebar-list');
+  const sidebarCollapse = $('chat-sidebar-collapse');
+  const sidebarTrigger = $('chat-sidebar-trigger');
+  const sidebarNewBtn = $('chat-sidebar-new-btn');
+  const moreBtn = $('chat-more-btn');
+  const moreDropdown = $('chat-more-dropdown');
+  const exportMdBtn = $('chat-export-md-btn');
+  const exportJsonBtn = $('chat-export-json-btn');
+  const clearBtn = $('chat-clear-btn');
+  const expandBtn = $('chat-expand-btn');
+  const depthSlider = $('chat-depth-slider');
+  const depthValue = $('chat-depth-value');
+  const webToggle = $('chat-web-toggle');
 
   // ==================== 状态 ====================
   const state = {
@@ -38,6 +48,8 @@
     currentSessionId: null,  // 当前对话历史 ID
     currentAiMsgEl: null,    // 当前正在输出的 AI 消息 DOM
     currentAiContent: '',    // 当前 AI 消息的纯文本缓存
+    webSearchEnabled: false,
+    sidebarCollapsed: false,
   };
 
   // ==================== 初始化 ====================
@@ -49,6 +61,10 @@
     state.provider = savedConfig.provider || 'deepseek';
     state.model = savedConfig.model || '';
     state.temperature = savedConfig.temperature ?? 0.7;
+
+    // 恢复深度滑块
+    if (depthSlider) depthSlider.value = state.temperature;
+    if (depthValue) depthValue.textContent = state.temperature;
 
     // 填充提供商下拉
     populateProviders();
@@ -67,11 +83,10 @@
     const initialQuery = params.get('q');
 
     if (initialQuery) {
-      // 自动发送
       setTimeout(() => sendMessage(initialQuery), 300);
     }
 
-    // 绑定事件
+    renderSidebarHistory();
     bindEvents();
   }
 
@@ -191,6 +206,7 @@
     state.isStreaming = streaming;
     if (sendBtn) sendBtn.style.display = streaming ? 'none' : '';
     if (stopBtn) stopBtn.style.display = streaming ? '' : 'none';
+    if (stopBtnBar) stopBtnBar.style.display = streaming ? '' : 'none';
     if (textarea) textarea.disabled = streaming;
   }
 
@@ -304,6 +320,7 @@
       const session = chatHistory.create(state.messages);
       state.currentSessionId = session.id;
     }
+    renderSidebarHistory();
   }
 
   function loadSession(sessionId) {
@@ -320,14 +337,14 @@
     // 重新渲染所有消息
     state.messages.forEach(msg => {
       if (msg.role === 'user') {
-        appendMessage('user', msg.content, '');
+        appendMessage('user', msg.content);
       } else if (msg.role === 'assistant') {
-        const el = appendMessage('ai', '', '');
+        const el = appendMessage('ai', '');
         updateAiMessage(el, msg.content);
       }
     });
 
-    closeHistoryModal();
+    renderSidebarHistory();
   }
 
   function deleteSession(sessionId) {
@@ -336,7 +353,7 @@
     if (state.currentSessionId === sessionId) {
       state.currentSessionId = null;
     }
-    renderHistoryList();
+    renderSidebarHistory();
   }
 
   function clearMessages() {
@@ -441,68 +458,74 @@
     return card;
   }
 
-  // ==================== 历史记录面板 ====================
-  function openHistoryModal() {
-    renderHistoryList();
-    if (historyModal) historyModal.style.display = '';
-    if (historyBackdrop) historyBackdrop.style.display = '';
-  }
-
-  function closeHistoryModal() {
-    if (historyModal) historyModal.style.display = 'none';
-    if (historyBackdrop) historyBackdrop.style.display = 'none';
-  }
-
-  function renderHistoryList() {
-    if (!historyListEl) return;
+  // ==================== 侧栏历史 ====================
+  function renderSidebarHistory() {
+    if (!sidebarList) return;
     const { chatHistory } = ChatAPI;
     const all = chatHistory.getAll();
 
     if (!all.length) {
-      historyListEl.innerHTML = '<div class="chat-history-empty">暂无历史对话</div>';
+      sidebarList.innerHTML = '<div class="chat-sidebar-empty" data-lang-en="No history yet" data-lang-zh="暂无历史记录">暂无历史记录</div>';
       return;
     }
 
-    historyListEl.innerHTML = all.map(session => `
-      <div class="chat-history-item ${session.id === state.currentSessionId ? 'chat-history-item--active' : ''}"
-           data-id="${session.id}">
-        <div class="chat-history-item-title">${escapeHtml(session.title)}</div>
-        <div class="chat-history-item-meta">${session.messages.length} 条消息 · ${formatTime(session.updatedAt)}</div>
-        <div class="chat-history-item-actions">
-          <button class="chat-btn chat-btn--tiny chat-history-load" data-id="${session.id}">📂</button>
-          <button class="chat-btn chat-btn--tiny chat-btn--danger chat-history-delete" data-id="${session.id}">🗑️</button>
-        </div>
+    sidebarList.innerHTML = all.map(session => `
+      <div class="chat-sidebar-item ${session.id === state.currentSessionId ? 'chat-sidebar-item--active' : ''}"
+           data-id="${escapeHtml(session.id)}">
+        <span class="chat-sidebar-item-title">${escapeHtml(session.title)}</span>
+        <button class="chat-sidebar-item-delete" data-id="${escapeHtml(session.id)}" title="Delete">✕</button>
       </div>
     `).join('');
 
-    // 绑定事件
-    historyListEl.querySelectorAll('.chat-history-load').forEach(btn => {
-      btn.addEventListener('click', () => loadSession(btn.dataset.id));
+    sidebarList.querySelectorAll('.chat-sidebar-item').forEach(item => {
+      item.addEventListener('click', e => {
+        if (e.target.closest('.chat-sidebar-item-delete')) return;
+        loadSession(item.dataset.id);
+      });
     });
-    historyListEl.querySelectorAll('.chat-history-delete').forEach(btn => {
-      btn.addEventListener('click', () => deleteSession(btn.dataset.id));
+    sidebarList.querySelectorAll('.chat-sidebar-item-delete').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        deleteSession(btn.dataset.id);
+      });
     });
   }
 
-  // ==================== 导出对话 ====================
-  function exportChat(format) {
-    if (!state.messages.length) return;
+  // ==================== 侧栏折叠 ====================
+  function toggleSidebar() {
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    if (!sidebar) return;
+    sidebar.classList.toggle('chat-sidebar--collapsed', state.sidebarCollapsed);
+    if (sidebarTrigger) sidebarTrigger.style.display = state.sidebarCollapsed ? '' : 'none';
+    if (sidebarCollapse) sidebarCollapse.textContent = state.sidebarCollapsed ? '▶' : '◀';
+  }
 
+  // ==================== More 下拉 ====================
+  function toggleMoreDropdown(e) {
+    e.stopPropagation();
+    if (!moreDropdown) return;
+    const isOpen = moreDropdown.style.display !== 'none';
+    moreDropdown.style.display = isOpen ? 'none' : '';
+  }
+
+  function closeMoreDropdown() {
+    if (moreDropdown) moreDropdown.style.display = 'none';
+  }
+
+  // ==================== 导出 ====================
+  function exportChat(format) {
+    if (!state.messages.length) { showToast('没有可导出的对话'); return; }
     if (format === 'markdown') {
       let md = '# AI Chat Export\n\n';
       state.messages.forEach(msg => {
-        const role = msg.role === 'user' ? '**You**' : '**AI**';
-        md += `${role}:\n${msg.content}\n\n---\n\n`;
+        md += `**${msg.role === 'user' ? 'You' : 'AI'}**:\n${msg.content}\n\n---\n\n`;
       });
-      navigator.clipboard.writeText(md).then(() => {
-        showToast('对话已复制为 Markdown');
-      }).catch(() => {});
-    } else if (format === 'json') {
-      const json = JSON.stringify(state.messages, null, 2);
-      navigator.clipboard.writeText(json).then(() => {
-        showToast('对话已复制为 JSON');
-      }).catch(() => {});
+      navigator.clipboard.writeText(md).then(() => showToast('已复制为 Markdown')).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(JSON.stringify(state.messages, null, 2))
+        .then(() => showToast('已复制为 JSON')).catch(() => {});
     }
+    closeMoreDropdown();
   }
 
   // ==================== Toast 提示 ====================
@@ -541,24 +564,19 @@
 
   // ==================== 事件绑定 ====================
   function bindEvents() {
-    // 发送按钮
+    // 发送
     sendBtn?.addEventListener('click', () => sendMessage());
-
-    // 停止按钮
+    // 停止
     stopBtn?.addEventListener('click', stopStreaming);
-
-    // 回车发送，Shift+Enter 换行
+    stopBtnBar?.addEventListener('click', stopStreaming);
+    // 回车发送
     textarea?.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
-
-    // 自动调整高度
+    // 自动高度
     textarea?.addEventListener('input', autoResizeTextarea);
 
-    // 提供商切换 → 更新模型列表
+    // 提供商
     providerSelect?.addEventListener('change', () => {
       state.provider = providerSelect.value;
       state.model = '';
@@ -569,82 +587,72 @@
         modelSelect.innerHTML = '<option value="">-- Model --</option>';
       }
     });
-
-    // 模型切换
+    // 模型
     modelSelect?.addEventListener('change', () => {
       state.model = modelSelect.value;
-      if (state.model) {
-        ChatAPI.apiManager.setConfig({ model: state.model });
-      }
+      if (state.model) ChatAPI.apiManager.setConfig({ model: state.model });
     });
 
-    // 设置按钮
-    settingsBtn?.addEventListener('click', openSettings);
+    // 深度滑块
+    depthSlider?.addEventListener('input', () => {
+      state.temperature = parseFloat(depthSlider.value);
+      if (depthValue) depthValue.textContent = state.temperature.toFixed(1);
+    });
 
-    // 关闭设置
+    // 联网搜索
+    webToggle?.addEventListener('click', () => {
+      state.webSearchEnabled = !state.webSearchEnabled;
+      webToggle.classList.toggle('chat-web-toggle--active', state.webSearchEnabled);
+    });
+
+    // 展开输入框
+    expandBtn?.addEventListener('click', () => {
+      if (!textarea) return;
+      const isExpanded = textarea.style.maxHeight === '400px';
+      textarea.style.maxHeight = isExpanded ? '200px' : '400px';
+      autoResizeTextarea();
+    });
+
+    // 侧栏
+    sidebarCollapse?.addEventListener('click', toggleSidebar);
+    sidebarTrigger?.addEventListener('click', toggleSidebar);
+    sidebarNewBtn?.addEventListener('click', newChat);
+
+    // 设置
+    settingsBtn?.addEventListener('click', openSettings);
     modalClose?.addEventListener('click', closeSettings);
     modalBackdrop?.addEventListener('click', closeSettings);
 
-    // 历史记录
-    historyClose?.addEventListener('click', closeHistoryModal);
-    historyBackdrop?.addEventListener('click', closeHistoryModal);
+    // More 下拉
+    moreBtn?.addEventListener('click', toggleMoreDropdown);
+    document.addEventListener('click', closeMoreDropdown);
+    moreDropdown?.addEventListener('click', e => e.stopPropagation());
 
-    // 自定义 API 添加
+    // 导出
+    exportMdBtn?.addEventListener('click', () => exportChat('markdown'));
+    exportJsonBtn?.addEventListener('click', () => exportChat('json'));
+
+    // 清空
+    clearBtn?.addEventListener('click', () => {
+      if (state.messages.length && confirm('确定清空当前对话？')) newChat();
+      closeMoreDropdown();
+    });
+
+    // 自定义 API
     customAddBtn?.addEventListener('click', () => {
       const name = $('chat-custom-name')?.value?.trim();
       const baseUrl = $('chat-custom-baseurl')?.value?.trim();
       const key = $('chat-custom-key')?.value?.trim();
       const models = $('chat-custom-models')?.value?.trim();
-
-      if (!name || !baseUrl || !key || !models) {
-        showToast('请填写所有字段');
-        return;
-      }
-
+      if (!name || !baseUrl || !key || !models) { showToast('请填写所有字段'); return; }
       ChatAPI.apiManager.addCustomProvider(name, baseUrl, key, models);
       populateProviders();
       renderApiList();
       showToast('自定义 API 已添加');
-
-      // 清空表单
       $('chat-custom-name').value = '';
       $('chat-custom-baseurl').value = '';
       $('chat-custom-key').value = '';
       $('chat-custom-models').value = '';
-    });
-
-    // 注入头部工具栏按钮
-    injectToolbar();
-  }
-
-  /** 在消息列表上方添加工具栏 */
-  function injectToolbar() {
-    const toolbar = document.createElement('div');
-    toolbar.className = 'chat-toolbar';
-    toolbar.innerHTML = `
-      <div class="chat-toolbar-left">
-        <span class="chat-toolbar-title" data-lang-en="🤖 AI Chat" data-lang-zh="🤖 AI 对话">🤖 AI Chat</span>
-      </div>
-      <div class="chat-toolbar-right">
-        <button class="chat-toolbar-btn" id="chat-new-btn" title="New Chat" data-lang-en="New Chat" data-lang-zh="新对话">➕</button>
-        <button class="chat-toolbar-btn" id="chat-history-btn" title="History" data-lang-en="History" data-lang-zh="历史记录">📋</button>
-        <button class="chat-toolbar-btn" id="chat-export-md-btn" title="Export Markdown" data-lang-en="Export Markdown" data-lang-zh="导出 Markdown">📝</button>
-        <button class="chat-toolbar-btn" id="chat-export-json-btn" title="Export JSON" data-lang-en="Export JSON" data-lang-zh="导出 JSON">📄</button>
-        <button class="chat-toolbar-btn" id="chat-clear-btn" title="Clear" data-lang-en="Clear" data-lang-zh="清空">🗑️</button>
-      </div>
-    `;
-
-    messagesEl.parentNode.insertBefore(toolbar, messagesEl);
-
-    // 绑定工具栏按钮
-    $('chat-new-btn')?.addEventListener('click', newChat);
-    $('chat-history-btn')?.addEventListener('click', openHistoryModal);
-    $('chat-export-md-btn')?.addEventListener('click', () => exportChat('markdown'));
-    $('chat-export-json-btn')?.addEventListener('click', () => exportChat('json'));
-    $('chat-clear-btn')?.addEventListener('click', () => {
-      if (state.messages.length && confirm('确定清空当前对话？')) {
-        newChat();
-      }
     });
   }
 
