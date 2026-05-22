@@ -202,11 +202,13 @@
       closeDropdown();
       openPanel();
     } else if (action === 'push-cloud') {
-      // 先显示加载态，操作完成后再关闭菜单
       await handlePushToCloud();
       closeDropdown();
     } else if (action === 'pull-cloud') {
       await handlePullFromCloud();
+      closeDropdown();
+    } else if (action === 'deduplicate') {
+      handleDeduplicate();
       closeDropdown();
     }
   }
@@ -520,14 +522,14 @@
     if (loading) {
       btn.classList.add('bm-dropdown-loading');
       btn.disabled = true;
-      // 保存原始图标文字
-      btn._origIcon = iconSpan?.textContent || '';
-      if (iconSpan) iconSpan.textContent = '⏳';
+      // 保存原始图标（innerHTML 保留 SVG 结构）
+      btn._origIconHTML = iconSpan?.innerHTML || '';
+      if (iconSpan) iconSpan.innerHTML = '⏳';
     } else {
       btn.classList.remove('bm-dropdown-loading');
       btn.disabled = false;
-      // 恢复原始图标文字
-      if (iconSpan && btn._origIcon) iconSpan.textContent = btn._origIcon;
+      // 恢复原始图标
+      if (iconSpan && btn._origIconHTML) iconSpan.innerHTML = btn._origIconHTML;
     }
   }
 
@@ -620,6 +622,38 @@
   /** 处理「从云端拉取」按钮点击（带反馈） */
   async function handlePullFromCloud() {
     await pullFromCloud(true);
+  }
+
+  // ==================== 本地去重 ====================
+
+  /** 去除本地书签中 URL 重复的条目，保留第一次出现的 */
+  function deduplicateBookmarks() {
+    const seen = new Set();
+    const unique = [];
+    let removed = 0;
+    for (const bm of bookmarks) {
+      if (!seen.has(bm.url)) {
+        seen.add(bm.url);
+        unique.push(bm);
+      } else {
+        removed++;
+      }
+    }
+    if (removed === 0) {
+      showToast('✅ 没有发现重复书签', 'info');
+      return false;
+    }
+    bookmarks = unique;
+    saveBookmarks();
+    render();
+    renderPanel();
+    showToast('🧹 已去除 ' + removed + ' 个重复书签', 'success');
+    return true;
+  }
+
+  /** 处理「去除重复书签」按钮点击 */
+  function handleDeduplicate() {
+    deduplicateBookmarks();
   }
 
   /** 登录后自动推送到云端 */

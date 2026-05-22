@@ -44,14 +44,32 @@ permalink: /
         </div>
       </div>
       <div class="bm-dropdown-divider"></div>
-      <button class="bm-dropdown-item" data-action="push-cloud">
-        <span class="bm-dropdown-icon">☁️⬆</span>
-        <span data-lang-en="Push to Cloud" data-lang-zh="推送到云端">Push to Cloud</span>
-      </button>
-      <button class="bm-dropdown-item" data-action="pull-cloud">
-        <span class="bm-dropdown-icon">☁️⬇</span>
-        <span data-lang-en="Pull from Cloud" data-lang-zh="从云端拉取">Pull from Cloud</span>
-      </button>
+      <div class="bm-dropdown-section bm-section--sync">
+        <div class="bm-dropdown-section-title">
+          <span class="bm-dropdown-icon sync-section-icon">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M5 13a4 4 0 0 1 0-8 5 5 0 0 1 9.2-2.2A4 4 0 0 1 15 13H5Z" opacity=".7"/><path d="M10 8v6m-3-3 3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span data-lang-en="Cloud Sync" data-lang-zh="云端同步">Cloud Sync</span>
+        </div>
+        <button class="bm-dropdown-item bm-dropdown-item--sync" data-action="push-cloud">
+          <span class="bm-dropdown-icon">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M5 13a4 4 0 0 1 0-8 5 5 0 0 1 9.2-2.2A4 4 0 0 1 15 13H5Z" opacity=".7"/><path d="M10 6v6m-3-3 3-3 3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span data-lang-en="Push to Cloud" data-lang-zh="推送到云端">Push to Cloud</span>
+        </button>
+        <button class="bm-dropdown-item bm-dropdown-item--sync" data-action="pull-cloud">
+          <span class="bm-dropdown-icon">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M5 13a4 4 0 0 1 0-8 5 5 0 0 1 9.2-2.2A4 4 0 0 1 15 13H5Z" opacity=".7"/><path d="M10 8v6m-3-3 3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span data-lang-en="Pull from Cloud" data-lang-zh="从云端拉取">Pull from Cloud</span>
+        </button>
+        <button class="bm-dropdown-item bm-dropdown-item--sync" data-action="deduplicate">
+          <span class="bm-dropdown-icon">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4" opacity=".5"/><circle cx="13" cy="13" r="4" opacity=".5"/><path d="M7 7 14 14"/></svg>
+          </span>
+          <span data-lang-en="Remove Duplicates" data-lang-zh="去除重复书签">Remove Duplicates</span>
+        </button>
+      </div>
     </div>
   </aside>
 

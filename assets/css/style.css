@@ -1928,6 +1928,50 @@ button:focus:not(:focus-visible) {
 .bm-dropdown-icon{
   font-size:1rem;
   flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ---- 云端同步分区 ---- */
+.bm-section--sync{
+  background:rgba(142,92,255,0.03);
+  border-top:1px solid rgba(142,92,255,0.08);
+  border-bottom:1px solid rgba(142,92,255,0.08);
+  padding:6px 16px 4px !important;
+}
+
+.bm-section--sync .bm-dropdown-section-title{
+  margin-bottom:2px;
+}
+
+.sync-section-icon{
+  color:var(--accent-solid);
+}
+
+.bm-dropdown-item--sync{
+  border-radius:10px;
+  margin:2px 0;
+  padding:10px 12px;
+  font-size:.85rem;
+}
+
+.bm-dropdown-item--sync .bm-dropdown-icon{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:rgba(142,92,255,0.08);
+  color:var(--accent-solid);
+  transition:background .2s ease, color .2s ease;
+}
+
+.bm-dropdown-item--sync:hover .bm-dropdown-icon{
+  background:var(--accent);
+  color:#fff;
+}
+
+.bm-dropdown-item--sync:hover{
+  background:rgba(142,92,255,0.06);
 }
 
 .bm-dropdown-divider{
