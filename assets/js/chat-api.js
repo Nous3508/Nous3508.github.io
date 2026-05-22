@@ -15,9 +15,13 @@
     deepseek: {
       name: 'DeepSeek',
       baseUrl: 'https://api.deepseek.com/v1',
+    deepseek: {
+      name: 'DeepSeek',
+      baseUrl: 'https://api.deepseek.com/v1',
+      apiType: 'openai',
       models: [
-        { id: 'deepseek-chat', name: 'DeepSeek V4 (Chat)' },
-        { id: 'deepseek-reasoner', name: 'DeepSeek R1 / V4 Reasoner' },
+        { id: 'deepseek-chat', name: 'DeepSeek V4 Flash ⚡' },
+        { id: 'deepseek-reasoner', name: 'DeepSeek R1 (Reasoner)' },
         { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro' }
       ],
       defaultModel: 'deepseek-chat'
@@ -25,6 +29,7 @@
     siliconflow: {
       name: 'SiliconFlow',
       baseUrl: 'https://api.siliconflow.cn/v1',
+      apiType: 'openai',
       models: [
         { id: 'deepseek-ai/DeepSeek-V4', name: 'DeepSeek V4' },
         { id: 'deepseek-ai/DeepSeek-V3', name: 'DeepSeek V3' },
@@ -47,7 +52,10 @@
     openai: {
       name: 'OpenAI',
       baseUrl: 'https://api.openai.com/v1',
+      apiType: 'openai',
       models: [
+        { id: 'gpt-5.5', name: 'GPT-5.5 (旗舰)' },
+        { id: 'gpt-5.4', name: 'GPT-5.4' },
         { id: 'o4-mini', name: 'o4-mini' },
         { id: 'o4', name: 'o4' },
         { id: 'o3', name: 'o3' },
@@ -56,14 +64,14 @@
         { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini' },
         { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano' },
         { id: 'gpt-4o', name: 'GPT-4o' },
-        { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
-        { id: 'gpt-4-turbo', name: 'GPT-4 Turbo' }
+        { id: 'gpt-4o-mini', name: 'GPT-4o Mini' }
       ],
-      defaultModel: 'gpt-4o-mini'
+      defaultModel: 'gpt-5.4'
     },
     moonshot: {
       name: 'Moonshot',
       baseUrl: 'https://api.moonshot.cn/v1',
+      apiType: 'openai',
       models: [
         { id: 'moonshot-v1-8k', name: 'Moonshot 8K' },
         { id: 'moonshot-v1-32k', name: 'Moonshot 32K' },
@@ -74,6 +82,7 @@
     groq: {
       name: 'Groq',
       baseUrl: 'https://api.groq.com/openai/v1',
+      apiType: 'openai',
       models: [
         { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B' },
         { id: 'llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B' },
@@ -83,6 +92,71 @@
         { id: 'gemma2-9b-it', name: 'Gemma 2 9B' }
       ],
       defaultModel: 'llama-4-scout-17b-16e-instruct'
+    },
+    // ---- 新增提供商 ----
+    bailian: {
+      name: '阿里百炼 Qwen',
+      baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+      apiType: 'openai',
+      models: [
+        { id: 'qwen3-7b-max', name: 'Qwen 3.7 Max (旗舰)' },
+        { id: 'qwen3-7b-plus', name: 'Qwen 3.6 Plus' },
+        { id: 'qwen3-235b-a22b', name: 'Qwen3 235B MoE' },
+        { id: 'qwen3-70b-a14b', name: 'Qwen3 70B MoE' },
+        { id: 'qwen3-32b', name: 'Qwen3 32B' },
+        { id: 'qwen3-8b', name: 'Qwen3 8B' }
+      ],
+      defaultModel: 'qwen3-7b-max'
+    },
+    zhipu: {
+      name: '智谱 GLM',
+      baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+      apiType: 'openai',
+      models: [
+        { id: 'glm-5-1-fast', name: 'GLM-5.1 高速版 (400 tok/s)' },
+        { id: 'glm-5', name: 'GLM-5 (旗舰)' }
+      ],
+      defaultModel: 'glm-5-1-fast'
+    },
+    mistral: {
+      name: 'Mistral',
+      baseUrl: 'https://api.mistral.ai/v1',
+      apiType: 'openai',
+      models: [
+        { id: 'mistral-large-3', name: 'Mistral Large 3' }
+      ],
+      defaultModel: 'mistral-large-3'
+    },
+    anthropic: {
+      name: 'Anthropic Claude',
+      baseUrl: 'https://api.anthropic.com/v1',
+      apiType: 'anthropic',
+      models: [
+        { id: 'claude-opus-4-7', name: 'Claude Opus 4.7' },
+        { id: 'claude-sonnet-4-5', name: 'Claude Sonnet 4.5 (编码王者)' }
+      ],
+      defaultModel: 'claude-sonnet-4-5'
+    },
+    google: {
+      name: 'Google Gemini',
+      baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+      apiType: 'google',
+      models: [
+        { id: 'gemini-3.5-flash', name: 'Gemini 3.5 Flash (极速)' },
+        { id: 'gemini-omni', name: 'Gemini Omni (多模态)' },
+        { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash (1M上下文)' }
+      ],
+      defaultModel: 'gemini-2.5-flash'
+    },
+    baidu: {
+      name: '百度 ERNIE',
+      baseUrl: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop',
+      apiType: 'baidu',
+      models: [
+        { id: 'ernie-5.1', name: 'ERNIE 5.1 (全模态旗舰)' },
+        { id: 'ernie-4.5', name: 'ERNIE 4.5 (性价比)' }
+      ],
+      defaultModel: 'ernie-5.1'
     }
   };
 
@@ -215,7 +289,6 @@
      */
     streamChat(messages, config, onChunk, onDone, onError) {
       const { provider, model, temperature } = config;
-      const baseUrl = apiManager.getBaseUrl(provider);
       const keys = apiManager.getKeys();
       const keyData = keys[provider];
       const apiKey = keyData?.key || '';
@@ -224,12 +297,30 @@
         if (onError) onError(new Error('API Key 未配置。请在设置中填写 API Key。'));
         return null;
       }
+
+      const abortController = new AbortController();
+      const providerCfg = PROVIDERS[provider] || {};
+
+      // 根据 apiType 路由到不同的 API 处理
+      switch (providerCfg.apiType || 'openai') {
+        case 'anthropic':
+          return this._streamAnthropic(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
+        case 'google':
+          return this._streamGoogle(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
+        case 'baidu':
+          return this._streamBaidu(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
+        default:
+          return this._streamOpenAI(provider, model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
+      }
+    },
+
+    // -------- OpenAI 兼容 API --------
+    _streamOpenAI(provider, model, messages, temperature, apiKey, abortController, onChunk, onDone, onError) {
+      const baseUrl = apiManager.getBaseUrl(provider);
       if (!baseUrl) {
         if (onError) onError(new Error('Base URL 未配置。'));
         return null;
       }
-
-      const abortController = new AbortController();
 
       const isReasoner = model.includes('reasoner') || model.includes('r1') || model.includes('o3') || model.includes('o4');
 
@@ -254,21 +345,170 @@
         ];
       }
 
-      fetch(`${baseUrl}/chat/completions`, {
+      this._fetchSSE(`${baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(body),
-        signal: abortController.signal
-      })
+        body: JSON.stringify(body)
+      }, abortController, onChunk, onDone, onError, (parsed) => {
+        const delta = parsed.choices?.[0]?.delta;
+        let text = '';
+        if (delta && delta.content) text += delta.content;
+        if (delta && delta.reasoning_content) text += delta.reasoning_content;
+        return text || null;
+      });
+
+      return abortController;
+    },
+
+    // -------- Anthropic Claude API --------
+    _streamAnthropic(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError) {
+      const baseUrl = PROVIDERS.anthropic.baseUrl;
+      if (!baseUrl) {
+        if (onError) onError(new Error('Base URL 未配置。'));
+        return null;
+      }
+
+      // 转换消息格式：Anthropic 使用 user/assistant 角色
+      const claudeMessages = [];
+      let systemContent = '';
+      for (const msg of messages) {
+        if (msg.role === 'system') {
+          systemContent = msg.content;
+          continue;
+        }
+        claudeMessages.push({ role: msg.role === 'assistant' ? 'assistant' : 'user', content: msg.content });
+      }
+
+      const body = {
+        model,
+        messages: claudeMessages,
+        max_tokens: 4096,
+        stream: true
+      };
+      if (systemContent) body.system = systemContent;
+      if (temperature != null) body.temperature = temperature;
+
+      this._fetchSSE(`${baseUrl}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify(body)
+      }, abortController, onChunk, onDone, onError, (parsed) => {
+        if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+          return parsed.delta.text;
+        }
+        return null;
+      });
+
+      return abortController;
+    },
+
+    // -------- Google Gemini API --------
+    _streamGoogle(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError) {
+      const baseUrl = PROVIDERS.google.baseUrl;
+      if (!baseUrl) {
+        if (onError) onError(new Error('Base URL 未配置。'));
+        return null;
+      }
+
+      // 转换消息格式
+      const contents = [];
+      let systemInstruction = null;
+      for (const msg of messages) {
+        if (msg.role === 'system') {
+          systemInstruction = { parts: [{ text: msg.content }] };
+          continue;
+        }
+        contents.push({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: msg.content }]
+        });
+      }
+
+      const body = { contents };
+      if (systemInstruction) body.system_instruction = systemInstruction;
+      if (temperature != null) body.generationConfig = { temperature };
+
+      const url = `${baseUrl}/models/${model}:streamGenerateContent?key=${encodeURIComponent(apiKey)}`;
+
+      this._fetchGoogleSSE(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }, abortController, onChunk, onDone, onError);
+
+      return abortController;
+    },
+
+    // -------- 百度 ERNIE API (使用 access_token) --------
+    _streamBaidu(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError) {
+      // 百度 ERNIE API 需要使用 access_token
+      // apiKey 格式: "client_id|client_secret" 或已获取的 token
+      const baseUrl = PROVIDERS.baidu.baseUrl;
+      if (!baseUrl) {
+        if (onError) onError(new Error('Base URL 未配置。'));
+        return null;
+      }
+
+      // 转换消息格式
+      const baiduMessages = messages.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content
+      }));
+
+      const body = {
+        messages: baiduMessages,
+        stream: true
+      };
+      if (temperature != null) body.temperature = temperature;
+
+      // 尝试直接使用 key 作为 access_token，或者格式为 "client_id|client_secret"
+      const useKeyDirectly = !apiKey.includes('|');
+      const url = useKeyDirectly
+        ? `${baseUrl}/chat/${model}?access_token=${encodeURIComponent(apiKey)}`
+        : null; // 需要先获取 token，简化处理：让用户直接传 token
+
+      if (!url) {
+        if (onError) onError(new Error('百度 ERNIE 请直接粘贴 access_token，格式 "client_id|client_secret" 暂不支持自动获取。'));
+        return null;
+      }
+
+      body.stream = true;
+
+      this._fetchSSE(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }, abortController, onChunk, onDone, onError, (parsed) => {
+        if (parsed.result) return parsed.result;
+        // 兼容 OpenAI 格式
+        const delta = parsed.choices?.[0]?.delta;
+        if (delta && delta.content) return delta.content;
+        return null;
+      });
+
+      return abortController;
+    },
+
+    // ==================== 底层 SSE 读取工具 ====================
+
+    /** 通用 SSE 流读取（OpenAI 风格 data: 事件） */
+    _fetchSSE(url, fetchOptions, abortController, onChunk, onDone, onError, parseFn) {
+      fetch(url, { ...fetchOptions, signal: abortController.signal })
         .then(async response => {
           if (!response.ok) {
             let errMsg = `HTTP ${response.status}`;
             try {
               const errData = await response.json();
-              errMsg = errData.error?.message || errMsg;
+              errMsg = errData.error?.message || errData.error || errMsg;
             } catch {}
             throw new Error(errMsg);
           }
@@ -282,9 +522,8 @@
             if (done) break;
 
             buffer += decoder.decode(value, { stream: true });
-            // 按行分割 SSE 数据
             const lines = buffer.split('\n');
-            buffer = lines.pop() || ''; // 保留未完成的行
+            buffer = lines.pop() || '';
 
             for (const line of lines) {
               const trimmed = line.trim();
@@ -294,17 +533,9 @@
 
               try {
                 const parsed = JSON.parse(data);
-                const delta = parsed.choices?.[0]?.delta;
-                if (delta && delta.content) {
-                  if (onChunk) onChunk(delta.content);
-                }
-                // 处理 reasoning_content（DeepSeek R1 的推理过程）
-                if (delta && delta.reasoning_content) {
-                  if (onChunk) onChunk(delta.reasoning_content);
-                }
-              } catch {
-                // 忽略解析错误
-              }
+                const text = parseFn ? parseFn(parsed) : parsed;
+                if (text) { if (onChunk) onChunk(text); }
+              } catch { /* 忽略 */ }
             }
           }
 
@@ -317,8 +548,62 @@
           }
           if (onError) onError(err);
         });
+    },
 
-      return abortController;
+    /** Google Gemini 专用 SSE 读取（返回 JSON 数组，非 data: 前缀） */
+    _fetchGoogleSSE(url, fetchOptions, abortController, onChunk, onDone, onError) {
+      fetch(url, { ...fetchOptions, signal: abortController.signal })
+        .then(async response => {
+          if (!response.ok) {
+            let errMsg = `HTTP ${response.status}`;
+            try {
+              const errData = await response.json();
+              errMsg = errData.error?.message || JSON.stringify(errData.error) || errMsg;
+            } catch {}
+            throw new Error(errMsg);
+          }
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            // Google Gemini 返回的是行分隔的 JSON 对象，每行一个完整 JSON
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed) continue;
+
+              try {
+                const parsed = JSON.parse(trimmed);
+                const candidates = parsed.candidates;
+                if (candidates && candidates.length > 0) {
+                  const parts = candidates[0]?.content?.parts;
+                  if (parts) {
+                    for (const part of parts) {
+                      if (part.text && onChunk) onChunk(part.text);
+                    }
+                  }
+                }
+              } catch { /* 忽略 */ }
+            }
+          }
+
+          if (onDone) onDone();
+        })
+        .catch(err => {
+          if (err.name === 'AbortError') {
+            if (onDone) onDone();
+            return;
+          }
+          if (onError) onError(err);
+        });
     },
 
     /**

@@ -244,6 +244,12 @@ permalink: /account/
           <option value="openai">OpenAI</option>
           <option value="moonshot">Moonshot</option>
           <option value="groq">Groq</option>
+          <option value="bailian">阿里百炼 Qwen</option>
+          <option value="zhipu">智谱 GLM</option>
+          <option value="mistral">Mistral</option>
+          <option value="anthropic">Anthropic Claude</option>
+          <option value="google">Google Gemini</option>
+          <option value="baidu">百度 ERNIE</option>
         </select>
         <select id="acct-default-model" class="acct-select">
           <option value="">-- Model --</option>
