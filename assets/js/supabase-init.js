@@ -185,6 +185,32 @@ const BookmarkAPI = {
 
     // 4. 重新拉取云端最新列表
     return this.fetchAll();
+  },
+
+  /** 清空云端所有书签，再插入本地全部书签（覆盖策略）
+   *
+   *  以本地顺序为准，云端旧数据全部删除后重新写入。
+   *  避免了合并策略下重复 URL 遗留的问题。
+   */
+  async replaceAll(localBookmarks) {
+    if (!supabaseClient) throw new Error('Supabase not initialized');
+    const user = await Auth.getUser();
+    const userId = user?.data?.user?.id;
+    if (!userId) throw new Error('Not logged in');
+
+    // 1. 删除云端所有书签（批量删除）
+    const existing = await this.fetchAll();
+    for (const cb of existing) {
+      await this.remove(cb.id);
+    }
+
+    // 2. 依次插入本地书签
+    for (let i = 0; i < localBookmarks.length; i++) {
+      const bm = localBookmarks[i];
+      await this.add(bm.title, bm.url, i);
+    }
+
+    return this.fetchAll();
   }
 };
 

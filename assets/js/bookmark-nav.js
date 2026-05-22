@@ -533,7 +533,7 @@
 
   // ==================== 云端同步（带反馈） ====================
 
-  /** 推送到云端 */
+  /** 推送到云端（清空云端 → 推送本地，避免重复） */
   async function pushToCloud(showFeedback) {
     if (!cloudUser) {
       if (typeof showLoginModal === 'function') {
@@ -543,7 +543,7 @@
     }
     if (showFeedback) setSyncButtonLoading('push-cloud', true);
     try {
-      await BookmarkAPI.syncLocalToCloud(bookmarks);
+      await BookmarkAPI.replaceAll(bookmarks);
       isCloudSynced = true;
       if (showFeedback) {
         showToast('☁️ 已推送到云端', 'success');
@@ -558,7 +558,7 @@
     if (showFeedback) setSyncButtonLoading('push-cloud', false);
   }
 
-  /** 从云端拉取 */
+  /** 从云端拉取（去重后覆盖本地） */
   async function pullFromCloud(showFeedback) {
     if (!cloudUser) {
       if (typeof showLoginModal === 'function') {
@@ -576,18 +576,32 @@
         if (showFeedback) setSyncButtonLoading('pull-cloud', false);
         return;
       }
-      // 将云端数据转换为本地格式
-      bookmarks = cloudData.map((cb, idx) => ({
+      // 以 URL 为键去重（保留每条记录第一次出现的顺序）
+      const seen = new Set();
+      const unique = [];
+      for (const cb of cloudData) {
+        if (!seen.has(cb.url)) {
+          seen.add(cb.url);
+          unique.push(cb);
+        }
+      }
+      // 覆盖本地
+      bookmarks = unique.map((cb, idx) => ({
         id: 'bm-cloud-' + idx + '-' + Date.now(),
         title: cb.title,
         url: cb.url
       }));
+      // 同步把去重后的干净数据推回云端
+      await BookmarkAPI.replaceAll(bookmarks);
       saveBookmarks();
       render();
       renderPanel();
       isCloudSynced = true;
       if (showFeedback) {
-        showToast('☁️ 已从云端拉取 ' + bookmarks.length + ' 个书签', 'success');
+        const dupCount = cloudData.length - unique.length;
+        let msg = '☁️ 已从云端拉取 ' + bookmarks.length + ' 个书签';
+        if (dupCount > 0) msg += '（去重 ' + dupCount + ' 个重复）';
+        showToast(msg, 'success');
       }
     } catch (e) {
       console.error('[Sync] Pull from cloud failed:', e);
@@ -624,7 +638,7 @@
     renderPanel();
   }
 
-  // 在保存时也自动推送到云端
+  // 在保存时也自动推送到云端（同样使用清空覆盖策略）
   const origSaveBookmarks = saveBookmarks;
   saveBookmarks = function() {
     origSaveBookmarks();
@@ -632,7 +646,7 @@
       if (window._syncTimer) clearTimeout(window._syncTimer);
       window._syncTimer = setTimeout(async () => {
         try {
-          await BookmarkAPI.syncLocalToCloud(bookmarks);
+          await BookmarkAPI.replaceAll(bookmarks);
           isCloudSynced = true;
         } catch (_) {
           isCloudSynced = false;
