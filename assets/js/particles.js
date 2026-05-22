@@ -198,9 +198,8 @@
   // ==================== 尺寸更新 ====================
   function resize() {
     if (!canvas) return;
-    const rect = canvas.parentNode.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
+    width = window.innerWidth;
+    height = window.innerHeight;
     canvas.width = width * devicePixelRatio;
     canvas.height = height * devicePixelRatio;
     canvas.style.width = width + 'px';

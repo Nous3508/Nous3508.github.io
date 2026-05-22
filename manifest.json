@@ -1,6 +1,9 @@
 {
-  "name": "Nous",
+  "name": "Nous の little nest",
   "short_name": "Nous",
+  "description": "Nous の little nest — projects, blog, learning, profile, and notes",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +18,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#9b5cff",
+  "background_color": "#fff7f0",
   "display": "standalone"
 }

@@ -1,18 +1,18 @@
 {
   "posts": [
     {
-      "title": "Welcome to Nous の little nest",
+      "title": "欢迎来到我的博客",
       "url": "/blog/2026/04/22/welcome/",
       "date": "2026-04-22",
-      "content": "This is a starter post for the site. It introduces the blog structure, future topics, and how to navigate the site.",
-      "tags": ["welcome", "site"]
+      "content": "这是第一篇示例文章。你可以在此撰写技术文章、项目笔记或发布公告。",
+      "tags": ["welcome", "start"]
     },
     {
       "title": "Embedded Notes: Starting with STM32",
       "url": "/blog/2026/04/23/stm32-start/",
       "date": "2026-04-23",
-      "content": "A quick note about getting started with STM32 peripherals, task organization, and basic project structure.",
-      "tags": ["stm32", "embedded"]
+      "content": "A short note for the embedded journey. First steps: 1. Create a clean project structure 2. Set up peripherals one by one 3. Keep the first build minimal 4. Add logging early 5. Iterate carefully",
+      "tags": ["stm32", "embedded", "notes"]
     }
   ],
   "projects": []

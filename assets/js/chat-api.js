@@ -16,8 +16,9 @@
       name: 'DeepSeek',
       baseUrl: 'https://api.deepseek.com/v1',
       models: [
-        { id: 'deepseek-chat', name: 'DeepSeek V3 (Chat)' },
-        { id: 'deepseek-reasoner', name: 'DeepSeek R1 (Reasoner)' }
+        { id: 'deepseek-chat', name: 'DeepSeek V4 (Chat)' },
+        { id: 'deepseek-reasoner', name: 'DeepSeek R1 / V4 Reasoner' },
+        { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro' }
       ],
       defaultModel: 'deepseek-chat'
     },
@@ -25,25 +26,38 @@
       name: 'SiliconFlow',
       baseUrl: 'https://api.siliconflow.cn/v1',
       models: [
+        { id: 'deepseek-ai/DeepSeek-V4', name: 'DeepSeek V4' },
         { id: 'deepseek-ai/DeepSeek-V3', name: 'DeepSeek V3' },
         { id: 'deepseek-ai/DeepSeek-R1', name: 'DeepSeek R1' },
+        { id: 'Pro/deepseek-ai/DeepSeek-V4', name: 'DeepSeek V4 (Pro 版)' },
+        { id: 'Pro/deepseek-ai/DeepSeek-V3', name: 'DeepSeek V3 (Pro 版)' },
+        { id: 'Qwen/Qwen3-235B-A22B', name: 'Qwen3 235B' },
+        { id: 'Qwen/Qwen3-70B-A14B', name: 'Qwen3 70B' },
+        { id: 'Qwen/Qwen3-32B', name: 'Qwen3 32B' },
+        { id: 'Qwen/Qwen3-8B', name: 'Qwen3 8B' },
         { id: 'Qwen/Qwen2.5-72B-Instruct', name: 'Qwen 2.5 72B' },
         { id: 'Qwen/Qwen2.5-32B-Instruct', name: 'Qwen 2.5 32B' },
         { id: 'Qwen/Qwen2.5-14B-Instruct', name: 'Qwen 2.5 14B' },
         { id: 'Qwen/Qwen2.5-7B-Instruct', name: 'Qwen 2.5 7B' },
         { id: 'THUDM/glm-4-9b-chat', name: 'GLM-4 9B' },
-        { id: 'Pro/deepseek-ai/DeepSeek-V3', name: 'DeepSeek V3 (Pro 版)' }
+        { id: 'THUDM/glm-4-9b-chat-1m', name: 'GLM-4 9B (1M Context)' }
       ],
-      defaultModel: 'deepseek-ai/DeepSeek-V3'
+      defaultModel: 'deepseek-ai/DeepSeek-V4'
     },
     openai: {
       name: 'OpenAI',
       baseUrl: 'https://api.openai.com/v1',
       models: [
+        { id: 'o4-mini', name: 'o4-mini' },
+        { id: 'o4', name: 'o4' },
+        { id: 'o3', name: 'o3' },
+        { id: 'o3-mini', name: 'o3-mini' },
+        { id: 'gpt-4.1', name: 'GPT-4.1' },
+        { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini' },
+        { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano' },
         { id: 'gpt-4o', name: 'GPT-4o' },
         { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
-        { id: 'gpt-4-turbo', name: 'GPT-4 Turbo' },
-        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' }
+        { id: 'gpt-4-turbo', name: 'GPT-4 Turbo' }
       ],
       defaultModel: 'gpt-4o-mini'
     },
@@ -55,18 +69,20 @@
         { id: 'moonshot-v1-32k', name: 'Moonshot 32K' },
         { id: 'moonshot-v1-128k', name: 'Moonshot 128K' }
       ],
-      defaultModel: 'moonshot-v1-8k'
+      defaultModel: 'moonshot-v1-128k'
     },
     groq: {
       name: 'Groq',
       baseUrl: 'https://api.groq.com/openai/v1',
       models: [
+        { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B' },
+        { id: 'llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B' },
         { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B' },
         { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B' },
         { id: 'mixtral-8x7b-32768', name: 'Mixtral 8x7B' },
         { id: 'gemma2-9b-it', name: 'Gemma 2 9B' }
       ],
-      defaultModel: 'llama-3.3-70b-versatile'
+      defaultModel: 'llama-4-scout-17b-16e-instruct'
     }
   };
 
@@ -215,24 +231,23 @@
 
       const abortController = new AbortController();
 
-      const isDeepSeekReasoner = provider === 'deepseek' && (model.includes('reasoner') || model.includes('r1'));
+      const isReasoner = model.includes('reasoner') || model.includes('r1') || model.includes('o3') || model.includes('o4');
 
       const body = {
         model,
         messages,
-        stream: true
+        stream: true,
+        temperature: temperature ?? 0.7
       };
 
-      // DeepSeek 思考模式：不需要 temperature（API 会忽略）
-      if (isDeepSeekReasoner) {
+      // DeepSeek 系列思考模式需要 extra_body 参数
+      if (isReasoner && (provider === 'deepseek' || provider.startsWith('custom_'))) {
         body.reasoning_effort = 'high';
         body.extra_body = { thinking: { type: 'enabled' } };
-      } else {
-        body.temperature = temperature ?? 0.7;
       }
 
-      // 如果提供商是 DeepSeek，添加前缀（非 reasoning 模型才加）
-      if (provider === 'deepseek' && !isDeepSeekReasoner) {
+      // 如果提供商是 DeepSeek，添加 system prompt（非 reasoning 模型才加）
+      if (provider === 'deepseek' && !isReasoner) {
         body.messages = [
           { role: 'system', content: 'You are a helpful assistant. Please answer in the language the user uses.' },
           ...messages

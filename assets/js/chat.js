@@ -403,13 +403,6 @@
     clearMessages();
   }
 
-  // ==================== 侧栏折叠 ====================
-  function toggleSidebar() {
-    state.sidebarCollapsed = !state.sidebarCollapsed;
-    if (!sidebar) return;
-    sidebar.classList.toggle('chat-sidebar--collapsed', state.sidebarCollapsed);
-  }
-
   // ==================== 侧栏历史 ====================
   function renderSidebarHistory() {
     if (!sidebarList) return;
