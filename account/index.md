@@ -172,16 +172,43 @@ permalink: /account/
 
     <hr class="acct-divider">
 
-    <!-- API Key 管理 -->
+    <!-- API Key 管理（重构版：选择提供商→查看模型→填写 Key） -->
     <div class="acct-section">
       <label class="acct-label" data-lang-en="API Keys" data-lang-zh="API Key 管理">API Keys</label>
-      <p class="acct-hint" data-lang-en="Keys are stored in your browser. You can manually push/pull them to the cloud."
-         data-lang-zh="Key 存储在浏览器本地，可以手动上传/拉取到云端。">
-        Keys are stored in your browser. You can manually push/pull them to the cloud.
+      <p class="acct-hint" data-lang-en="Select a provider, view its models, and enter your API key."
+         data-lang-zh="选择提供商，查看可用模型，然后填写 API Key。">
+        Select a provider, view its models, and enter your API key.
       </p>
-      <div id="acct-api-list"></div>
-      <details class="acct-details">
-        <summary data-lang-en="+ Add Custom API" data-lang-zh="+ 添加自定义 API">+ Add Custom API</summary>
+
+      <!-- 提供商选择行 -->
+      <div class="acct-inline-row acct-api-picker">
+        <select id="acct-api-provider" class="acct-select acct-api-provider-select">
+          <option value="">— 选择提供商 —</option>
+        </select>
+        <input type="url" id="acct-api-baseurl" class="acct-api-url" placeholder="Base URL (可选，留空用默认)" style="flex:1.5">
+      </div>
+
+      <!-- 模型列表（选中提供商后显示） -->
+      <div id="acct-api-models" class="acct-api-models" style="display:none">
+        <div class="acct-api-models-label" data-lang-en="Available Models" data-lang-zh="可用模型">可用模型</div>
+        <div id="acct-api-model-tags" class="acct-api-model-tags"></div>
+      </div>
+
+      <!-- API Key 输入 -->
+      <div class="acct-inline-row acct-api-key-row" style="margin-top:12px">
+        <input type="password" id="acct-api-key-input" class="acct-api-input" placeholder="sk-..." style="flex:2">
+        <button id="acct-api-save-btn" class="acct-btn acct-btn--primary" data-lang-en="💾 Save Key" data-lang-zh="💾 保存 Key">💾 保存 Key</button>
+      </div>
+
+      <!-- 已保存的 Key 概览 -->
+      <div style="margin-top:16px">
+        <div class="acct-api-models-label" data-lang-en="Saved Keys" data-lang-zh="已保存的 Key">已保存的 Key</div>
+        <div id="acct-api-status-bar" class="acct-api-status-bar"></div>
+      </div>
+
+      <!-- 自定义 API（折叠） -->
+      <details class="acct-details" style="margin-top:16px">
+        <summary data-lang-en="+ Add Custom API Provider" data-lang-zh="+ 添加自定义 API 提供商">+ 添加自定义 API 提供商</summary>
         <div class="acct-custom-form">
           <label>
             <span data-lang-en="Name" data-lang-zh="名称">Name</span>

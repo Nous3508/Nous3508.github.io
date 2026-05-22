@@ -2183,6 +2183,16 @@ button:focus:not(:focus-visible) {
   box-shadow:var(--shadow);
 }
 
+.acct-btn--primary{
+  background:var(--accent);
+  color:#fff;
+  border-color:transparent;
+}
+
+.acct-btn--primary:hover{
+  box-shadow:var(--shadow-strong);
+}
+
 .acct-btn--small{
   padding:5px 12px;
   font-size:.78rem;
@@ -2195,6 +2205,132 @@ button:focus:not(:focus-visible) {
 
 .acct-btn--danger:hover{
   background:rgba(220,38,38,0.08);
+}
+
+/* ==================== API Key 管理（重构版） ==================== */
+
+.acct-api-picker{
+  margin-bottom:10px;
+}
+
+.acct-api-provider-select{
+  flex:1;
+  min-width:160px;
+}
+
+/* 模型标签列表 */
+.acct-api-models{
+  margin:8px 0;
+}
+
+.acct-api-models-label{
+  font-size:.82rem;
+  font-weight:700;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.acct-api-model-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.acct-api-model-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 10px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:rgba(127,127,127,0.06);
+  color:var(--text);
+  font-size:.78rem;
+  font-weight:600;
+  transition:background .2s ease;
+}
+
+.acct-api-model-tag--active{
+  background:rgba(155,92,255,0.12);
+  border-color:var(--accent-solid);
+}
+
+/* API Key 状态条 */
+.acct-api-status-bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:4px;
+}
+
+.acct-api-status-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 10px 5px 8px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text);
+  background:var(--card);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.acct-api-status-chip:hover{
+  transform:translateY(-1px);
+  box-shadow:var(--shadow);
+}
+
+.acct-api-status-chip .chip-icon{
+  font-size:.82rem;
+}
+
+.acct-api-status-chip .chip-remove{
+  width:16px;
+  height:16px;
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:.6rem;
+  color:var(--muted);
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  transition:background .15s ease, color .15s ease;
+}
+
+.acct-api-status-chip .chip-remove:hover{
+  background:rgba(220,38,38,0.1);
+  color:#dc2626;
+}
+
+/* API Key 输入行 */
+.acct-api-key-row{
+  gap:8px;
+}
+
+.acct-api-key-row .acct-api-input{
+  flex:2;
+  min-width:160px;
+  padding:9px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.5);
+  color:var(--text);
+  font-size:.85rem;
+  outline:none;
+  transition:border-color .2s ease;
+}
+
+.acct-api-key-row .acct-api-input:focus{
+  border-color:var(--accent-solid);
+}
+
+[data-theme="dark"] .acct-api-key-row .acct-api-input{
+  background:rgba(255,255,255,0.04);
 }
 
 /* 自定义 API 表单 */

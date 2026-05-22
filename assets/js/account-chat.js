@@ -62,58 +62,198 @@
     reader.readAsDataURL(file);
   }
 
-  // ==================== API Key 管理 ====================
-  function renderApiKeyList() {
-    const container = $('acct-api-list');
-    if (!container) return;
+  // ==================== API Key 管理（重构版） ====================
+
+  let _selectedProviderId = '';
+
+  /** 填充提供商下拉列表 */
+  function populateProviderSelect() {
+    const sel = $('acct-api-provider');
+    if (!sel) return;
     const { PROVIDERS, apiManager } = ChatAPI;
+    const allProviders = apiManager.getAllProviders();
+
+    sel.innerHTML = '<option value="">— 选择提供商 —</option>';
+    Object.entries(allProviders).forEach(([id, cfg]) => {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = cfg.name + (cfg.custom ? ' ⚡' : '');
+      sel.appendChild(opt);
+    });
+
+    // 如果有已保存的 key，默认选中第一个有 key 的提供商
+    const keys = apiManager.getKeys();
+    const savedIds = Object.keys(keys).filter(k => keys[k].key);
+    if (savedIds.length > 0 && sel.value === '') {
+      // 不自动选中，让用户自己选
+    }
+  }
+
+  /** 提供商切换时更新模型列表 */
+  function onProviderChange(providerId) {
+    _selectedProviderId = providerId;
+    const modelsContainer = $('acct-api-models');
+    const tagsContainer = $('acct-api-model-tags');
+    const keyInput = $('acct-api-key-input');
+    const baseUrlInput = $('acct-api-baseurl');
+    const saveBtn = $('acct-api-save-btn');
+
+    if (!providerId) {
+      if (modelsContainer) modelsContainer.style.display = 'none';
+      if (keyInput) keyInput.value = '';
+      if (baseUrlInput) baseUrlInput.value = '';
+      return;
+    }
+
+    // 显示模型列表
+    const { apiManager } = ChatAPI;
+    const models = apiManager.getModels(providerId);
+    const keys = apiManager.getKeys();
+    const keyData = keys[providerId] || {};
+
+    if (tagsContainer) {
+      tagsContainer.innerHTML = models.map(m => `
+        <span class="acct-api-model-tag">${escapeHtml(m.name)}</span>
+      `).join('');
+    }
+    if (modelsContainer) modelsContainer.style.display = '';
+
+    // 回填已保存的 Key
+    if (keyInput) keyInput.value = keyData.key || '';
+    if (baseUrlInput) {
+      baseUrlInput.value = keyData.customBaseUrl || apiManager.getBaseUrl(providerId) || '';
+      baseUrlInput.placeholder = keyData.customBaseUrl
+        ? '自定义 Base URL'
+        : 'Base URL (可选，留空用默认)';
+    }
+
+    // 更新保存按钮文案
+    if (saveBtn) {
+      saveBtn.textContent = keyData.key ? '🔄 更新 Key' : '💾 保存 Key';
+    }
+  }
+
+  /** 保存当前选中提供商的 API Key */
+  function saveCurrentApiKey() {
+    const providerId = _selectedProviderId;
+    if (!providerId) {
+      showSyncStatus('请先选择一个提供商', 'err');
+      return;
+    }
+
+    const keyInput = $('acct-api-key-input');
+    const baseUrlInput = $('acct-api-baseurl');
+    if (!keyInput) return;
+
+    const key = keyInput.value.trim();
+    if (!key) {
+      showSyncStatus('请输入 API Key', 'err');
+      keyInput.focus();
+      return;
+    }
+
+    const { apiManager } = ChatAPI;
+    apiManager.setKey(providerId, {
+      key,
+      customBaseUrl: baseUrlInput?.value?.trim() || ''
+    });
+
+    renderApiKeyStatusBar();
+    showSyncStatus('✅ API Key 已保存 (' + (apiManager.getAllProviders()[providerId]?.name || providerId) + ')', 'ok');
+
+    // 更新按钮文案
+    const saveBtn = $('acct-api-save-btn');
+    if (saveBtn) saveBtn.textContent = '🔄 更新 Key';
+
+    // 通知 chat.js 刷新模型列表（通过自定义事件）
+    window.dispatchEvent(new CustomEvent('apikey:saved', { detail: { provider: providerId } }));
+  }
+
+  /** 删除指定提供商的 API Key */
+  function removeApiKey(providerId) {
+    const { apiManager } = ChatAPI;
+    const providerName = apiManager.getAllProviders()[providerId]?.name || providerId;
+
+    if (!confirm(`确定要删除 ${providerName} 的 API Key 吗？`)) return;
+
+    apiManager.removeKey(providerId);
+    renderApiKeyStatusBar();
+    showSyncStatus(`已删除 ${providerName} 的 API Key`, 'ok');
+
+    // 如果当前选中的就是被删除的提供商，清空输入
+    if (_selectedProviderId === providerId) {
+      const keyInput = $('acct-api-key-input');
+      if (keyInput) keyInput.value = '';
+      const saveBtn = $('acct-api-save-btn');
+      if (saveBtn) saveBtn.textContent = '💾 保存 Key';
+    }
+  }
+
+  /** 渲染已保存的 Key 状态条 */
+  function renderApiKeyStatusBar() {
+    const bar = $('acct-api-status-bar');
+    if (!bar) return;
+    const { PROVIDERS, apiManager } = ChatAPI;
+    const allProviders = apiManager.getAllProviders();
     const keys = apiManager.getKeys();
 
-    container.innerHTML = '';
-    Object.entries(PROVIDERS).forEach(([id, cfg]) => {
-      const keyData = keys[id] || {};
-      container.appendChild(createApiCard(id, cfg.name, !!keyData.key, keyData, false));
+    const entries = [];
+    Object.entries(allProviders).forEach(([id, cfg]) => {
+      const hasKey = !!(keys[id]?.key);
+      entries.push({ id, name: cfg.name, hasKey, isCustom: !!cfg.custom });
     });
-    Object.entries(keys).forEach(([id, keyData]) => {
-      if (PROVIDERS[id] || !keyData.custom) return;
-      container.appendChild(createApiCard(id, keyData.customName || id, !!keyData.key, keyData, true));
+
+    if (!entries.length) {
+      bar.innerHTML = '<span style="color:var(--muted);font-size:.82rem">暂无已保存的 Key</span>';
+      return;
+    }
+
+    bar.innerHTML = entries.map(({ id, name, hasKey, isCustom }) => `
+      <span class="acct-api-status-chip" data-provider="${escapeHtml(id)}">
+        <span class="chip-icon">${hasKey ? '✅' : '❌'}</span>
+        <span>${escapeHtml(name)}${isCustom ? ' ⚡' : ''}</span>
+        ${hasKey ? `<button class="chip-remove" data-provider="${escapeHtml(id)}" title="删除 Key">✕</button>` : ''}
+      </span>
+    `).join('');
+
+    // 点击芯片切换选中该提供商
+    bar.querySelectorAll('.acct-api-status-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        if (e.target.closest('.chip-remove')) return;
+        const pid = chip.dataset.provider;
+        const sel = $('acct-api-provider');
+        if (sel) {
+          sel.value = pid;
+          onProviderChange(pid);
+        }
+      });
+    });
+
+    // 删除按钮
+    bar.querySelectorAll('.chip-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeApiKey(btn.dataset.provider);
+      });
     });
   }
 
-  function createApiCard(id, displayName, hasKey, keyData, isCustom) {
-    const card = document.createElement('div');
-    card.className = 'acct-api-card';
+  /** 渲染整个 API Key 管理界面（旧版兼容入口，现拆分为子函数） */
+  function renderApiKeyList() {
+    populateProviderSelect();
+    renderApiKeyStatusBar();
 
-    card.innerHTML = `
-      <span class="acct-api-status">${hasKey ? '✅' : '❌'}</span>
-      <span class="acct-api-name">${displayName}</span>
-      <input type="password" class="acct-api-input" placeholder="sk-..." value="${escapeHtml(keyData.key || '')}">
-      <input type="url" class="acct-api-url" placeholder="Base URL (optional)" value="${escapeHtml(keyData.customBaseUrl || '')}">
-      <button class="acct-btn acct-btn--small acct-api-save">${hasKey ? '更新' : '保存'}</button>
-      ${isCustom ? '<button class="acct-btn acct-btn--small acct-btn--danger acct-api-delete">删除</button>' : ''}
-    `;
-
-    card.querySelector('.acct-api-save').addEventListener('click', () => {
-      const keyInput = card.querySelector('.acct-api-input');
-      const urlInput = card.querySelector('.acct-api-url');
-      ChatAPI.apiManager.setKey(id, {
-        key: keyInput.value,
-        customBaseUrl: urlInput.value || ''
-      });
-      renderApiKeyList();
-      showSyncStatus('API Key saved', 'ok');
-    });
-
-    const deleteBtn = card.querySelector('.acct-api-delete');
-    if (deleteBtn) {
-      deleteBtn.addEventListener('click', () => {
-        ChatAPI.apiManager.removeKey(id);
-        renderApiKeyList();
-        populateDefaultProvider();
-      });
+    // 如果有已保存的 Key，自动选中第一个有 Key 的提供商
+    const { apiManager } = ChatAPI;
+    const keys = apiManager.getKeys();
+    const sel = $('acct-api-provider');
+    if (sel && !sel.value) {
+      const savedIds = Object.keys(keys).filter(k => keys[k].key);
+      if (savedIds.length > 0) {
+        sel.value = savedIds[0];
+        onProviderChange(savedIds[0]);
+      }
     }
-
-    return card;
   }
 
   // ==================== 默认模型 ====================
@@ -237,7 +377,27 @@
       if (e.target.files?.length) handleAvatarUpload(e.target.files[0]);
     });
 
-    // 默认提供商切换
+    // ---- API Key 管理事件 ----
+
+    // 提供商下拉切换
+    const providerSel = $('acct-api-provider');
+    providerSel?.addEventListener('change', () => {
+      onProviderChange(providerSel.value);
+    });
+
+    // 保存 API Key
+    $('acct-api-save-btn')?.addEventListener('click', saveCurrentApiKey);
+
+    // API Key 输入框回车保存
+    const keyInput = $('acct-api-key-input');
+    keyInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveCurrentApiKey();
+      }
+    });
+
+    // ---- 默认模型 ----
     const defaultProvider = $('acct-default-provider');
     defaultProvider?.addEventListener('change', () => {
       populateDefaultModels(defaultProvider.value);
