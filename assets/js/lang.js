@@ -6,8 +6,9 @@
     // 1. 更新 html lang 属性
     document.documentElement.setAttribute("lang", lang);
 
-    // 2. 处理所有带 data-lang-en 的元素（替换文本内容）
+    // 2. 处理所有带 data-lang-en 的元素（替换文本内容，跳过表单元素避免破坏其状态）
     document.querySelectorAll("[data-lang-en]").forEach(el => {
+      if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
       const text = el.getAttribute(`data-lang-${lang}`);
       if (text) el.textContent = text;
     });
