@@ -196,6 +196,14 @@
   margin-bottom: 2px;
 }
 
+/* 页眉描述优化 */
+.page-hero .lead,
+.page-hero p.lead {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* === 通用区块间距 === */
 .section-gap{
   padding: 18px 0 36px;
@@ -245,8 +253,10 @@
 /* === 页脚 === */
 .site-footer{
   margin-top:48px;
-  padding:28px 0 40px;
+  padding:32px 0 40px;
   border-top:1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 .footer-grid{
   display:flex;
@@ -258,12 +268,21 @@
 .footer-brand{
   font-size:1.2rem;
   font-weight:900;
+  color: var(--text);
+  margin-bottom: 4px;
 }
 .footer-links{
   display:flex;
-  gap:12px;
+  gap:14px;
   flex-wrap:wrap;
   justify-content:center;
+  align-items: center;
+}
+.footer-links a {
+  transition: color .2s ease;
+}
+.footer-links a:hover {
+  color: var(--text);
 }
 
 /* 首页布局：确保内容在粒子 Canvas 之上 */

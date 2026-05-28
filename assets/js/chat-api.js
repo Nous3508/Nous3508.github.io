@@ -279,12 +279,13 @@
      * 流式聊天请求
      * @param {Array} messages - [{role, content}, ...]
      * @param {Object} config - { provider, model, temperature }
-     * @param {Function} onChunk - (text) => {} 每收到一段文本调用
+     * @param {Function} onChunk - (text) => {} 每收到一段内容文本调用
      * @param {Function} onDone - () => {} 完成回调
      * @param {Function} onError - (err) => {} 错误回调
+     * @param {Function} onReasoning - (text) => {} 可选，每收到一段推理文本调用
      * @returns {AbortController} 用于取消请求
      */
-    streamChat(messages, config, onChunk, onDone, onError) {
+    streamChat(messages, config, onChunk, onDone, onError, onReasoning) {
       const { provider, model, temperature, reasoningEffort } = config;
       const keys = apiManager.getKeys();
       const keyData = keys[provider];
@@ -307,12 +308,12 @@
         case 'baidu':
           return this._streamBaidu(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
         default:
-          return this._streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError);
+          return this._streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError, onReasoning);
       }
     },
 
     // -------- OpenAI 兼容 API --------
-    _streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError) {
+    _streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError, onReasoning) {
       const baseUrl = apiManager.getBaseUrl(provider);
       if (!baseUrl) {
         if (onError) onError(new Error('Base URL 未配置。'));
@@ -352,10 +353,16 @@
         body: JSON.stringify(body)
       }, abortController, onChunk, onDone, onError, (parsed) => {
         const delta = parsed.choices?.[0]?.delta;
-        let text = '';
-        if (delta && delta.content) text += delta.content;
-        if (delta && delta.reasoning_content) text += delta.reasoning_content;
-        return text || null;
+        if (!delta) return null;
+        // 将 reasoning_content 通过 onReasoning 回调单独传递
+        if (delta.reasoning_content && onReasoning) {
+          onReasoning(delta.reasoning_content);
+        }
+        // 普通 content 走原有的 onChunk
+        if (delta.content) {
+          return delta.content;
+        }
+        return null;
       });
 
       return abortController;

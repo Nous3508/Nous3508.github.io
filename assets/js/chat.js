@@ -47,9 +47,13 @@
     currentSessionId: null,  // 当前对话历史 ID
     currentAiMsgEl: null,    // 当前正在输出的 AI 消息 DOM
     currentAiContent: '',    // 当前 AI 消息的纯文本缓存
+    currentAiReasoning: '',  // 当前 AI 消息的推理文本缓存
+    hasReasoningPhase: false, // 是否已收到推理内容
     webSearchEnabled: false,
     sidebarCollapsed: false,
     thinkingDepth: 'medium',
+    isExpanded: false,       // 输入框是否展开
+    isNearBottom: true,      // 用户是否在消息列表底部
   };
 
   // ==================== 初始化 ====================
@@ -87,6 +91,8 @@
     // 异步获取用户头像
     getUserAvatarUrl();
     renderSidebarHistory();
+    // 初始化滚动状态
+    checkNearBottom();
     // 更新欢迎界面头像
     const welcomeIcon = document.querySelector('.chat-welcome-icon');
     if (welcomeIcon) {
@@ -376,11 +382,20 @@
 
     requestMessages.push(...state.messages);
 
+    // 重置推理状态
+    state.currentAiReasoning = '';
+    state.hasReasoningPhase = false;
+
     state.abortController = chatAPI.streamChat(
       requestMessages,
       config,
-      // onChunk
+      // onChunk — 普通内容
       (chunk) => {
+        // 首次收到内容时，标记推理阶段结束（如果有推理的话）
+        if (state.hasReasoningPhase) {
+          finalizeReasoning(state.currentAiMsgEl);
+          state.hasReasoningPhase = false;
+        }
         state.currentAiContent += chunk;
         updateAiMessage(state.currentAiMsgEl, state.currentAiContent);
       },
@@ -391,6 +406,7 @@
         setStreaming(false);
         state.currentAiMsgEl = null;
         state.currentAiContent = '';
+        state.currentAiReasoning = '';
 
         // 自动保存/更新历史
         saveSession();
@@ -398,11 +414,22 @@
       // onError
       (err) => {
         setStreaming(false);
-        updateAiMessage(state.currentAiMsgEl, `\n\n> ❌ **错误**: ${err.message}`);
+        // 追加错误信息到 AI 回复中
+        const errorSuffix = `\n\n> ❌ **错误**: ${err.message}`;
+        updateAiMessage(state.currentAiMsgEl, state.currentAiContent + errorSuffix);
+        // 添加重试按钮
+        addRetryButton(state.currentAiMsgEl, textarea?.value || getLastUserMessage());
         state.messages.push({ role: 'assistant', content: state.currentAiContent + `\n\n[Error: ${err.message}]` });
         state.currentAiMsgEl = null;
         state.currentAiContent = '';
+        state.currentAiReasoning = '';
         console.error('[Chat] API error:', err);
+      },
+      // onReasoning
+      (reasoningText) => {
+        state.hasReasoningPhase = true;
+        state.currentAiReasoning += reasoningText;
+        updateReasoning(state.currentAiMsgEl, state.currentAiReasoning);
       }
     );
   }
@@ -479,8 +506,8 @@
     } else if (role === 'system') {
       bubble.textContent = content;
     } else {
-      // AI 消息：使用 marked 渲染
-      bubble.innerHTML = '<div class="chat-msg-thinking">思考中...</div>';
+      // AI 消息：不再显示"思考中"，由 reasoning 回调实时显示
+      bubble.innerHTML = '';
     }
 
     div.appendChild(avatar);
@@ -501,6 +528,11 @@
     messagesEl.appendChild(div);
     scrollToBottom();
 
+    // 为用户消息添加操作按钮，AI 消息稍后由 updateAiMessage 添加
+    if (role === 'user') {
+      addMsgActions(div);
+    }
+
     return div;
   }
 
@@ -517,15 +549,21 @@
       return;
     }
 
-    // 如果有思考中提示，移除
+    // 如果有旧的 thinking 占位，移除（兼容旧版）
     const thinkingEl = bubble.querySelector('.chat-msg-thinking');
     if (thinkingEl) thinkingEl.remove();
 
     try {
       const rawHtml = marked.parse(content);
       if (window.DOMPurify) {
+        // 保留 reasoning block（如果有的话）
+        const existingReasoning = bubble.querySelector('.chat-msg-reasoning');
         bubble.innerHTML = window.DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] });
-        // 为代码块添加复制按钮
+        // 将 reasoning block 重新插到最前面
+        if (existingReasoning) {
+          bubble.insertBefore(existingReasoning, bubble.firstChild);
+        }
+        // 为代码块添加复制按钮和语言标签
         enhanceCodeBlocks(bubble);
       } else {
         bubble.textContent = content;
@@ -534,19 +572,42 @@
       bubble.textContent = content;
     }
 
+    // AI 消息添加操作按钮（确保只添加一次）
+    if (!msgEl.querySelector('.chat-msg-actions')) {
+      addMsgActions(msgEl);
+    }
+
     scrollToBottom();
   }
 
-  /** 为代码块添加复制按钮 */
+  /** 为代码块添加复制按钮 + 语言标签 */
   function enhanceCodeBlocks(container) {
     container.querySelectorAll('pre').forEach(pre => {
+      // 语言标签
+      const code = pre.querySelector('code');
+      let lang = '';
+      if (code && code.className) {
+        const match = code.className.match(/language-(\w+)/);
+        if (match) lang = match[1];
+      }
+      if (!lang && pre.dataset?.lang) lang = pre.dataset.lang;
+      if (!lang && code && code.dataset?.lang) lang = code.dataset.lang;
+
+      // 添加语言标签栏（放在顶部）
+      if (lang && !pre.querySelector('.chat-code-lang')) {
+        const langBar = document.createElement('div');
+        langBar.className = 'chat-code-lang';
+        langBar.textContent = lang;
+        pre.insertBefore(langBar, pre.firstChild);
+      }
+
+      // 复制按钮（已存在则跳过）
       if (pre.querySelector('.chat-code-copy-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'chat-code-copy-btn';
       btn.textContent = '📋';
       btn.title = 'Copy code';
       btn.addEventListener('click', () => {
-        const code = pre.querySelector('code');
         if (code) {
           navigator.clipboard.writeText(code.textContent || '').catch(() => {});
           btn.textContent = '✅';
@@ -558,10 +619,228 @@
     });
   }
 
-  function scrollToBottom() {
+  /** 智能滚动：仅在用户靠近底部时自动滚动 */
+  function scrollToBottom(force = false) {
+    if (!force && !state.isNearBottom) return;
     requestAnimationFrame(() => {
       messagesEl.scrollTop = messagesEl.scrollHeight;
     });
+  }
+
+  /** 检测用户是否在消息列表底部 */
+  function checkNearBottom() {
+    if (!messagesEl) return;
+    const threshold = 120;
+    state.isNearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < threshold;
+    updateScrollDownBtn();
+  }
+
+  /** 更新"滚动到底部"按钮 */
+  function updateScrollDownBtn() {
+    let btn = document.querySelector('.chat-scroll-down-btn');
+    if (state.isNearBottom) {
+      if (btn) btn.remove();
+      return;
+    }
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.className = 'chat-scroll-down-btn';
+      btn.textContent = '↓';
+      btn.setAttribute('aria-label', 'Scroll to bottom');
+      btn.addEventListener('click', () => scrollToBottom(true));
+      messagesEl?.parentNode?.appendChild(btn);
+    }
+  }
+
+  // ==================== 消息操作（编辑/删除/重试）====================
+
+  /** 获取最后一条用户消息 */
+  function getLastUserMessage() {
+    for (let i = state.messages.length - 1; i >= 0; i--) {
+      if (state.messages[i].role === 'user') return state.messages[i].content;
+    }
+    return '';
+  }
+
+  /** 添加重试按钮到 AI 消息气泡 */
+  function addRetryButton(msgEl, lastUserMsg) {
+    if (!msgEl) return;
+    const bubble = msgEl.querySelector('.chat-msg-bubble');
+    if (!bubble || bubble.querySelector('.chat-retry-btn')) return;
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'chat-retry-btn';
+    retryBtn.textContent = '↻ Retry';
+    retryBtn.addEventListener('click', () => {
+      // 删除这条错误消息
+      msgEl.remove();
+      // 从 state 中移除最后一条 assistant 消息
+      if (state.messages.length && state.messages[state.messages.length - 1].role === 'assistant') {
+        state.messages.pop();
+      }
+      // 重新发送
+      sendMessage(lastUserMsg);
+    });
+    bubble.appendChild(retryBtn);
+  }
+
+  /** 编辑用户消息：双击或点击编辑按钮进入编辑模式 */
+  function enableMessageEdit(msgEl) {
+    if (state.isStreaming) return;
+    const bubble = msgEl.querySelector('.chat-msg-bubble');
+    if (!bubble) return;
+    const originalText = bubble.textContent;
+    const textarea = document.createElement('textarea');
+    textarea.className = 'chat-edit-textarea';
+    textarea.value = originalText;
+    textarea.style.width = '100%';
+    textarea.style.minHeight = '60px';
+    bubble.innerHTML = '';
+    bubble.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    const saveEdit = () => {
+      const newText = textarea.value.trim();
+      if (newText && newText !== originalText) {
+        bubble.textContent = newText;
+        // 更新 state.messages 中的内容
+        const msgIndex = Array.from(messagesEl.querySelectorAll('.chat-msg--user')).indexOf(msgEl);
+        if (msgIndex >= 0) {
+          const userMsgs = state.messages.filter(m => m.role === 'user');
+          const idx = userMsgs[msgIndex];
+          if (idx) idx.content = newText;
+        }
+      } else {
+        bubble.textContent = originalText;
+      }
+      // 重新绑定编辑按钮
+      addMsgActions(msgEl);
+    };
+
+    textarea.addEventListener('blur', saveEdit);
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        textarea.blur();
+      }
+      if (e.key === 'Escape') {
+        bubble.textContent = originalText;
+        addMsgActions(msgEl);
+      }
+    });
+  }
+
+  /** 删除单条消息 */
+  function deleteMessage(msgEl) {
+    const role = msgEl.classList.contains('chat-msg--user') ? 'user' : 'ai';
+    // 从 DOM 移除
+    msgEl.remove();
+    // 从 state.messages 移除 — 找到对应的消息
+    if (role === 'user') {
+      const userEls = messagesEl.querySelectorAll('.chat-msg--user');
+      const idx = Array.from(userEls).indexOf(msgEl);
+      const userMsgs = state.messages.filter(m => m.role === 'user');
+      if (idx >= 0 && userMsgs[idx]) {
+        const realIdx = state.messages.indexOf(userMsgs[idx]);
+        if (realIdx >= 0) state.messages.splice(realIdx, 1);
+      }
+    } else {
+      const aiEls = messagesEl.querySelectorAll('.chat-msg--ai');
+      const idx = Array.from(aiEls).indexOf(msgEl);
+      const aiMsgs = state.messages.filter(m => m.role === 'assistant');
+      if (idx >= 0 && aiMsgs[idx]) {
+        const realIdx = state.messages.indexOf(aiMsgs[idx]);
+        if (realIdx >= 0) state.messages.splice(realIdx, 1);
+      }
+    }
+  }
+
+  /** 为消息添加操作按钮（编辑/删除） */
+  function addMsgActions(msgEl) {
+    const role = msgEl.classList.contains('chat-msg--user') ? 'user' : 'ai';
+    // 移除旧的 actions 容器
+    const oldActions = msgEl.querySelector('.chat-msg-actions');
+    if (oldActions) oldActions.remove();
+
+    const actions = document.createElement('div');
+    actions.className = 'chat-msg-actions';
+
+    if (role === 'user') {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'chat-msg-action-btn';
+      editBtn.textContent = '✎';
+      editBtn.title = 'Edit';
+      editBtn.addEventListener('click', () => enableMessageEdit(msgEl));
+      actions.appendChild(editBtn);
+    }
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'chat-msg-action-btn chat-msg-action-btn--del';
+    delBtn.textContent = '✕';
+    delBtn.title = 'Delete';
+    delBtn.addEventListener('click', () => deleteMessage(msgEl));
+    actions.appendChild(delBtn);
+
+    // 如果是 AI 消息且非 streaming 状态，添加重试按钮
+    if (role === 'ai' && !state.isStreaming) {
+      const retryBtn = document.createElement('button');
+      retryBtn.className = 'chat-msg-action-btn';
+      retryBtn.textContent = '↻';
+      retryBtn.title = 'Retry';
+      retryBtn.addEventListener('click', () => {
+        const lastUserMsg = getLastUserMessage();
+        if (lastUserMsg) {
+          deleteMessage(msgEl);
+          // 删除对应的 assistant 消息记录
+          if (state.messages.length && state.messages[state.messages.length - 1].role === 'assistant') {
+            state.messages.pop();
+          }
+          sendMessage(lastUserMsg);
+        }
+      });
+      actions.appendChild(retryBtn);
+    }
+
+    msgEl.appendChild(actions);
+  }
+
+  // ==================== 推理内容显示 ====================
+
+  /** 更新推理内容（流式） */
+  function updateReasoning(msgEl, text) {
+    if (!msgEl) return;
+    let reasoningBlock = msgEl.querySelector('.chat-msg-reasoning');
+    if (!reasoningBlock) {
+      const bubble = msgEl.querySelector('.chat-msg-bubble');
+      if (!bubble) return;
+      // 创建推理区块
+      reasoningBlock = document.createElement('div');
+      reasoningBlock.className = 'chat-msg-reasoning';
+      const header = document.createElement('div');
+      header.className = 'chat-reasoning-header';
+      header.innerHTML = '<span class="chat-reasoning-icon">🧠</span> <span>思考中...</span>';
+      reasoningBlock.appendChild(header);
+      const content = document.createElement('div');
+      content.className = 'chat-reasoning-content';
+      reasoningBlock.appendChild(content);
+      // 插入到气泡最前面
+      bubble.insertBefore(reasoningBlock, bubble.firstChild);
+    }
+    const contentEl = reasoningBlock.querySelector('.chat-reasoning-content');
+    if (contentEl) {
+      contentEl.textContent = text;
+      scrollToBottom();
+    }
+  }
+
+  /** 推理阶段结束，将推理块标记为已完成 */
+  function finalizeReasoning(msgEl) {
+    if (!msgEl) return;
+    const header = msgEl.querySelector('.chat-reasoning-header');
+    if (header) {
+      const span = header.querySelector('span:last-child');
+      if (span) span.textContent = '已完成思考';
+    }
   }
 
   // ==================== 对话历史管理 ====================
@@ -597,6 +876,10 @@
         const el = appendMessage('ai', '');
         updateAiMessage(el, msg.content);
       }
+    });
+    // 确保所有消息都有操作按钮
+    messagesEl.querySelectorAll('.chat-msg--ai').forEach(el => {
+      if (!el.querySelector('.chat-msg-actions')) addMsgActions(el);
     });
 
     renderSidebarHistory();
@@ -735,7 +1018,8 @@
   function autoResizeTextarea() {
     if (!textarea) return;
     textarea.style.height = 'auto';
-    textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+    const maxCap = state.isExpanded ? window.innerHeight / 2 : 200;
+    textarea.style.height = Math.min(textarea.scrollHeight, maxCap) + 'px';
   }
 
   // ==================== 事件绑定 ====================
@@ -774,10 +1058,25 @@
 
     expandBtn?.addEventListener('click', () => {
       if (!textarea) return;
-      const isExpanded = textarea.style.maxHeight === '400px';
-      textarea.style.maxHeight = isExpanded ? '200px' : '400px';
+      state.isExpanded = !state.isExpanded;
+      if (state.isExpanded) {
+        const halfScreen = window.innerHeight / 2;
+        textarea.style.maxHeight = halfScreen + 'px';
+        textarea.style.height = Math.min(textarea.scrollHeight, halfScreen) + 'px';
+        expandBtn.classList.add('is-expanded');
+        expandBtn.title = 'Collapse';
+      } else {
+        textarea.style.maxHeight = '';
+        textarea.style.height = 'auto';
+        expandBtn.classList.remove('is-expanded');
+        expandBtn.title = 'Expand input';
+      }
       autoResizeTextarea();
+      textarea.focus();
     });
+
+    // 滚动监听（自动滚动行为）
+    messagesEl?.addEventListener('scroll', checkNearBottom, { passive: true });
 
     sidebarToggle?.addEventListener('click', toggleSidebar);
     sidebarToggleMobile?.addEventListener('click', toggleSidebar);
