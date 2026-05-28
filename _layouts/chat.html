@@ -109,12 +109,25 @@
           <!-- 第二行：工具条 -->
           <div class="chat-input-row chat-input-row--tools">
             <div class="chat-input-tools-left">
-              <select id="chat-provider-select" class="chat-select" aria-label="Select provider">
-                <option value="">-- Provider --</option>
-              </select>
-              <select id="chat-model-select" class="chat-select" aria-label="Select model">
-                <option value="">-- Model --</option>
-              </select>
+              <div class="chat-select-wrap" id="chat-provider-select-wrap">
+                <button class="chat-select-btn" id="chat-provider-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="chat-select-label" id="chat-provider-label">-- Provider --</span>
+                  <span class="chat-select-caret">▾</span>
+                </button>
+                <div class="chat-select-menu" id="chat-provider-menu" role="listbox" aria-label="Select provider"></div>
+              </div>
+              <div class="chat-select-wrap" id="chat-model-select-wrap">
+                <button class="chat-select-btn" id="chat-model-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="chat-select-label" id="chat-model-label">-- Model --</span>
+                  <span class="chat-select-caret">▾</span>
+                </button>
+                <div class="chat-select-menu" id="chat-model-menu" role="listbox" aria-label="Select model"></div>
+              </div>
+              <div class="chat-depth-control" id="chat-depth-control">
+                <span class="chat-depth-label" data-lang-en="Depth" data-lang-zh="深度">Depth</span>
+                <input type="range" id="chat-depth-slider" class="chat-depth-slider" min="1" max="3" step="1" value="2" aria-label="Thinking depth">
+                <span class="chat-depth-value" id="chat-depth-value" data-lang-en="Medium" data-lang-zh="中">Medium</span>
+              </div>
               <button class="chat-tool-chip chat-web-toggle" id="chat-web-toggle" aria-label="Toggle web search" title="联网搜索">
                 <span id="chat-web-icon">🌐</span>
                 <span data-lang-en="Search" data-lang-zh="联网">Search</span>
@@ -143,6 +156,11 @@
       if (window.marked && window.marked.setOptions) {
         window.marked.setOptions({ breaks: true, gfm: true });
       }
+    </script>
+    <script>
+      window.BING_SEARCH_ENDPOINT = "{{ site.bing_search_endpoint | default: '' }}";
+      window.BING_SEARCH_MARKET = "{{ site.bing_search_market | default: 'zh-CN' }}";
+      window.BING_SEARCH_COUNT = {{ site.bing_search_count | default: 5 }};
     </script>
     <script src="/assets/js/chat-api.js"></script>
     <script src="/assets/js/chat.js"></script>

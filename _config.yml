@@ -4,6 +4,10 @@ url: "https://nous3508.github.io"
 baseurl: ""
 lang: "zh"
 
+bing_search_endpoint: ""
+bing_search_market: "zh-CN"
+bing_search_count: 5
+
 markdown: kramdown
 highlighter: rouge
 permalink: /:categories/:year/:month/:day/:title/

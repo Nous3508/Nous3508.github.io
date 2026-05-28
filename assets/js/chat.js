@@ -14,8 +14,16 @@
   const textarea = $('chat-textarea');
   const sendBtn = $('chat-send-btn');
   const stopBtn = $('chat-stop-btn-bar');
-  const providerSelect = $('chat-provider-select');
-  const modelSelect = $('chat-model-select');
+  const providerWrap = $('chat-provider-select-wrap');
+  const providerBtn = $('chat-provider-btn');
+  const providerMenu = $('chat-provider-menu');
+  const providerLabel = $('chat-provider-label');
+  const modelWrap = $('chat-model-select-wrap');
+  const modelBtn = $('chat-model-btn');
+  const modelMenu = $('chat-model-menu');
+  const modelLabel = $('chat-model-label');
+  const depthSlider = $('chat-depth-slider');
+  const depthValue = $('chat-depth-value');
   const sidebar = $('chat-sidebar');
   const sidebarList = $('chat-sidebar-list');
   const sidebarToggle = $('chat-sidebar-toggle');
@@ -41,6 +49,7 @@
     currentAiContent: '',    // 当前 AI 消息的纯文本缓存
     webSearchEnabled: false,
     sidebarCollapsed: false,
+    thinkingDepth: 'medium',
   };
 
   // ==================== 初始化 ====================
@@ -51,18 +60,21 @@
     const savedConfig = apiManager.getConfig();
     state.provider = savedConfig.provider || 'deepseek';
     state.model = savedConfig.model || '';
+    state.thinkingDepth = savedConfig.thinkingDepth || 'medium';
 
     // 填充提供商下拉
     populateProviders();
 
     // 如果已有 provider，选中并填充模型
     if (state.provider) {
-      providerSelect.value = state.provider;
+      updateProviderLabel();
       populateModels(state.provider);
-      if (state.model) {
-        modelSelect.value = state.model;
-      }
+    } else {
+      if (modelBtn) modelBtn.disabled = true;
+      updateModelLabel([]);
     }
+
+    updateDepthUI();
 
     // 读取 URL 参数 ?q=...
     const params = new URLSearchParams(window.location.search);
@@ -89,32 +101,220 @@
   }
 
   // ==================== 提供商/模型选择 ====================
-  function populateProviders() {
-    const providers = ChatAPI.apiManager.getAllProviders();
-    providerSelect.innerHTML = '<option value="">-- Provider --</option>';
-    Object.entries(providers).forEach(([id, cfg]) => {
-      const opt = document.createElement('option');
-      opt.value = id;
-      opt.textContent = cfg.name;
-      providerSelect.appendChild(opt);
+  const DEPTH_LABELS = {
+    low: { en: 'Low', zh: '浅' },
+    medium: { en: 'Medium', zh: '中' },
+    high: { en: 'High', zh: '深' }
+  };
+
+  const DEPTH_INSTRUCTIONS = {
+    low: {
+      en: 'Answer briefly and directly. Avoid extra explanation unless asked.',
+      zh: '请简洁直接回答，避免多余解释，除非用户要求。'
+    },
+    medium: {
+      en: 'Answer with balanced detail. Include key steps or rationale when helpful.',
+      zh: '请提供适中细节的回答，必要时给出关键步骤或理由。'
+    },
+    high: {
+      en: 'Answer thoroughly with reasoning steps, caveats, and examples when relevant.',
+      zh: '请给出深入回答，包含推理步骤、注意事项与必要示例。'
+    }
+  };
+
+  function getLangKey() {
+    const lang = document.documentElement.lang || 'en';
+    return lang.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  }
+
+  function normalizeDepth(depth) {
+    return (depth === 'low' || depth === 'medium' || depth === 'high') ? depth : 'medium';
+  }
+
+  function getDepthInstruction(depth) {
+    const d = normalizeDepth(depth);
+    return DEPTH_INSTRUCTIONS[d]?.[getLangKey()] || '';
+  }
+
+  function getDepthTemperature(depth) {
+    const d = normalizeDepth(depth);
+    if (d === 'low') return 0.4;
+    if (d === 'high') return 0.9;
+    return 0.7;
+  }
+
+  function updateDepthUI() {
+    if (!depthSlider || !depthValue) return;
+    const depth = normalizeDepth(state.thinkingDepth);
+    depthSlider.value = depth === 'low' ? '1' : depth === 'high' ? '3' : '2';
+    depthValue.dataset.langEn = DEPTH_LABELS[depth].en;
+    depthValue.dataset.langZh = DEPTH_LABELS[depth].zh;
+    depthValue.textContent = DEPTH_LABELS[depth][getLangKey()];
+  }
+
+  function getBingSearchConfig() {
+    const endpoint = (window.BING_SEARCH_ENDPOINT || '').trim();
+    const market = (window.BING_SEARCH_MARKET || 'zh-CN').trim();
+    const count = Number(window.BING_SEARCH_COUNT || 5);
+    return { endpoint, market, count: Number.isFinite(count) ? count : 5 };
+  }
+
+  function formatWebContext(query, results) {
+    const lines = results.map((r, i) => {
+      const title = r.name || r.title || 'Untitled';
+      const url = r.url || r.link || '';
+      const snippet = r.snippet || r.description || '';
+      return `${i + 1}. ${title}\n${url}\n${snippet}`.trim();
     });
+    const header = getLangKey() === 'zh'
+      ? `以下是 Bing 搜索结果（query: ${query}）：`
+      : `Bing search results (query: ${query}):`;
+    const footer = getLangKey() === 'zh'
+      ? '请仅在需要时使用这些信息，并标注来源链接。'
+      : 'Use these sources when helpful and cite the links.';
+    return `${header}\n\n${lines.join('\n\n')}\n\n${footer}`;
+  }
+
+  async function runWebSearch(query) {
+    const { endpoint, market, count } = getBingSearchConfig();
+    if (!endpoint) {
+      showToast(getLangKey() === 'zh' ? '请先配置 Bing 搜索代理' : 'Configure Bing search proxy first');
+      return '';
+    }
+
+    try {
+      const url = new URL(endpoint);
+      url.searchParams.set('q', query);
+      url.searchParams.set('mkt', market || 'zh-CN');
+      url.searchParams.set('count', String(Math.max(1, Math.min(count || 5, 10))));
+
+      const res = await fetch(url.toString(), { method: 'GET' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const raw = data.results || data.webPages?.value || [];
+      if (!raw.length) return '';
+
+      const results = raw.slice(0, 8).map(r => ({
+        name: r.name,
+        url: r.url,
+        snippet: r.snippet
+      }));
+
+      return formatWebContext(query, results);
+    } catch (e) {
+      console.error('[Chat] Web search failed:', e);
+      showToast(getLangKey() === 'zh' ? '联网搜索失败，已继续回答' : 'Web search failed, continuing without it');
+      return '';
+    }
+  }
+
+  function closeSelectMenus() {
+    providerWrap?.classList.remove('is-open');
+    modelWrap?.classList.remove('is-open');
+    if (providerBtn) providerBtn.setAttribute('aria-expanded', 'false');
+    if (modelBtn) modelBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleSelectMenu(type) {
+    const wrap = type === 'provider' ? providerWrap : modelWrap;
+    if (!wrap) return;
+    const isOpen = wrap.classList.contains('is-open');
+    closeSelectMenus();
+    if (!isOpen) {
+      wrap.classList.add('is-open');
+      const btn = type === 'provider' ? providerBtn : modelBtn;
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function updateProviderLabel() {
+    if (!providerLabel) return;
+    if (!state.provider) {
+      providerLabel.textContent = '-- Provider --';
+      return;
+    }
+    const providers = ChatAPI.apiManager.getAllProviders();
+    providerLabel.textContent = providers[state.provider]?.name || state.provider;
+  }
+
+  function updateModelLabel(models) {
+    if (!modelLabel) return;
+    if (!state.model) {
+      modelLabel.textContent = '-- Model --';
+      return;
+    }
+    const list = models || ChatAPI.apiManager.getModels(state.provider);
+    const found = list.find(m => m.id === state.model);
+    modelLabel.textContent = found?.name || state.model;
+  }
+
+  function setProvider(providerId) {
+    if (!providerId) return;
+    if (state.provider === providerId) {
+      closeSelectMenus();
+      return;
+    }
+    state.provider = providerId;
+    state.model = '';
+    ChatAPI.apiManager.setConfig({ provider: state.provider, model: '' });
+    populateProviders();
+    populateModels(providerId);
+    closeSelectMenus();
+  }
+
+  function setModel(modelId) {
+    if (!modelId) return;
+    state.model = modelId;
+    ChatAPI.apiManager.setConfig({ model: state.model });
+    populateModels(state.provider);
+    closeSelectMenus();
+  }
+
+  function populateProviders() {
+    if (!providerMenu) return;
+    providerMenu.innerHTML = '';
+    const providers = ChatAPI.apiManager.getAllProviders();
+    Object.entries(providers).forEach(([id, cfg]) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'chat-select-item' + (id === state.provider ? ' is-active' : '');
+      item.dataset.value = id;
+      item.textContent = cfg.name;
+      item.addEventListener('click', () => setProvider(id));
+      providerMenu.appendChild(item);
+    });
+    updateProviderLabel();
   }
 
   function populateModels(providerId) {
+    if (!modelMenu || !modelBtn) return;
+    modelMenu.innerHTML = '';
     const models = ChatAPI.apiManager.getModels(providerId);
-    modelSelect.innerHTML = '<option value="">-- Model --</option>';
-    models.forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      opt.textContent = m.name;
-      modelSelect.appendChild(opt);
-    });
-    // 自动选中默认模型
-    const defaultModel = ChatAPI.apiManager.getDefaultModel(providerId);
-    if (defaultModel) {
-      modelSelect.value = defaultModel;
-      state.model = defaultModel;
+    if (!providerId || !models.length) {
+      modelBtn.disabled = true;
+      state.model = '';
+      updateModelLabel([]);
+      return;
     }
+    modelBtn.disabled = false;
+
+    const defaultModel = ChatAPI.apiManager.getDefaultModel(providerId);
+    const hasSaved = models.some(m => m.id === state.model);
+    const selected = hasSaved ? state.model : (defaultModel || models[0].id);
+    state.model = selected;
+
+    models.forEach(m => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'chat-select-item' + (m.id === state.model ? ' is-active' : '');
+      item.dataset.value = m.id;
+      item.textContent = m.name;
+      item.addEventListener('click', () => setModel(m.id));
+      modelMenu.appendChild(item);
+    });
+
+    updateModelLabel(models);
   }
 
   // ==================== 发送消息 ====================
@@ -154,14 +354,30 @@
     const config = {
       provider: state.provider,
       model: state.model,
-      temperature: 0.7
+      temperature: getDepthTemperature(state.thinkingDepth),
+      reasoningEffort: state.thinkingDepth
     };
 
     // 保存配置
     apiManager.setConfig(config);
 
+    const requestMessages = [];
+    const depthInstruction = getDepthInstruction(state.thinkingDepth);
+    if (depthInstruction) {
+      requestMessages.push({ role: 'system', content: depthInstruction });
+    }
+
+    if (state.webSearchEnabled) {
+      const webContext = await runWebSearch(q);
+      if (webContext) {
+        requestMessages.push({ role: 'system', content: webContext });
+      }
+    }
+
+    requestMessages.push(...state.messages);
+
     state.abortController = chatAPI.streamChat(
-      state.messages,
+      requestMessages,
       config,
       // onChunk
       (chunk) => {
@@ -422,7 +638,10 @@
     sidebarList.innerHTML = all.map(session => `
       <div class="chat-sidebar-item ${session.id === state.currentSessionId ? 'chat-sidebar-item--active' : ''}"
            data-id="${escapeHtml(session.id)}">
-        <span class="chat-sidebar-item-title">${escapeHtml(session.title)}</span>
+        <div class="chat-sidebar-item-main">
+          <span class="chat-sidebar-item-title">${escapeHtml(session.title)}</span>
+          <span class="chat-sidebar-item-time">${escapeHtml(formatTime(session.updatedAt || session.createdAt))}</span>
+        </div>
         <button class="chat-sidebar-item-delete" data-id="${escapeHtml(session.id)}" title="Delete">✕</button>
       </div>
     `).join('');
@@ -528,19 +747,24 @@
     });
     textarea?.addEventListener('input', autoResizeTextarea);
 
-    providerSelect?.addEventListener('change', () => {
-      state.provider = providerSelect.value;
-      state.model = '';
-      if (state.provider) {
-        populateModels(state.provider);
-        ChatAPI.apiManager.setConfig({ provider: state.provider });
-      } else {
-        modelSelect.innerHTML = '<option value="">-- Model --</option>';
-      }
+    providerBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSelectMenu('provider');
     });
-    modelSelect?.addEventListener('change', () => {
-      state.model = modelSelect.value;
-      if (state.model) ChatAPI.apiManager.setConfig({ model: state.model });
+    modelBtn?.addEventListener('click', (e) => {
+      if (modelBtn.disabled) return;
+      e.stopPropagation();
+      toggleSelectMenu('model');
+    });
+
+    providerMenu?.addEventListener('click', (e) => e.stopPropagation());
+    modelMenu?.addEventListener('click', (e) => e.stopPropagation());
+
+    depthSlider?.addEventListener('input', () => {
+      const v = Number(depthSlider.value || 2);
+      state.thinkingDepth = v <= 1 ? 'low' : v >= 3 ? 'high' : 'medium';
+      ChatAPI.apiManager.setConfig({ thinkingDepth: state.thinkingDepth });
+      updateDepthUI();
     });
 
     webToggle?.addEventListener('click', () => {
@@ -561,6 +785,7 @@
 
     moreBtn?.addEventListener('click', toggleMoreDropdown);
     document.addEventListener('click', closeMoreDropdown);
+    document.addEventListener('click', closeSelectMenus);
     moreDropdown?.addEventListener('click', e => e.stopPropagation());
 
     exportMdBtn?.addEventListener('click', () => exportChat('markdown'));

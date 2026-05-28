@@ -285,7 +285,7 @@
      * @returns {AbortController} 用于取消请求
      */
     streamChat(messages, config, onChunk, onDone, onError) {
-      const { provider, model, temperature } = config;
+      const { provider, model, temperature, reasoningEffort } = config;
       const keys = apiManager.getKeys();
       const keyData = keys[provider];
       const apiKey = keyData?.key || '';
@@ -307,12 +307,12 @@
         case 'baidu':
           return this._streamBaidu(model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
         default:
-          return this._streamOpenAI(provider, model, messages, temperature, apiKey, abortController, onChunk, onDone, onError);
+          return this._streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError);
       }
     },
 
     // -------- OpenAI 兼容 API --------
-    _streamOpenAI(provider, model, messages, temperature, apiKey, abortController, onChunk, onDone, onError) {
+    _streamOpenAI(provider, model, messages, temperature, apiKey, reasoningEffort, abortController, onChunk, onDone, onError) {
       const baseUrl = apiManager.getBaseUrl(provider);
       if (!baseUrl) {
         if (onError) onError(new Error('Base URL 未配置。'));
@@ -320,6 +320,7 @@
       }
 
       const isReasoner = model.includes('reasoner') || model.includes('r1') || model.includes('o3') || model.includes('o4');
+      const effort = reasoningEffort || 'medium';
 
       const body = {
         model,
@@ -330,7 +331,7 @@
 
       // DeepSeek 系列思考模式需要 extra_body 参数
       if (isReasoner && (provider === 'deepseek' || provider.startsWith('custom_'))) {
-        body.reasoning_effort = 'high';
+        body.reasoning_effort = effort;
         body.extra_body = { thinking: { type: 'enabled' } };
       }
 

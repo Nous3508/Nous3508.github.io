@@ -143,6 +143,25 @@
     return true;
   }
 
+  function mergeBookmarks(localList, cloudList) {
+    const seen = new Set();
+    const merged = [];
+
+    (localList || []).forEach(bm => {
+      if (!bm?.url || seen.has(bm.url)) return;
+      seen.add(bm.url);
+      merged.push(bm);
+    });
+
+    (cloudList || []).forEach(cb => {
+      if (!cb?.url || seen.has(cb.url)) return;
+      seen.add(cb.url);
+      merged.push({ id: genId(), title: cb.title || cb.url, url: cb.url });
+    });
+
+    return merged;
+  }
+
   // -------- 侧边栏渲染 --------
   function render() {
     if (!list) return;
@@ -719,12 +738,12 @@
         return;
       }
 
-      const shouldPull = confirm('检测到云端已有书签，是否从云端覆盖本地？取消则用本地覆盖云端。');
-      if (shouldPull) {
-        await pullFromCloud();
-      } else {
-        await pushToCloud();
-      }
+      bookmarks = mergeBookmarks(bookmarks, cloudData);
+      saveBookmarks();
+      render();
+      renderPanel();
+      await BookmarkAPI.replaceAll(bookmarks);
+      isCloudSynced = true;
     } catch (e) {
       console.error('[Sync] Auto sync failed:', e);
     }
