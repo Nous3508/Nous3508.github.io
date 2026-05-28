@@ -33,11 +33,35 @@
   const moreDropdown = $('chat-more-dropdown');
   const exportMdBtn = $('chat-export-md-btn');
   const exportJsonBtn = $('chat-export-json-btn');
+  const downloadMdBtn = $('chat-download-md-btn');
+  const downloadJsonBtn = $('chat-download-json-btn');
   const clearBtn = $('chat-clear-btn');
   const expandBtn = $('chat-expand-btn');
   const webToggle = $('chat-web-toggle');
+  // 新增 DOM 引用
+  const settingsBtn = $('chat-settings-btn');
+  const settingsModal = $('chat-settings-modal');
+  const settingsClose = $('chat-settings-close');
+  const settingsCancel = $('chat-settings-cancel');
+  const settingsSave = $('chat-settings-save');
+  const settingsProviderBtn = $('chat-settings-provider-btn');
+  const settingsProviderMenu = $('chat-settings-provider-menu');
+  const settingsProviderLabel = $('chat-settings-provider-label');
+  const settingsApiKeyInput = $('chat-settings-apikey');
+  const settingsApiKeyToggle = $('chat-settings-apikey-toggle');
+  const settingsSystemPrompt = $('chat-settings-system-prompt');
+  const settingsAvatarInput = $('chat-settings-avatar');
+  const settingsAvatarPreview = $('chat-settings-avatar-preview');
+  const settingsCustomToggle = $('chat-settings-custom-toggle');
+  const settingsCustomForm = $('chat-custom-provider-form');
+  const settingsCustomName = $('chat-custom-name');
+  const settingsCustomUrl = $('chat-custom-url');
+  const settingsCustomModels = $('chat-custom-models');
+  const settingsCustomSave = $('chat-custom-save-btn');
+  const scrollBottomBtn = $('chat-scroll-bottom-btn');
 
   // ==================== 状态 ====================
+  const STORAGE_SYSTEM_PROMPT = 'nous_chat_system_prompt';
   const state = {
     provider: '',
     model: '',
@@ -50,6 +74,8 @@
     webSearchEnabled: false,
     sidebarCollapsed: false,
     thinkingDepth: 'medium',
+    systemPrompt: '',        // 自定义系统提示词
+    settingsOpenProvider: '', // 设置面板当前选中的提供商
   };
 
   // ==================== 初始化 ====================
@@ -61,6 +87,7 @@
     state.provider = savedConfig.provider || 'deepseek';
     state.model = savedConfig.model || '';
     state.thinkingDepth = savedConfig.thinkingDepth || 'medium';
+    state.systemPrompt = localStorage.getItem(STORAGE_SYSTEM_PROMPT) || '';
 
     // 填充提供商下拉
     populateProviders();
@@ -362,8 +389,12 @@
     apiManager.setConfig(config);
 
     const requestMessages = [];
+    // 自定义系统提示词（优先级最高）
+    if (state.systemPrompt && state.systemPrompt.trim()) {
+      requestMessages.push({ role: 'system', content: state.systemPrompt.trim() });
+    }
     const depthInstruction = getDepthInstruction(state.thinkingDepth);
-    if (depthInstruction) {
+    if (depthInstruction && !state.systemPrompt.trim()) {
       requestMessages.push({ role: 'system', content: depthInstruction });
     }
 
@@ -479,12 +510,54 @@
     } else if (role === 'system') {
       bubble.textContent = content;
     } else {
-      // AI 消息：使用 marked 渲染
-      bubble.innerHTML = '<div class="chat-msg-thinking">思考中...</div>';
+      // AI 消息：显示打字动画
+      bubble.innerHTML = '<div class="chat-typing-dots"><span></span><span></span><span></span></div>';
     }
 
+    const bodyWrap = document.createElement('div');
+    bodyWrap.className = 'chat-msg-body';
+    bodyWrap.appendChild(bubble);
+
+    // 消息操作按钮
+    const actions = document.createElement('div');
+    actions.className = 'chat-msg-actions';
+
+    if (role === 'ai' && content) {
+      // 复制按钮
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'chat-msg-action-btn';
+      copyBtn.textContent = '📋 Copy';
+      copyBtn.title = 'Copy message';
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(content).then(() => {
+          copyBtn.textContent = '✅ Copied';
+          setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+        }).catch(() => {});
+      });
+      actions.appendChild(copyBtn);
+
+      // 重新生成按钮
+      const regenBtn = document.createElement('button');
+      regenBtn.className = 'chat-msg-action-btn';
+      regenBtn.textContent = '🔄 Regenerate';
+      regenBtn.title = 'Regenerate response';
+      regenBtn.addEventListener('click', () => regenerateResponse());
+      actions.appendChild(regenBtn);
+    }
+
+    if (role === 'user') {
+      // 编辑按钮
+      const editBtn = document.createElement('button');
+      editBtn.className = 'chat-msg-action-btn';
+      editBtn.textContent = '✏️ Edit';
+      editBtn.title = 'Edit and resend';
+      editBtn.addEventListener('click', () => editAndResend(div, content));
+      actions.appendChild(editBtn);
+    }
+
+    bodyWrap.appendChild(actions);
     div.appendChild(avatar);
-    div.appendChild(bubble);
+    div.appendChild(bodyWrap);
 
     // 添加时间戳
     if (role === 'user' || role === 'ai') {
@@ -517,7 +590,11 @@
       return;
     }
 
-    // 如果有思考中提示，移除
+    // 移除打字动画
+    const dotsEl = bubble.querySelector('.chat-typing-dots');
+    if (dotsEl) dotsEl.remove();
+
+    // 如果有旧的"思考中"占位，移除
     const thinkingEl = bubble.querySelector('.chat-msg-thinking');
     if (thinkingEl) thinkingEl.remove();
 
@@ -525,13 +602,23 @@
       const rawHtml = marked.parse(content);
       if (window.DOMPurify) {
         bubble.innerHTML = window.DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] });
-        // 为代码块添加复制按钮
         enhanceCodeBlocks(bubble);
       } else {
         bubble.textContent = content;
       }
     } catch {
       bubble.textContent = content;
+    }
+
+    // 更新复制按钮（action buttons 里的 Copy）
+    const copyBtn = msgEl.querySelector('.chat-msg-action-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(content).then(() => {
+          copyBtn.textContent = '✅ Copied';
+          setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+        }).catch(() => {});
+      }, { once: true });
     }
 
     scrollToBottom();
@@ -560,7 +647,10 @@
 
   function scrollToBottom() {
     requestAnimationFrame(() => {
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      if (messagesEl) {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+      checkScrollPosition();
     });
   }
 
@@ -622,6 +712,241 @@
   function newChat() {
     if (state.isStreaming) stopStreaming();
     clearMessages();
+  }
+
+  // ==================== 重新生成回复 ====================
+  function regenerateResponse() {
+    if (state.isStreaming) return;
+    // 移除最后一条 AI 消息
+    if (state.messages.length > 0 && state.messages[state.messages.length - 1].role === 'assistant') {
+      state.messages.pop();
+    }
+    // 移除最后一条用户消息（重新发送）
+    const lastUserMsg = [...state.messages].reverse().find(m => m.role === 'user');
+    if (!lastUserMsg) return;
+    // 从 DOM 中移除最后一条 AI 消息
+    const aiMsgs = messagesEl.querySelectorAll('.chat-msg--ai');
+    if (aiMsgs.length > 0) aiMsgs[aiMsgs.length - 1].remove();
+    // 重新发送
+    sendMessage(lastUserMsg.content);
+  }
+
+  // ==================== 编辑并重发 ====================
+  function editAndResend(msgEl, oldContent) {
+    if (state.isStreaming) return;
+    // 找到该消息在 state.messages 中的位置
+    const idx = Array.from(messagesEl.querySelectorAll('.chat-msg--user')).indexOf(msgEl);
+    if (idx < 0) return;
+    // 计算在 state.messages 中的索引（跳过 system 消息）
+    const userMsgs = state.messages.filter(m => m.role === 'user');
+    const userIdx = state.messages.indexOf(userMsgs[idx]);
+    if (userIdx < 0) return;
+
+    // 用当前内容填充输入框
+    if (textarea) {
+      textarea.value = oldContent;
+      textarea.focus();
+      autoResizeTextarea();
+    }
+    // 截断消息历史到该消息之前
+    state.messages = state.messages.slice(0, userIdx);
+    // 从 DOM 中移除该消息及之后的所有消息
+    let el = msgEl;
+    while (el) {
+      const next = el.nextElementSibling;
+      if (el.classList.contains('chat-msg')) el.remove();
+      el = next;
+    }
+    state.currentSessionId = null;
+  }
+
+  // ==================== 滚动监听（显示/隐藏滚底按钮） ====================
+  function checkScrollPosition() {
+    if (!scrollBottomBtn || !messagesEl) return;
+    const threshold = 120;
+    const distToBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight;
+    if (distToBottom > threshold) {
+      scrollBottomBtn.classList.add('is-visible');
+    } else {
+      scrollBottomBtn.classList.remove('is-visible');
+    }
+  }
+
+  // ==================== 设置面板 ====================
+  function openSettings() {
+    if (!settingsModal) return;
+    state.settingsOpenProvider = state.provider || 'deepseek';
+    renderSettingsProviderMenu();
+    loadSettingsToForm();
+    if (settingsCustomForm) settingsCustomForm.style.display = 'none';
+    settingsModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSettings() {
+    if (!settingsModal) return;
+    settingsModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function loadSettingsToForm() {
+    const { apiManager } = ChatAPI;
+    const keys = apiManager.getKeys();
+    const keyData = keys[state.settingsOpenProvider] || {};
+    if (settingsApiKeyInput) settingsApiKeyInput.value = keyData.key || '';
+    if (settingsSystemPrompt) settingsSystemPrompt.value = state.systemPrompt;
+    // 头像
+    const avatarType = localStorage.getItem('nous_chat_avatar_type') || 'emoji';
+    const avatarData = localStorage.getItem('nous_chat_avatar') || '🤖';
+    if (settingsAvatarInput) settingsAvatarInput.value = avatarType === 'upload' ? '(uploaded image)' : avatarData;
+    updateAvatarPreview();
+  }
+
+  function saveSettingsFromForm() {
+    const { apiManager } = ChatAPI;
+    const provider = state.settingsOpenProvider;
+    if (!provider) return;
+
+    // 保存 API Key
+    const key = (settingsApiKeyInput?.value || '').trim();
+    if (key && key !== '(uploaded image)') {
+      apiManager.setKey(provider, { key });
+    }
+
+    // 保存系统提示词
+    const prompt = (settingsSystemPrompt?.value || '').trim();
+    state.systemPrompt = prompt;
+    localStorage.setItem(STORAGE_SYSTEM_PROMPT, prompt);
+
+    // 保存头像
+    const avatarVal = (settingsAvatarInput?.value || '').trim();
+    if (avatarVal && avatarVal !== '(uploaded image)') {
+      if (avatarVal.startsWith('data:')) {
+        localStorage.setItem('nous_chat_avatar_type', 'upload');
+        localStorage.setItem('nous_chat_avatar', avatarVal);
+      } else {
+        localStorage.setItem('nous_chat_avatar_type', 'emoji');
+        localStorage.setItem('nous_chat_avatar', avatarVal);
+      }
+    }
+
+    closeSettings();
+    showToast(getLangKey() === 'zh' ? '✅ 设置已保存' : '✅ Settings saved');
+  }
+
+  function renderSettingsProviderMenu() {
+    if (!settingsProviderMenu || !settingsProviderBtn) return;
+    settingsProviderMenu.innerHTML = '';
+    const providers = ChatAPI.apiManager.getAllProviders();
+    const keys = ChatAPI.apiManager.getKeys();
+
+    Object.entries(providers).forEach(([id, cfg]) => {
+      const hasKey = !!(keys[id]?.key);
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'chat-select-item' + (id === state.settingsOpenProvider ? ' is-active' : '');
+      item.dataset.value = id;
+      item.innerHTML = `${cfg.name} ${hasKey ? '<span style="color:var(--accent-solid);margin-left:4px">🔑</span>' : ''}`;
+      item.addEventListener('click', () => {
+        state.settingsOpenProvider = id;
+        renderSettingsProviderMenu();
+        loadSettingsToForm();
+        // 关闭下拉
+        document.getElementById('chat-settings-provider-wrap')?.classList.remove('is-open');
+      });
+      settingsProviderMenu.appendChild(item);
+    });
+
+    // 更新标签
+    const provCfg = providers[state.settingsOpenProvider];
+    if (settingsProviderLabel) {
+      settingsProviderLabel.textContent = provCfg?.name || '-- Select --';
+    }
+  }
+
+  function updateAvatarPreview() {
+    if (!settingsAvatarPreview) return;
+    const val = (settingsAvatarInput?.value || '').trim();
+    if (val.startsWith('data:')) {
+      settingsAvatarPreview.innerHTML = `<img src="${val}" alt="avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+    } else if (val.startsWith('http')) {
+      settingsAvatarPreview.innerHTML = `<img src="${val}" alt="avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
+    } else {
+      settingsAvatarPreview.textContent = val || '🤖';
+    }
+  }
+
+  function saveCustomProvider() {
+    const name = (settingsCustomName?.value || '').trim();
+    const url = (settingsCustomUrl?.value || '').trim();
+    const modelsStr = (settingsCustomModels?.value || '').trim();
+    if (!name || !url) {
+      showToast('Please fill in provider name and base URL');
+      return;
+    }
+    ChatAPI.apiManager.addCustomProvider(name, url, '', modelsStr);
+    if (settingsCustomName) settingsCustomName.value = '';
+    if (settingsCustomUrl) settingsCustomUrl.value = '';
+    if (settingsCustomModels) settingsCustomModels.value = '';
+    if (settingsCustomForm) settingsCustomForm.style.display = 'none';
+    renderSettingsProviderMenu();
+    // 同时刷新主界面的提供商列表
+    populateProviders();
+    showToast(getLangKey() === 'zh' ? '✅ 自定义提供商已添加' : '✅ Custom provider added');
+  }
+
+  // ==================== 键盘快捷键 ====================
+  function handleGlobalKeyboard(e) {
+    // Ctrl+K / Cmd+K → 新对话
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      newChat();
+      return;
+    }
+    // Ctrl+, / Cmd+, → 打开设置
+    if ((e.ctrlKey || e.metaKey) && e.key === ',') {
+      e.preventDefault();
+      openSettings();
+      return;
+    }
+    // Escape → 关闭设置面板
+    if (e.key === 'Escape' && settingsModal && settingsModal.style.display === 'flex') {
+      closeSettings();
+      return;
+    }
+  }
+
+  // ==================== 导出下载文件 ====================
+  function downloadExport(format) {
+    if (!state.messages.length) { showToast('没有可导出的对话'); return; }
+    let content, filename, mime;
+    const ts = new Date().toISOString().slice(0, 10);
+
+    if (format === 'markdown') {
+      let md = '# AI Chat Export\n\n';
+      state.messages.forEach(msg => {
+        md += `**${msg.role === 'user' ? 'You' : 'AI'}**:\n${msg.content}\n\n---\n\n`;
+      });
+      content = md;
+      filename = `chat-export-${ts}.md`;
+      mime = 'text/markdown';
+    } else {
+      content = JSON.stringify(state.messages, null, 2);
+      filename = `chat-export-${ts}.json`;
+      mime = 'application/json';
+    }
+
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(getLangKey() === 'zh' ? `📥 已下载 ${filename}` : `📥 Downloaded ${filename}`);
+    closeMoreDropdown();
   }
 
   // ==================== 侧栏历史 ====================
@@ -790,9 +1115,68 @@
 
     exportMdBtn?.addEventListener('click', () => exportChat('markdown'));
     exportJsonBtn?.addEventListener('click', () => exportChat('json'));
+    downloadMdBtn?.addEventListener('click', () => downloadExport('markdown'));
+    downloadJsonBtn?.addEventListener('click', () => downloadExport('json'));
     clearBtn?.addEventListener('click', () => {
       if (state.messages.length && confirm('确定清空当前对话？')) newChat();
       closeMoreDropdown();
+    });
+
+    // 新增：滚动监听
+    messagesEl?.addEventListener('scroll', checkScrollPosition, { passive: true });
+
+    // 新增：滚底按钮
+    scrollBottomBtn?.addEventListener('click', () => {
+      scrollToBottom();
+      if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+
+    // 新增：设置面板
+    settingsBtn?.addEventListener('click', openSettings);
+    settingsClose?.addEventListener('click', closeSettings);
+    settingsCancel?.addEventListener('click', closeSettings);
+    settingsSave?.addEventListener('click', saveSettingsFromForm);
+    settingsModal?.addEventListener('click', (e) => {
+      if (e.target === settingsModal) closeSettings();
+    });
+
+    // 设置面板 - 提供商下拉
+    settingsProviderBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wrap = document.getElementById('chat-settings-provider-wrap');
+      if (wrap) wrap.classList.toggle('is-open');
+    });
+    settingsProviderMenu?.addEventListener('click', (e) => e.stopPropagation());
+
+    // API Key 可见性切换
+    settingsApiKeyToggle?.addEventListener('click', () => {
+      if (!settingsApiKeyInput) return;
+      const isPassword = settingsApiKeyInput.type === 'password';
+      settingsApiKeyInput.type = isPassword ? 'text' : 'password';
+      settingsApiKeyToggle.textContent = isPassword ? '🙈' : '👁️';
+    });
+
+    // 头像预览实时更新
+    settingsAvatarInput?.addEventListener('input', updateAvatarPreview);
+
+    // 自定义提供商
+    settingsCustomToggle?.addEventListener('click', () => {
+      if (settingsCustomForm) {
+        const isVisible = settingsCustomForm.style.display !== 'none';
+        settingsCustomForm.style.display = isVisible ? 'none' : 'flex';
+      }
+    });
+    settingsCustomSave?.addEventListener('click', saveCustomProvider);
+
+    // 全局键盘快捷键
+    document.addEventListener('keydown', handleGlobalKeyboard);
+
+    // 设置面板中的下拉关闭
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('chat-settings-provider-wrap');
+      if (wrap && !e.target.closest('#chat-settings-provider-wrap')) {
+        wrap.classList.remove('is-open');
+      }
     });
   }
 

@@ -61,11 +61,20 @@
               <div class="chat-topbar-dropdown" id="chat-more-dropdown" style="display:none">
                 <button class="chat-dropdown-item" id="chat-export-md-btn">
                   <span class="chat-dropdown-icon">📝</span>
-                  <span data-lang-en="Export Markdown" data-lang-zh="导出 Markdown">Export Markdown</span>
+                  <span data-lang-en="Copy Markdown" data-lang-zh="复制 Markdown">Copy Markdown</span>
                 </button>
                 <button class="chat-dropdown-item" id="chat-export-json-btn">
                   <span class="chat-dropdown-icon">📄</span>
-                  <span data-lang-en="Export JSON" data-lang-zh="导出 JSON">Export JSON</span>
+                  <span data-lang-en="Copy JSON" data-lang-zh="复制 JSON">Copy JSON</span>
+                </button>
+                <div class="chat-dropdown-divider"></div>
+                <button class="chat-dropdown-item" id="chat-download-md-btn">
+                  <span class="chat-dropdown-icon">💾</span>
+                  <span data-lang-en="Download .md" data-lang-zh="下载 .md">Download .md</span>
+                </button>
+                <button class="chat-dropdown-item" id="chat-download-json-btn">
+                  <span class="chat-dropdown-icon">💾</span>
+                  <span data-lang-en="Download .json" data-lang-zh="下载 .json">Download .json</span>
                 </button>
                 <div class="chat-dropdown-divider"></div>
                 <button class="chat-dropdown-item chat-dropdown-item--danger" id="chat-clear-btn">
@@ -134,6 +143,7 @@
               </button>
             </div>
             <div class="chat-input-tools-right">
+              <button class="chat-tool-chip chat-settings-btn" id="chat-settings-btn" aria-label="Settings" title="设置 API Key">⚙️ <span data-lang-en="Settings" data-lang-zh="设置">Settings</span></button>
               <button class="chat-stop-btn chat-stop-btn--bar" id="chat-stop-btn-bar" aria-label="Stop" style="display:none">⏹ 停止</button>
             </div>
           </div>
@@ -143,6 +153,72 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- 滚到底部浮动按钮 -->
+    <button class="chat-scroll-bottom-btn" id="chat-scroll-bottom-btn" aria-label="Scroll to bottom" title="滚到底部">↓</button>
+
+    <!-- ========== API Key 设置弹窗 ========== -->
+    <div class="chat-modal-overlay" id="chat-settings-modal" style="display:none">
+      <div class="chat-modal" role="dialog" aria-modal="true" aria-label="Settings">
+        <div class="chat-modal-header">
+          <h2 data-lang-en="⚙️ API Settings" data-lang-zh="⚙️ API 设置">⚙️ API Settings</h2>
+          <button class="chat-modal-close" id="chat-settings-close" aria-label="Close">✕</button>
+        </div>
+        <div class="chat-modal-body">
+          <!-- 提供商选择 -->
+          <div class="chat-setting-group">
+            <label class="chat-setting-label" data-lang-en="Provider" data-lang-zh="提供商">Provider</label>
+            <div class="chat-select-wrap" id="chat-settings-provider-wrap">
+              <button class="chat-select-btn" id="chat-settings-provider-btn" type="button">
+                <span class="chat-select-label" id="chat-settings-provider-label">-- Select --</span>
+                <span class="chat-select-caret">▾</span>
+              </button>
+              <div class="chat-select-menu" id="chat-settings-provider-menu" role="listbox"></div>
+            </div>
+          </div>
+          <!-- API Key 输入 -->
+          <div class="chat-setting-group">
+            <label class="chat-setting-label" for="chat-settings-apikey">API Key</label>
+            <div class="chat-apikey-row">
+              <input type="password" class="chat-setting-input" id="chat-settings-apikey" placeholder="sk-..." autocomplete="off">
+              <button class="chat-apikey-toggle" id="chat-settings-apikey-toggle" aria-label="Toggle visibility" title="显示/隐藏">👁️</button>
+            </div>
+            <p class="chat-setting-hint" data-lang-en="Your key is stored only in this browser's localStorage."
+               data-lang-zh="密钥仅存储在本浏览器 localStorage 中。">Your key is stored only in this browser's localStorage.</p>
+          </div>
+          <!-- 系统提示词 -->
+          <div class="chat-setting-group">
+            <label class="chat-setting-label" for="chat-settings-system-prompt" data-lang-en="System Prompt (optional)" data-lang-zh="系统提示词（可选）">System Prompt (optional)</label>
+            <textarea class="chat-setting-textarea" id="chat-settings-system-prompt" rows="3"
+              placeholder="You are a helpful assistant..."
+              data-lang-en="You are a helpful assistant..."
+              data-lang-zh="你是一个有帮助的助手..."></textarea>
+          </div>
+          <!-- AI 头像 -->
+          <div class="chat-setting-group">
+            <label class="chat-setting-label" data-lang-en="AI Avatar" data-lang-zh="AI 头像">AI Avatar</label>
+            <div class="chat-avatar-row">
+              <input type="text" class="chat-setting-input" id="chat-settings-avatar" placeholder="🤖 (emoji or URL)" maxlength="200">
+              <span class="chat-avatar-preview" id="chat-settings-avatar-preview">🤖</span>
+            </div>
+          </div>
+          <!-- 自定义提供商 -->
+          <div class="chat-setting-group">
+            <button class="chat-setting-link" id="chat-settings-custom-toggle" data-lang-en="＋ Add Custom Provider" data-lang-zh="＋ 添加自定义提供商">＋ Add Custom Provider</button>
+            <div class="chat-custom-provider-form" id="chat-custom-provider-form" style="display:none">
+              <input type="text" class="chat-setting-input" id="chat-custom-name" placeholder="Provider name" style="margin-top:6px">
+              <input type="text" class="chat-setting-input" id="chat-custom-url" placeholder="https://api.example.com/v1" style="margin-top:6px">
+              <input type="text" class="chat-setting-input" id="chat-custom-models" placeholder="model-a, model-b" style="margin-top:6px">
+              <button class="chat-btn chat-btn--sm" id="chat-custom-save-btn" style="margin-top:6px" data-lang-en="Save Provider" data-lang-zh="保存提供商">Save Provider</button>
+            </div>
+          </div>
+        </div>
+        <div class="chat-modal-footer">
+          <button class="chat-btn chat-btn--secondary" id="chat-settings-cancel" data-lang-en="Cancel" data-lang-zh="取消">Cancel</button>
+          <button class="chat-btn chat-btn--primary" id="chat-settings-save" data-lang-en="💾 Save Settings" data-lang-zh="💾 保存设置">💾 Save Settings</button>
+        </div>
+      </div>
     </div>
 
     <!-- Supabase SDK -->
