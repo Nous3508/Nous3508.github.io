@@ -335,9 +335,8 @@
         body.extra_body = { thinking: { type: 'enabled' } };
       }
 
-      // 如果提供商是 DeepSeek 且消息中没有 system prompt，添加默认的
-      const hasSystemMsg = messages.some(m => m.role === 'system');
-      if (provider === 'deepseek' && !isReasoner && !hasSystemMsg) {
+      // 如果提供商是 DeepSeek，添加 system prompt（非 reasoning 模型才加）
+      if (provider === 'deepseek' && !isReasoner) {
         body.messages = [
           { role: 'system', content: 'You are a helpful assistant. Please answer in the language the user uses.' },
           ...messages
