@@ -132,6 +132,17 @@
     return d.innerHTML;
   }
 
+  function isDefaultBookmarks(list) {
+    if (!Array.isArray(list)) return true;
+    if (list.length !== DEFAULT_BOOKMARKS.length) return false;
+    for (let i = 0; i < DEFAULT_BOOKMARKS.length; i++) {
+      if (list[i]?.url !== DEFAULT_BOOKMARKS[i].url || list[i]?.title !== DEFAULT_BOOKMARKS[i].title) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // -------- 侧边栏渲染 --------
   function render() {
     if (!list) return;
@@ -659,7 +670,7 @@
   /** 登录后自动推送到云端 */
   async function onCloudLogin(user) {
     cloudUser = user;
-    await pushToCloud();
+    await syncOnLogin();
   }
 
   /** 登出后切回本地模式 */
@@ -691,6 +702,34 @@
 
   // ==================== 初始化 ====================
 
+  async function syncOnLogin() {
+    try {
+      const cloudData = await BookmarkAPI.fetchAll();
+      const hasCloud = Array.isArray(cloudData) && cloudData.length > 0;
+      const hasLocal = Array.isArray(bookmarks) && bookmarks.length > 0;
+      const localIsDefault = isDefaultBookmarks(bookmarks);
+
+      if (!hasCloud) {
+        await pushToCloud();
+        return;
+      }
+
+      if (!hasLocal || localIsDefault) {
+        await pullFromCloud();
+        return;
+      }
+
+      const shouldPull = confirm('检测到云端已有书签，是否从云端覆盖本地？取消则用本地覆盖云端。');
+      if (shouldPull) {
+        await pullFromCloud();
+      } else {
+        await pushToCloud();
+      }
+    } catch (e) {
+      console.error('[Sync] Auto sync failed:', e);
+    }
+  }
+
   async function init() {
     bookmarks = loadBookmarks();
     isCollapsed = loadCollapsedState();
@@ -717,7 +756,7 @@
     });
 
     if (cloudUser) {
-      pushToCloud().catch(() => {});
+      syncOnLogin().catch(() => {});
     }
 
     // 事件绑定 — 侧边栏

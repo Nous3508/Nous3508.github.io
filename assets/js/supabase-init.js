@@ -266,9 +266,14 @@ const ChatSettingsAPI = {
   /** 从云端获取对话设置 */
   async fetch() {
     if (!supabaseClient) throw new Error('Supabase not initialized');
+    const user = await Auth.getUser();
+    const userId = user?.data?.user?.id;
+    if (!userId) return null;
+
     const { data, error } = await supabaseClient
       .from('chat_settings')
       .select('*')
+      .eq('user_id', userId)
       .maybeSingle();
 
     if (error) throw error;

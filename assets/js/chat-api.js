@@ -15,9 +15,6 @@
     deepseek: {
       name: 'DeepSeek',
       baseUrl: 'https://api.deepseek.com/v1',
-    deepseek: {
-      name: 'DeepSeek',
-      baseUrl: 'https://api.deepseek.com/v1',
       apiType: 'openai',
       models: [
         { id: 'deepseek-chat', name: 'DeepSeek V4 Flash ⚡' },

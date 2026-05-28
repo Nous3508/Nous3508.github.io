@@ -43,7 +43,11 @@
   function renderAvatarPreview() {
     const preview = $('chat-avatar-preview');
     if (!preview) return;
-    preview.textContent = currentAvatarData || '🤖';
+    if (currentAvatarType === 'upload' && currentAvatarData && currentAvatarData.startsWith('data:')) {
+      preview.innerHTML = `<img src="${currentAvatarData}" alt="AI" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+    } else {
+      preview.textContent = currentAvatarData || '🤖';
+    }
 
     // 高亮当前选中的 emoji
     document.querySelectorAll('.chat-avatar-option').forEach(btn => {

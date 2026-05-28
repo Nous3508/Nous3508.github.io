@@ -306,9 +306,14 @@
     if (thinkingEl) thinkingEl.remove();
 
     try {
-      bubble.innerHTML = marked.parse(content);
-      // 为代码块添加复制按钮
-      enhanceCodeBlocks(bubble);
+      const rawHtml = marked.parse(content);
+      if (window.DOMPurify) {
+        bubble.innerHTML = window.DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] });
+        // 为代码块添加复制按钮
+        enhanceCodeBlocks(bubble);
+      } else {
+        bubble.textContent = content;
+      }
     } catch {
       bubble.textContent = content;
     }
